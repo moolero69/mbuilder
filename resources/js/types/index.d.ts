@@ -1,4 +1,5 @@
 import { LucideIcon } from 'lucide-react';
+import { ReactNode } from 'react';
 import type { Config } from 'ziggy-js';
 
 export interface Auth {
@@ -132,4 +133,15 @@ export interface MemoriaRam {
     precio: number;
     fecha_creacion: Date;
     fecha_actualizacion: Date;
+}
+
+export interface ConfiguradorLayoutProps {
+    sidebar: ReactNode;
+    main: ReactNode;
+}
+
+export interface ItemArrastrableProps {
+    id: string;
+    nombre: string;
+    icono: ReactNode;
 }
