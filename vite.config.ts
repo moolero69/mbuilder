@@ -13,7 +13,15 @@ export default defineConfig({
         }),
         react(),
         tailwindcss(),
-    ],
+    ],server: {
+        host: '192.168.1.23',  // Poner la misma IP que usaste en `php artisan serve`
+        port: 5173,             // Puedes cambiar el puerto si es necesario
+        strictPort: true,
+        watch: {
+            usePolling: true
+        },
+        cors: true
+    },
     esbuild: {
         jsx: 'automatic',
     },

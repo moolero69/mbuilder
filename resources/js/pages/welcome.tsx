@@ -15,8 +15,8 @@ export default function Welcome() {
             <Header />
 
             <div className="min-h-screen bg-black font-sans text-white">
-                {/* Hero Section */}
                 <section className="flex min-h-dvh flex-col items-center justify-center px-6 text-center">
+                <img src="img/logo-512px.png" alt="logo mbuilder" className="bg-white m-5" />
                     <h2 className="mb-4 text-5xl font-extrabold text-[var(--verde-neon)] drop-shadow-xl">Construye tu PC ideal</h2>
                     <p className="max-w-2xl text-lg text-gray-400">
                         Descubre la mejor combinación de componentes para optimizar rendimiento, compatibilidad y eficiencia.
