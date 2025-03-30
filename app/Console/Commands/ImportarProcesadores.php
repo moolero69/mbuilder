@@ -28,6 +28,7 @@ class ImportarProcesadores extends Command
         foreach ($csv as $fila) {
             Procesador::create([
                 'nombre' => $fila['Nombre'],
+                'marca' => $fila['Marca'],
                 'socket' => $fila['Socket'],
                 'frecuencia_base' => $fila['Frecuencia_Base'],
                 'frecuencia_turbo' => $fila['Frecuencia_Turbo'],

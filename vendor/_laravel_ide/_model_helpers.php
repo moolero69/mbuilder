@@ -1396,10 +1396,12 @@ namespace App\Models {
      * @property float $frecuencia_turbo
      * @property float $frecuencia_base
      * @property string $socket
+     * @property string $marca
      * @property string $nombre
      * @property string $id
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereNombre($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereMarca($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereSocket($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereFrecuenciaBase($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereFrecuenciaTurbo($value)

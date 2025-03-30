@@ -14,6 +14,7 @@ class Procesador extends Model
     protected $fillable = [
         "id",
         "nombre",
+        "marca",
         "socket",
         "frecuencia_base",
         "frecuencia_turbo",

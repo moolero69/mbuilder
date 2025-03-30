@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('procesadores', function (Blueprint $table) {
             $table->string('id', 7)->primary();
             $table->string('nombre');
+            $table->string('marca');
             $table->string('socket');
             $table->decimal('frecuencia_base', 3, 1);
             $table->decimal('frecuencia_turbo', 3, 1);

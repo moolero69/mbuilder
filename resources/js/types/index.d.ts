@@ -73,6 +73,7 @@ export interface TarjetaGrafica {
 export interface Procesador {
     id: string;
     nombre: string;
+    marca: string;
     socket: string;
     frecuencia_base: number;
     frecuencia_turbo: number;
