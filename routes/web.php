@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ConfiguradorController;
+use App\Http\Controllers\PruebasController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -14,6 +15,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('configurador', [ConfiguradorController::class, 'index'])->name('configurador');
+    Route::get('pruebas', PruebasController::class)->name('pruebas');
 
 });
 

@@ -9,11 +9,16 @@ const Header: React.FC = () => {
     return (
         <>
             <header className="bg-opacity-50 b sticky top-0 z-100 flex w-full items-center justify-between border-b-3 border-[var(--verde-neon)] bg-black px-6 py-4 text-white">
-                <div className="flex flex-row gap-3 px-5 justify-center align-middle">
+                <div className="flex flex-row justify-center gap-3 px-5 align-middle">
                     <img src="img/logo-64px.png" alt="logo mbuilder" className="bg-white" />
-                    <h1 className="mx-4 font-['Orbitron'] text-5xl font-bold text-white drop-shadow-[5px_5px_6px_var(--azul-neon)]">
-                        MBUILDER
-                    </h1>
+                    <Link href={route('home')} className="inline">
+                        <h1 className="mx-4 font-['Orbitron'] text-5xl font-bold text-white drop-shadow-[5px_5px_6px_var(--azul-neon)]">MBUILDER</h1>
+                    </Link>
+                </div>
+                <div>
+                    <Button variant={'outline'} className="border-[var(--rosa-neon)]">
+                        <Link href={route('pruebas')}>Pruebas</Link>
+                    </Button>
                 </div>
                 <nav>
                     <ul className="flex space-x-10">
@@ -21,7 +26,7 @@ const Header: React.FC = () => {
                             <>
                                 <h2 className="text-green-300">{auth.user.name}</h2>
                                 <Button variant={'outline'} className="border-[var(--rojo-neon)]">
-                                    <Link href="logout" method="post">
+                                    <Link href={route('logout')} method="post">
                                         Cerrar Sesion
                                     </Link>
                                 </Button>
@@ -29,11 +34,11 @@ const Header: React.FC = () => {
                         ) : (
                             <>
                                 <Button variant={'outline'} className="border-[var(--verde-neon)]">
-                                    <Link href="login">Iniciar Sesion</Link>
+                                    <Link href={route('login')}>Iniciar Sesion</Link>
                                 </Button>
 
                                 <Button variant={'outline'} className="border-[var(--azul-neon)]">
-                                    <Link href="register">Registrate</Link>
+                                    <Link href={route('register')}>Registrate</Link>
                                 </Button>
                             </>
                         )}
