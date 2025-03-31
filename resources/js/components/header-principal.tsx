@@ -25,11 +25,18 @@ const Header: React.FC = () => {
                         {auth.user ? (
                             <>
                                 <h2 className="text-green-300">{auth.user.name}</h2>
-                                <Button variant={'outline'} className="border-[var(--rojo-neon)]">
+                                {/* <Button variant={'outline'} className="border-[var(--rojo-neon)]">
                                     <Link href={route('logout')} method="post">
                                         Cerrar Sesion
                                     </Link>
-                                </Button>
+                                </Button> */}
+                                <Link
+                                    href={route('logout')}
+                                    method="post"
+                                    className="inline-flex items-center justify-center gap-2 rounded-md border border-[var(--rojo-neon)] px-4 py-2 text-sm hover:bg-red-500/10 hover:cursor-pointer"
+                                >
+                                    Cerrar Sesión
+                                </Link>
                             </>
                         ) : (
                             <>

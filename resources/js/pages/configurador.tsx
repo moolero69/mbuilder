@@ -51,10 +51,10 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
         setIsDragging(true);
     };
 
-    const desplegar = ()=>{
-        setIntelDesplegado(true)
-        setAmdDesplegado(true)
-    }
+    const desplegar = () => {
+        setIntelDesplegado(true);
+        setAmdDesplegado(true);
+    };
 
     return (
         <>
@@ -66,13 +66,21 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
                     sidebar={
                         <div className="w-full space-y-4">
                             {/* 🔍 Barra de búsqueda general */}
-                            <div className="relative w-full mt-2">
+                            <div className="relative mt-2 w-full">
                                 <input
                                     type="text"
                                     placeholder="Buscar procesador..."
                                     value={busquedaGeneral}
-                                    onChange={(e) => setBusquedaGeneral(e.target.value)}
-                                    onInputCapture={desplegar}
+                                    onChange={(e) => {
+                                        const valor = e.target.value;
+                                        setBusquedaGeneral(valor);
+                                        // Si la búsqueda está vacía, colapsamos los desplegables
+                                        if (valor.trim() === '') {
+                                            setIntelDesplegado(false);
+                                            setAmdDesplegado(false);
+                                        }
+                                    }}
+                                    onInput={desplegar}
                                     className="w-full rounded-lg border border-gray-600 bg-black/70 p-2 pl-10 text-gray-300 placeholder-gray-500 focus:ring-0 focus:outline-none"
                                 />
                                 <Search className="absolute top-2 left-3 text-gray-400" size={18} />
@@ -184,6 +192,7 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
                                         </h1>
                                     )}
                                 </AreaSoltarItem>
+                                poner toast de arrastrar
                             </div>
 
                             {/* Info del procesador con borde neón */}

@@ -32,7 +32,6 @@ export default function Pruebas() {
                         <div className="rounded-md border px-4 py-2 font-mono text-sm shadow-sm">Procesador 5</div>
                         <div className="rounded-md border px-4 py-2 font-mono text-sm shadow-sm">Procesador 6</div>
                         <div className="rounded-md border px-4 py-2 font-mono text-sm shadow-sm">Procesador 7</div>
-
                     </CollapsibleContent>
                 </Collapsible>
             </div>
