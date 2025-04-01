@@ -22,5 +22,5 @@
 # /.nova
 /.vscode
 # /.zed
-/vendor/bin/pint
-/vendor/bin/pest
+/vendor/bin/
+vite.config.ts

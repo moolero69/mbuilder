@@ -3,6 +3,7 @@ import Header from '@/components/header-principal';
 import { Button } from '@/components/ui/button';
 import { type DatosCompartidos } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { toast, Toaster } from 'sonner';
 
 export default function Welcome() {
     return (

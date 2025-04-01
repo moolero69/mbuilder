@@ -1,6 +1,7 @@
 import { DatosCompartidos } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import React from 'react';
+import { Toaster } from 'sonner';
 import { Button } from './ui/button';
 
 const Header: React.FC = () => {
@@ -8,6 +9,7 @@ const Header: React.FC = () => {
     const { auth } = page.props;
     return (
         <>
+            <Toaster position="bottom-center" />
             <header className="bg-opacity-50 b sticky top-0 z-100 flex w-full items-center justify-between border-b-3 border-[var(--verde-neon)] bg-black px-6 py-4 text-white">
                 <div className="flex flex-row justify-center gap-3 px-5 align-middle">
                     <img src="img/logo-64px.png" alt="logo mbuilder" className="bg-white" />
@@ -28,7 +30,7 @@ const Header: React.FC = () => {
                                 <Link
                                     href={route('logout')}
                                     method="post"
-                                    className="inline-flex items-center justify-center gap-2 rounded-md border border-[var(--rojo-neon)] px-4 py-2 text-sm hover:bg-red-500/10 hover:cursor-pointer"
+                                    className="inline-flex items-center justify-center gap-2 rounded-md border border-[var(--rojo-neon)] px-4 py-2 text-sm hover:cursor-pointer hover:bg-red-500/10"
                                 >
                                     Cerrar Sesión
                                 </Link>

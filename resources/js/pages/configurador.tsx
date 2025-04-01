@@ -8,13 +8,13 @@ import { Procesador, TarjetaGrafica } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, Cpu, Euro, Factory, Gauge, Minus, Plus, Power, Search, Zap } from 'lucide-react';
-import { toast } from "sonner";
+import { ArrowBigDown, Cpu, Euro, Factory, Flame, Gauge, Minus, Plus, Power, Search, X, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export default function Configurador({ procesadores, graficas }: { procesadores: Procesador[]; graficas: TarjetaGrafica[] }) {
     const [procesadorSeleccionado, setProcesadorSeleccionado] = useState<Procesador | null>(null);
-    const [procesadorActivo, setProcesadorActivo] = useState<Procesador | null>(null); // Guardamos el ítem activo
+    const [procesadorActivo, setProcesadorActivo] = useState<Procesador | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [loading, setLoading] = useState(true);
     const [intelDesplegado, setIntelDesplegado] = useState(false);
@@ -26,12 +26,26 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
 
     useEffect(() => {
         // Simula la carga de la página
-        setTimeout(() => setLoading(false), 1000); // 2 segundos
+        // setTimeout(() => setLoading(false), 1000); // 2 segundos
+        toast.custom(
+            (t) => (
+                <div className="flex items-center gap-3 rounded-xl bg-black/80 p-4 text-white shadow-lg ml-20 w-[350px]">
+                    <span>
+                        <Flame className="text-[var(--rojo-neon)]" />
+                    </span>
+                    <div className="flex w-full justify-center text-center text-xl">
+                        <p className="font-['exo_2']">Arrastra tu procesador</p>
+                    </div>
+                </div>
+            ),
+            { duration: 3500 }
+        );
+        
     }, []);
 
-    if (loading) {
-        return <Loader />;
-    }
+    // if (loading) {
+    //     return <Loader />;
+    // }
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -84,7 +98,7 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
                                     onInput={desplegar}
                                     className="w-full rounded-lg border border-gray-600 bg-black/70 p-2 pl-10 text-gray-300 placeholder-gray-500 focus:ring-0 focus:outline-none"
                                 />
-                                <Search className="absolute top-2 left-3 text-gray-400" size={18} />
+                                <Search className="absolute top-3 left-3 text-gray-400" size={18} />
                             </div>
 
                             {/* 🔵 INTEL */}
@@ -170,7 +184,7 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
                         </div>
                     }
                     main={
-                        <div className="flex h-dvh flex-col items-center gap-3 bg-gray-900 text-white">
+                        <div className="flex h-dvh flex-col items-center gap-3 bg-black/20 text-white">
                             {procesadorActivo ? (
                                 <div className="z-10 flex flex-col items-center gap-2 text-white">
                                     <h1 className="relative z-20 text-center font-['orbitron'] text-6xl font-extrabold tracking-wide text-[var(--azul-neon)]">
@@ -185,24 +199,16 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
                             )}
 
                             {/* Zona de drop con efecto cyberpunk */}
-                            <div className={`relative z-20 h-[64px] w-[50%] border-2 ${procesadorActivo && "border-dashed"} border-[var(--rojo-neon)] bg-black/40`}>
+                            <div
+                                className={`relative z-20 h-[64px] w-[50%] border-2 ${procesadorActivo && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
+                            >
                                 <AreaSoltarItem>
                                     {!procesadorActivo && (
-                                        <h1 className="text-transparent] mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold">
+                                        <h1 className="text-transparent mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold">
                                             {procesadorSeleccionado?.nombre}
                                         </h1>
                                     )}
                                 </AreaSoltarItem>
-                                poner toast de arrastrar
-                                {!procesadorActivo &&
-                                toast("Event has been created", {
-                                    description: "Sunday, December 03, 2023 at 9:00 AM",
-                                    action: {
-                                        label: "Undo",
-                                        onClick: () => console.log("Undo"),
-                                    }
-                                })
-                            }
                             </div>
 
                             {/* Info del procesador con borde neón */}
