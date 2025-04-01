@@ -25,11 +25,6 @@ const Header: React.FC = () => {
                         {auth.user ? (
                             <>
                                 <h2 className="text-green-300">{auth.user.name}</h2>
-                                {/* <Button variant={'outline'} className="border-[var(--rojo-neon)]">
-                                    <Link href={route('logout')} method="post">
-                                        Cerrar Sesion
-                                    </Link>
-                                </Button> */}
                                 <Link
                                     href={route('logout')}
                                     method="post"

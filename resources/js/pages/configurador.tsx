@@ -9,6 +9,7 @@ import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
 import { ArrowBigDown, Cpu, Euro, Factory, Gauge, Minus, Plus, Power, Search, Zap } from 'lucide-react';
+import { toast } from "sonner";
 import { useEffect, useState } from 'react';
 
 export default function Configurador({ procesadores, graficas }: { procesadores: Procesador[]; graficas: TarjetaGrafica[] }) {
@@ -184,7 +185,7 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
                             )}
 
                             {/* Zona de drop con efecto cyberpunk */}
-                            <div className="relative z-20 h-[64px] w-[50%] border-2 border-dashed border-[var(--rojo-neon)] bg-black/40">
+                            <div className={`relative z-20 h-[64px] w-[50%] border-2 ${procesadorActivo && "border-dashed"} border-[var(--rojo-neon)] bg-black/40`}>
                                 <AreaSoltarItem>
                                     {!procesadorActivo && (
                                         <h1 className="text-transparent] mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold">
@@ -193,6 +194,15 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
                                     )}
                                 </AreaSoltarItem>
                                 poner toast de arrastrar
+                                {!procesadorActivo &&
+                                toast("Event has been created", {
+                                    description: "Sunday, December 03, 2023 at 9:00 AM",
+                                    action: {
+                                        label: "Undo",
+                                        onClick: () => console.log("Undo"),
+                                    }
+                                })
+                            }
                             </div>
 
                             {/* Info del procesador con borde neón */}
