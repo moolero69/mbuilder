@@ -2,19 +2,18 @@ import { AreaSoltarItem } from '@/components/AreaSoltarItem';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { PlacaBase, Procesador } from '@/types';
+import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
+import MontajeLayout from '@/layouts/app/montaje-layout';
+import { PlacaBase } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, CircuitBoard, Euro, Factory, Flame, Gauge, Minus, Plus, Power, Search, X, Zap } from 'lucide-react';
+import { ArrowBigDown, CircuitBoard, Euro, Factory, Flame, Gauge, Minus, Plus, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
-import MontajeLayout from '@/layouts/app/montaje-layout';
 
 export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }) {
     const { procesadorGuardado, guardarPlacaBaseSeelccionada } = useProgresoMontaje((state) => state);
-
 
     const [placaBaseSeleccionada, setPlacaBaseSeleccionada] = useState<PlacaBase | null>(null);
     const [placaBaseActiva, setPlacaBaseActiva] = useState<PlacaBase | null>(null);
@@ -30,19 +29,17 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
 
     const [placasFiltradas, setPlacasFiltradas] = useState<PlacaBase[]>();
 
-
-    const placasBaseAsrock = placasBase.filter((p) => p.marca === 'ASRock' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const placasBaseAsus = placasBase.filter((p) => p.marca === 'ASUS' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const placasBaseMsi = placasBase.filter((p) => p.marca === 'MSI' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const placasBaseGigabyte = placasBase.filter((p) => p.marca === 'Gigabyte' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-
-
-
+    const placasBaseAsrock = placasFiltradas?.filter((p) => p.marca === 'ASRock' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const placasBaseAsus = placasFiltradas?.filter((p) => p.marca === 'ASUS' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const placasBaseMsi = placasFiltradas?.filter((p) => p.marca === 'MSI' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const placasBaseGigabyte = placasFiltradas?.filter(
+        (p) => p.marca === 'Gigabyte' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()),
+    );
 
     useEffect(() => {
         toast.custom(
             (t) => (
-                <div className="flex items-center gap-3 rounded-xl bg-black/80 p-4 text-white shadow-lg ml-20 w-[350px]">
+                <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl bg-black/80 p-4 text-white shadow-lg">
                     <span>
                         <Flame className="text-[var(--rojo-neon)]" />
                     </span>
@@ -51,27 +48,18 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                     </div>
                 </div>
             ),
-            { duration: 3500 }
+            { duration: 3500 },
         );
 
         const comprobarCompatibilidad = () => {
-            const placasNoCompatibles = placasBase.map((placa) => ({
-                ...placa,
-                compatible: procesadorGuardado?.socket === placa.socket
-            }));
+            const placasCompatibles = placasBase.filter((placa) => procesadorGuardado?.socket === placa.socket);
 
-            setPlacasFiltradas(placasNoCompatibles);
+            setPlacasFiltradas(placasCompatibles);
         };
 
         comprobarCompatibilidad();
-
-
     }, []);
-
-    // if (loading) {
-    //     return <Loader />;
-    // }
-
+    
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
 
@@ -92,18 +80,18 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
     };
 
     const desplegar = () => {
-        setAsrockDesplegado(true)
-        setAsusDesplegado(true)
-        setMsiDesplegado(true)
-        setGigabyteDesplegado(true)
+        setAsrockDesplegado(true);
+        setAsusDesplegado(true);
+        setMsiDesplegado(true);
+        setGigabyteDesplegado(true);
     };
 
     const replegar = () => {
-        setAsrockDesplegado(false)
-        setAsusDesplegado(false)
-        setMsiDesplegado(false)
-        setGigabyteDesplegado(false)
-    }
+        setAsrockDesplegado(false);
+        setAsusDesplegado(false);
+        setMsiDesplegado(false);
+        setGigabyteDesplegado(false);
+    };
 
     return (
         <>
@@ -115,7 +103,7 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                     sidebar={
                         <div className="w-full space-y-4">
                             {/* 🔍 Barra de búsqueda general */}
-                            <div className="sticky mt-2 w-full top-0">
+                            <div className="sticky top-0 mt-2 w-full">
                                 <input
                                     type="text"
                                     placeholder="Buscar procesador..."
@@ -124,7 +112,7 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                                         const valor = e.target.value;
                                         setBusquedaGeneral(valor);
                                         // Si la búsqueda está vacía, colapsamos los desplegables
-                                        valor.trim() === '' && replegar()
+                                        valor.trim() === '' && replegar();
                                     }}
                                     onInput={desplegar}
                                     className="w-full rounded-lg border border-gray-600 bg-black p-2 pl-10 text-gray-300 placeholder-gray-500 focus:ring-0 focus:outline-none"
@@ -133,181 +121,244 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                             </div>
 
                             {/* 💀 ASROCK */}
-                            <Collapsible open={asRockDesplegado} onOpenChange={setAsrockDesplegado} className="w-full space-y-2">
-                                <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
-                                    <p className="font-['exo_2'] text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">ASRock</p>
-                                    <CollapsibleTrigger asChild>
-                                        <Button variant="ghost" size="sm">
-                                            {asRockDesplegado ? <Minus /> : <Plus />}
-                                        </Button>
-                                    </CollapsibleTrigger>
-                                </div>
-                                {!asRockDesplegado && (
-                                    <>
-                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placasBaseAsrock[0].id} nombre={placasBaseAsrock[0].nombre} icono={<CircuitBoard />} />
+                            {placasBaseAsrock && (
+                                <Collapsible open={asRockDesplegado} onOpenChange={setAsrockDesplegado} className="w-full space-y-2">
+                                    <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
+                                        <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
+                                            ASRock
+                                        </p>
+                                        <CollapsibleTrigger asChild>
+                                            <Button variant="ghost" size="sm">
+                                                {asRockDesplegado ? <Minus /> : <Plus />}
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                    </div>
+                                    {!asRockDesplegado && (
+                                        <>
+                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={placasBaseAsrock[0].id}
+                                                        nombre={placasBaseAsrock[0].nombre}
+                                                        icono={<CircuitBoard />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={placasBaseAsrock[1].id}
+                                                        nombre={placasBaseAsrock[1].nombre}
+                                                        icono={<CircuitBoard />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={placasBaseAsrock[2].id}
+                                                        nombre={placasBaseAsrock[2].nombre}
+                                                        icono={<CircuitBoard />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
                                             </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placasBaseAsrock[1].id} nombre={placasBaseAsrock[1].nombre} icono={<CircuitBoard />} />
+                                        </>
+                                    )}
+                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        {placasBaseAsrock.map((placa) => (
+                                            <div key={placa.id} className="w-full">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
                                             </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placasBaseAsrock[2].id} nombre={placasBaseAsrock[2].nombre} icono={<CircuitBoard />} />
-                                            </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                        </div>
-                                    </>
-                                )}
-                                <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                    {placasBaseAsrock.map((placa) => (
-                                        <div key={placa.id} className="w-full">
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
-                                            </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                        </div>
-                                    ))}
-                                </CollapsibleContent>
-                            </Collapsible>
+                                        ))}
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            )}
 
                             {/* 💀 ASUS */}
-                            <Collapsible open={asusDesplegado} onOpenChange={setAsusDesplegado} className="w-full space-y-2">
-                                <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
-                                    <p className="font-['exo_2'] text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">Asus</p>
-                                    <CollapsibleTrigger asChild>
-                                        <Button variant="ghost" size="sm">
-                                            {asusDesplegado ? <Minus /> : <Plus />}
-                                        </Button>
-                                    </CollapsibleTrigger>
-                                </div>
-                                {!asusDesplegado && (
-                                    <>
-                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placasBaseAsus[0].id} nombre={placasBaseAsus[0].nombre} icono={<CircuitBoard />} />
+                            {placasBaseAsus && (
+                                <Collapsible open={asusDesplegado} onOpenChange={setAsusDesplegado} className="w-full space-y-2">
+                                    <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
+                                        <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
+                                            Asus
+                                        </p>
+                                        <CollapsibleTrigger asChild>
+                                            <Button variant="ghost" size="sm">
+                                                {asusDesplegado ? <Minus /> : <Plus />}
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                    </div>
+                                    {!asusDesplegado && (
+                                        <>
+                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={placasBaseAsus[0].id}
+                                                        nombre={placasBaseAsus[0].nombre}
+                                                        icono={<CircuitBoard />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={placasBaseAsus[1].id}
+                                                        nombre={placasBaseAsus[1].nombre}
+                                                        icono={<CircuitBoard />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={placasBaseAsus[2].id}
+                                                        nombre={placasBaseAsus[2].nombre}
+                                                        icono={<CircuitBoard />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
                                             </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placasBaseAsus[1].id} nombre={placasBaseAsus[1].nombre} icono={<CircuitBoard />} />
-                                            </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placasBaseAsus[2].id} nombre={placasBaseAsus[2].nombre} icono={<CircuitBoard />} />
-                                            </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                        </div>
-                                    </>
-                                )}
+                                        </>
+                                    )}
 
-                                <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                    {placasBaseAsus.map((placa) => (
-                                        <div key={placa.id} className="w-full">
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        {placasBaseAsus.map((placa) => (
+                                            <div key={placa.id} className="w-full">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
                                             </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                        </div>
-                                    ))}
-                                </CollapsibleContent>
-                            </Collapsible>
-
+                                        ))}
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            )}
 
                             {/* 💀 MSI */}
-                            <Collapsible open={msiDesplegado} onOpenChange={setMsiDesplegado} className="w-full space-y-2">
-                                <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
-                                    <p className="font-['exo_2'] text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">MSI</p>
-                                    <CollapsibleTrigger asChild>
-                                        <Button variant="ghost" size="sm">
-                                            {msiDesplegado ? <Minus /> : <Plus />}
-                                        </Button>
-                                    </CollapsibleTrigger>
-                                </div>
-                                {!msiDesplegado && (
-                                    <>
-                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placasBaseMsi[0].id} nombre={placasBaseMsi[0].nombre} icono={<CircuitBoard />} />
+                            {placasBaseMsi && (
+                                <Collapsible open={msiDesplegado} onOpenChange={setMsiDesplegado} className="w-full space-y-2">
+                                    <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
+                                        <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
+                                            MSI
+                                        </p>
+                                        <CollapsibleTrigger asChild>
+                                            <Button variant="ghost" size="sm">
+                                                {msiDesplegado ? <Minus /> : <Plus />}
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                    </div>
+                                    {!msiDesplegado && (
+                                        <>
+                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={placasBaseMsi[0].id}
+                                                        nombre={placasBaseMsi[0].nombre}
+                                                        icono={<CircuitBoard />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={placasBaseMsi[1].id}
+                                                        nombre={placasBaseMsi[1].nombre}
+                                                        icono={<CircuitBoard />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={placasBaseMsi[2].id}
+                                                        nombre={placasBaseMsi[2].nombre}
+                                                        icono={<CircuitBoard />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
                                             </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placasBaseMsi[1].id} nombre={placasBaseMsi[1].nombre} icono={<CircuitBoard />} />
-                                            </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placasBaseMsi[2].id} nombre={placasBaseMsi[2].nombre} icono={<CircuitBoard />} />
-                                            </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                        </div>
-                                    </>
-                                )}
+                                        </>
+                                    )}
 
-                                <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                    {placasBaseMsi.map((placa) => (
-                                        <div key={placa.id} className="w-full">
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        {placasBaseMsi.map((placa) => (
+                                            <div key={placa.id} className="w-full">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
                                             </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                        </div>
-                                    ))}
-                                </CollapsibleContent>
-                            </Collapsible>
+                                        ))}
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            )}
 
                             {/* 💀 Gigabyte */}
-                            <Collapsible open={gigabyteDesplegado} onOpenChange={setGigabyteDesplegado} className="w-full space-y-2">
-                                <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
-                                    <p className="font-['exo_2'] text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">Gigabyte</p>
-                                    <CollapsibleTrigger asChild>
-                                        <Button variant="ghost" size="sm">
-                                            {gigabyteDesplegado ? <Minus /> : <Plus />}
-                                        </Button>
-                                    </CollapsibleTrigger>
-                                </div>
-                                {!gigabyteDesplegado && (
-                                    <>
-                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placasBaseGigabyte[0].id} nombre={placasBaseGigabyte[0].nombre} icono={<CircuitBoard />} />
+                            {placasBaseGigabyte && (
+                                <Collapsible open={gigabyteDesplegado} onOpenChange={setGigabyteDesplegado} className="w-full space-y-2">
+                                    <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
+                                        <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
+                                            Gigabyte
+                                        </p>
+                                        <CollapsibleTrigger asChild>
+                                            <Button variant="ghost" size="sm">
+                                                {gigabyteDesplegado ? <Minus /> : <Plus />}
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                    </div>
+                                    {!gigabyteDesplegado && (
+                                        <>
+                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={placasBaseGigabyte[0].id}
+                                                        nombre={placasBaseGigabyte[0].nombre}
+                                                        icono={<CircuitBoard />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={placasBaseGigabyte[1].id}
+                                                        nombre={placasBaseGigabyte[1].nombre}
+                                                        icono={<CircuitBoard />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={placasBaseGigabyte[2].id}
+                                                        nombre={placasBaseGigabyte[2].nombre}
+                                                        icono={<CircuitBoard />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
                                             </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placasBaseGigabyte[1].id} nombre={placasBaseGigabyte[1].nombre} icono={<CircuitBoard />} />
-                                            </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placasBaseGigabyte[2].id} nombre={placasBaseGigabyte[2].nombre} icono={<CircuitBoard />} />
-                                            </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                        </div>
-                                    </>
-                                )}
+                                        </>
+                                    )}
 
-                                <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                    {placasBaseGigabyte.map((placa) => (
-                                        <div key={placa.id} className="w-full">
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        {placasBaseGigabyte.map((placa) => (
+                                            <div key={placa.id} className="w-full">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
                                             </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                        </div>
-                                    ))}
-                                </CollapsibleContent>
-                            </Collapsible>
+                                        ))}
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            )}
                         </div>
                     }
                     main={
                         <div className="flex h-full flex-col items-center gap-3 bg-black/20 text-white">
                             {placaBaseActiva ? (
                                 <div className="z-10 flex flex-col items-center gap-2 text-white">
-                                    <h1 className="rerelative z-20 text-center font-['orbitron'] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 font-extrabold text-6xl tracking-wider bg-gray-900 p-4">
+                                    <h1 className="rerelative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
                                         Arrastra tu placa base aquí
                                     </h1>
                                     <ArrowBigDown className="h-32 w-32 text-[var(--morado-neon)]" />
                                 </div>
                             ) : (
-                                <h1 className="relative z-20 text-center font-['orbitron'] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 font-extrabold text-6xl tracking-wider bg-gray-900 p-4">
+                                <h1 className="relative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
                                     Placa base
                                 </h1>
                             )}
@@ -318,18 +369,28 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                             >
                                 <AreaSoltarItem>
                                     {!placaBaseActiva && (
-                                        <h1 className="text-transparent mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold">
+                                        <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {placaBaseSeleccionada?.nombre}
                                         </h1>
                                     )}
                                 </AreaSoltarItem>
+                                {/* <div>
+                                    <h2 className="mb-4 text-xl font-bold">{`Placas Base Compatibles para el socket ${procesadorGuardado?.socket}`}</h2>
+                                    <ul>
+                                        {placasFiltradas?.map((placa, index) => (
+                                            <li key={index} className={`rounded-md p-4 ${placa.compatible ? 'bg-green-600' : 'bg-red-600'}`}>
+                                                {placa.nombre} - Socket: {placa.socket} -{placa.compatible ? ' ✅ Compatible' : ' ❌ No Compatible'}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div> */}
                             </div>
 
                             {/* Info del procesador con borde neón */}
                             {placaBaseSeleccionada && (
                                 <>
                                     <div className="grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3">
-                                        <div className="flex items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out transform hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Factory size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -338,7 +399,7 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                                                 <p className="text-lg text-gray-300">{placaBaseSeleccionada.marca}</p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out transform hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <CircuitBoard size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -347,7 +408,7 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                                                 <p className="text-lg text-gray-300">{placaBaseSeleccionada.socket}</p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out transform hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <CircuitBoard size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -356,18 +417,16 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                                                 <p className="text-lg text-gray-300">{placaBaseSeleccionada.factor_forma}</p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out transform hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Gauge size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     consumo
                                                 </h2>
-                                                <p className="text-lg text-gray-300">
-                                                    {placaBaseSeleccionada.consumo}W
-                                                </p>
+                                                <p className="text-lg text-gray-300">{placaBaseSeleccionada.consumo}W</p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out transform hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Euro size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-green-300 via-green-400 to-green-600 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -377,7 +436,13 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                                             </div>
                                         </div>
                                     </div>
-                                    <Button variant={'outline'} className="border-[var(--morado-neon)] font-['exo_2']" onClick={() => { guardarPlacaBaseSeelccionada!(placaBaseSeleccionada) }}>
+                                    <Button
+                                        variant={'outline'}
+                                        className="border-[var(--morado-neon)] font-['exo_2']"
+                                        onClick={() => {
+                                            guardarPlacaBaseSeelccionada!(placaBaseSeleccionada);
+                                        }}
+                                    >
                                         <Link href={route('pruebas')}>Siguiente</Link>
                                     </Button>
                                 </>
@@ -385,7 +450,6 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                         </div>
                     }
                 />
-
                 <DragOverlay>
                     {placaBaseActiva ? <ItemArrastrable id={placaBaseActiva.id} nombre={placaBaseActiva.nombre} icono={<CircuitBoard />} /> : null}
                 </DragOverlay>
