@@ -109,6 +109,7 @@ export interface PlacaBase {
     precio: number;
     fecha_creacion: Date;
     fecha_actualizacion: Date;
+    compatible?: boolean;
 }
 
 export interface Torre {
@@ -145,4 +146,11 @@ export interface ItemArrastrableProps {
     id: string;
     nombre: string;
     icono: ReactNode;
+}
+
+export interface EstadoMontaje {
+    procesadorGuardado?: Procesador | null;
+    guardarProcesadorSeleccionado?: (procesador: Procesador | null) => void;
+    placaBaseGuardada?: PlacaBase | null;
+    guardarPlacaBaseSeelccionada?: (placaBase: PlacaBase | null) => void;
 }

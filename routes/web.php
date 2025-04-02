@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\ConfiguradorController;
+use App\Http\Controllers\Montaje\MontajePlacaBaseController;
+use App\Http\Controllers\Montaje\MontajeProcesadorController;
 use App\Http\Controllers\PruebasController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -14,7 +15,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    Route::get('configurador', [ConfiguradorController::class, 'index'])->name('configurador');
+    Route::get('montaje/procesador', [MontajeProcesadorController::class, 'index'])->name('montaje.procesador');
+    Route::get('montaje/placaBase', [MontajePlacaBaseController::class, 'index'])->name('montaje.placaBase');
     Route::get('pruebas', PruebasController::class)->name('pruebas');
 
 });

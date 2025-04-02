@@ -1,24 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Montaje;
 
+use App\Http\Controllers\Controller;
+use App\Models\PlacaBase;
 use App\Models\Procesador;
-use App\Models\TarjetaGrafica;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ConfiguradorController extends Controller
+class MontajePlacaBaseController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $placasBase = PlacaBase::all();
         $procesadores = Procesador::all();
-        $graficas = TarjetaGrafica::all();
-        return Inertia::render('configurador', [
-            'procesadores' => $procesadores,
-            'graficas' => $graficas
+        return Inertia::render('montaje/placaBase', [
+            'placasBase' => $placasBase,
+            'procesadores' => $procesadores
         ]);
     }
 
