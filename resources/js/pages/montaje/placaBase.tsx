@@ -8,7 +8,7 @@ import { PlacaBase } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, CircuitBoard, Euro, Factory, Flame, Gauge, Minus, Plus, Search } from 'lucide-react';
+import { ArrowBigDown, ArrowLeft, CircuitBoard, Cpu, Euro, Factory, Flame, Gauge, Minus, Move, Plus, Search, Wrench } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -41,7 +41,7 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
             (t) => (
                 <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl bg-black/80 p-4 text-white shadow-lg">
                     <span>
-                        <Flame className="text-[var(--rojo-neon)]" />
+                        <Wrench size={30} className="text-[var(--rojo-neon)]" />
                     </span>
                     <div className="flex w-full justify-center text-center text-xl">
                         <p className="font-['exo_2']">Arrastra tu placa base</p>
@@ -59,7 +59,7 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
 
         comprobarCompatibilidad();
     }, []);
-    
+
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
 
@@ -350,6 +350,12 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                     }
                     main={
                         <div className="flex h-full flex-col items-center gap-3 bg-black/20 text-white">
+                            <div className='absolute text-2xl left-[20%] flex items-center'>
+                                <ArrowLeft size={30} />
+                                <Link href={route('montaje.procesador')}>
+                                    <h1 className='underline font-["exo_2"]'>VOLVER AL PROCESADOR</h1>
+                                </Link>
+                            </div>
                             {placaBaseActiva ? (
                                 <div className="z-10 flex flex-col items-center gap-2 text-white">
                                     <h1 className="rerelative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
@@ -400,7 +406,7 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
-                                            <CircuitBoard size={48} className="text-[var(--rojo-neon)]" />
+                                            <Cpu size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Socket
@@ -451,7 +457,7 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                     }
                 />
                 <DragOverlay>
-                    {placaBaseActiva ? <ItemArrastrable id={placaBaseActiva.id} nombre={placaBaseActiva.nombre} icono={<CircuitBoard />} /> : null}
+                    {placaBaseActiva ? <ItemArrastrable id={placaBaseActiva.id} nombre={placaBaseActiva.nombre} icono={<CircuitBoard />} iconoSecundario={<Move />} /> : null}
                 </DragOverlay>
             </DndContext>
         </>

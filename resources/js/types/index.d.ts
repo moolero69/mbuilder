@@ -146,6 +146,7 @@ export interface ItemArrastrableProps {
     id: string;
     nombre: string;
     icono: ReactNode;
+    iconoSecundario?: ReactNode;
 }
 
 export interface EstadoMontaje {

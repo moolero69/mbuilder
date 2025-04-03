@@ -6,13 +6,13 @@ import { Procesador, TarjetaGrafica } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, Cpu, Euro, Factory, Flame, Gauge, Minus, Plus, Power, Search, X, Zap } from 'lucide-react';
+import { ArrowBigDown, Cpu, Euro, Factory, Flame, Gauge, Minus, Move, Plus, Power, Search, Wrench, X, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import MontajeLayout from '@/layouts/app/montaje-layout';
 
-export default function Configurador({ procesadores, graficas }: { procesadores: Procesador[]; graficas: TarjetaGrafica[] }) {
+export default function Configurador({ procesadores }: { procesadores: Procesador[] }) {
     const { guardarProcesadorSeleccionado } = useProgresoMontaje((state) => state);
 
     const [procesadorSeleccionado, setProcesadorSeleccionado] = useState<Procesador | null>(null);
@@ -22,17 +22,15 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
     const [amdDesplegado, setAmdDesplegado] = useState(false);
     const [busquedaGeneral, setBusquedaGeneral] = useState('');
 
-    const [procesadorIncompatible, setProcesadorInconpatible] = useState<boolean>(false);
-
     const procesadoresAmd = procesadores.filter((p) => p.marca === 'AMD' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
     const procesadoresIntel = procesadores.filter((p) => p.marca === 'Intel' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
 
     useEffect(() => {
         toast.custom(
             (t) => (
-                <div className="flex items-center gap-3 rounded-xl bg-black/80 p-4 text-white shadow-lg ml-20 w-[350px]">
+                <div className="flex items-center gap-3 rounded-xl bg-black/80 p-4 text-white shadow-lg ml-20 w-[350px] border-2 border-[var(--rosa-neon)]">
                     <span>
-                        <Flame className="text-[var(--rojo-neon)]" />
+                        <Wrench size={30} className="text-[var(--rojo-neon)]" />{ }
                     </span>
                     <div className="flex w-full justify-center text-center text-xl">
                         <p className="font-['exo_2']">Arrastra tu procesador</p>
@@ -43,10 +41,6 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
         );
 
     }, []);
-
-    // if (loading) {
-    //     return <Loader />;
-    // }
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -118,7 +112,7 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
                                     <>
                                         <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                             <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={procesadoresIntel[0].id} nombre={procesadoresIntel[0].nombre} icono={<Cpu />} />
+                                                <ItemArrastrable id={procesadoresIntel[0].id} nombre={procesadoresIntel[0].nombre} icono={<Cpu />} iconoSecundario={<Flame />} />
                                             </div>
                                             <Separator className="border-[1px] border-gray-600" />
                                             <div className="flex flex-row justify-center gap-5 py-3 align-middle">
@@ -203,7 +197,7 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
 
                             {/* Zona de drop con efecto cyberpunk */}
                             <div
-                                className={`relative z-20 h-[64px] w-[50%] border-2 ${procesadorActivo && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
+                                className={`relative z-20 h-[80px] w-[50%] border-2 ${procesadorActivo && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
                                 <AreaSoltarItem>
                                     {!procesadorActivo && (
@@ -217,7 +211,7 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
                             {/* Info del procesador con borde neón */}
                             {procesadorSeleccionado && (
                                 <>
-                                    <div className="grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3">
+                                    <div className="grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3 justify-center">
                                         <div className="flex items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out transform hover:border-[var(--morado-neon)]">
                                             <Factory size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
@@ -252,7 +246,7 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
                                                     Frecuencia
                                                 </h2>
                                                 <p className="text-lg text-gray-300">
-                                                    {procesadorSeleccionado.frecuencia_base}Hz / {procesadorSeleccionado.frecuencia_turbo}Hz
+                                                    {procesadorSeleccionado.frecuencia_base}GHz / {procesadorSeleccionado.frecuencia_turbo}GHz
                                                 </p>
                                             </div>
                                         </div>
@@ -260,9 +254,9 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
                                             <Zap size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    Núcleos
+                                                    Núcleos / Hilos
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{procesadorSeleccionado.nucleos}</p>
+                                                <p className="text-lg text-gray-300">{procesadorSeleccionado.nucleos} / {procesadorSeleccionado.hilos}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out transform hover:border-[var(--morado-neon)]">
@@ -283,9 +277,8 @@ export default function Configurador({ procesadores, graficas }: { procesadores:
                         </div>
                     }
                 />
-
                 <DragOverlay>
-                    {procesadorActivo ? <ItemArrastrable id={procesadorActivo.id} nombre={procesadorActivo.nombre} icono={<Cpu />} /> : null}
+                    {procesadorActivo ? <ItemArrastrable id={procesadorActivo.id} nombre={procesadorActivo.nombre} icono={<Cpu />} iconoSecundario={<Move />} /> : null}
                 </DragOverlay>
             </DndContext>
         </>
