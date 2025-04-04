@@ -151,7 +151,17 @@ export interface ItemArrastrableProps {
 
 export interface EstadoMontaje {
     procesadorGuardado?: Procesador | null;
-    guardarProcesadorSeleccionado?: (procesador: Procesador | null) => void;
+    guardarProcesador?: (procesador: Procesador | null) => void;
     placaBaseGuardada?: PlacaBase | null;
-    guardarPlacaBaseSeelccionada?: (placaBase: PlacaBase | null) => void;
+    guardarPlacaBase?: (placaBase: PlacaBase | null) => void;
+    memoriaRamGuardada?: MemoriaRam | null;
+    guardarMemoriaRam?: (memoriaRam: MemoriaRam | null) => void;
+    discoDuroGuardado?: DiscoDuro | null;
+    guardarDiscoDuro?: (discoDuro: DiscoDuro | null) => void;
+    tarjetaGraficaGuardada?: TarjetaGrafica | null;
+    guardarTarjetaGrafica?: (tarjetaGrafica: TarjetaGrafica | null) => void;
+    fuenteAlimentacionGuardada?: FuenteAlimentacion | null;
+    guardarFuenteAlimentacion?: (fuenteAlimentacion: FuenteAlimentacion | null) => void;
+    torreGuardada?: Torre | null;
+    guardarTorre?: (fuenteAlimentacion: Torre | null) => void;
 }

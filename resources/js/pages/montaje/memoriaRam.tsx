@@ -4,37 +4,40 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import MontajeLayout from '@/layouts/app/montaje-layout';
-import { PlacaBase } from '@/types';
+import { MemoriaRam, PlacaBase } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, ArrowLeft, CircuitBoard, Cpu, Euro, Factory, Gauge, Minus, Move, Plus, Search, Wrench } from 'lucide-react';
+import { ArrowBigDown, ArrowLeft, MemoryStick, Cpu, Euro, Factory, Gauge, Minus, Move, Plus, Search, Wrench, Microchip, Box } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }) {
-    const { procesadorGuardado, guardarPlacaBase } = useProgresoMontaje((state) => state);
+export default function Configurador({ placasBase, memoriasRam }: { placasBase: PlacaBase[]; memoriasRam: MemoriaRam[] }) {
+    const { procesadorGuardado, guardarMemoriaRam } = useProgresoMontaje((state) => state);
 
-    const [placaBaseSeleccionada, setPlacaBaseSeleccionada] = useState<PlacaBase | null>(null);
-    const [placaBaseActiva, setPlacaBaseActiva] = useState<PlacaBase | null>(null);
+    const [memoriaSeleccionada, setMemoriaSeleccionada] = useState<MemoriaRam | null>(null);
+
+    const [memoriaActiva, setMemoriaActiva] = useState<MemoriaRam | null>(null);
 
     const [isDragging, setIsDragging] = useState(false);
 
-    const [asRockDesplegado, setAsrockDesplegado] = useState(false);
-    const [asusDesplegado, setAsusDesplegado] = useState(false);
-    const [msiDesplegado, setMsiDesplegado] = useState(false);
-    const [gigabyteDesplegado, setGigabyteDesplegado] = useState(false);
+    const [corsairDesplegado, setCorsairDesplegado] = useState(false);
+    const [crucialDesplegado, setCrucialDesplegado] = useState(false);
+    const [kingstonDesplegado, setKingstonDesplegado] = useState(false);
+    const [adataDesplegado, setAdataDesplegado] = useState(false);
+    const [gSkillDesplegado, setGSkillDesplegado] = useState(false);
 
     const [busquedaGeneral, setBusquedaGeneral] = useState('');
 
-    const [placasFiltradas, setPlacasFiltradas] = useState<PlacaBase[]>();
+    const [memoriasFiltradas, setMemoriasFiltradas] = useState<MemoriaRam[]>();
 
-    const placasBaseAsrock = placasFiltradas?.filter((p) => p.marca === 'ASRock' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const placasBaseAsus = placasFiltradas?.filter((p) => p.marca === 'ASUS' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const placasBaseMsi = placasFiltradas?.filter((p) => p.marca === 'MSI' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const placasBaseGigabyte = placasFiltradas?.filter(
-        (p) => p.marca === 'Gigabyte' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()),
+    const memoriasCorsair = memoriasFiltradas?.filter((p) => p.marca === 'Corsair' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const memoriasCrucial = memoriasFiltradas?.filter((p) => p.marca === 'Crucial' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const memoriasKingston = memoriasFiltradas?.filter(
+        (p) => p.marca === 'Kingston' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()),
     );
+    const memoriasAdata = memoriasFiltradas?.filter((p) => p.marca === 'ADATA' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const memoriasGskill = memoriasFiltradas?.filter((p) => p.marca === 'G.SKILL' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
 
     useEffect(() => {
         toast.custom(
@@ -44,7 +47,7 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                         <Wrench size={30} className="text-[var(--rojo-neon)]" />
                     </span>
                     <div className="flex w-full justify-center text-center text-xl">
-                        <p className="font-['exo_2']">Arrastra tu placa base</p>
+                        <p className="font-['exo_2']">Arrastra tu memoria RAM</p>
                     </div>
                 </div>
             ),
@@ -52,9 +55,17 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
         );
 
         const comprobarCompatibilidad = () => {
-            const placasCompatibles = placasBase.filter((placa) => procesadorGuardado?.socket === placa.socket);
+            const memoriasCompatibles = memoriasRam.filter((memoria) => {
+                const socket = procesadorGuardado?.socket;
+                const tipoMemoria = memoria.tipo;
 
-            setPlacasFiltradas(placasCompatibles);
+                const socketsDDR5 = ['AM5', 'LGA1700'];
+                const socketsDDR4 = ['AM4', 'LGA1200'];
+
+                return (socketsDDR5.includes(socket!) && tipoMemoria === 'DDR5') || (socketsDDR4.includes(socket!) && tipoMemoria === 'DDR4');
+            });
+
+            setMemoriasFiltradas(memoriasCompatibles);
         };
 
         comprobarCompatibilidad();
@@ -64,38 +75,40 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
         const { active, over } = event;
 
         if (over?.id === 'dropzone') {
-            const item = placasBase.find((p) => p.id === active.id);
+            const item = memoriasRam.find((p) => p.id === active.id);
             if (item) {
-                setPlacaBaseSeleccionada(item);
+                setMemoriaSeleccionada(item);
             }
         }
-        setPlacaBaseActiva(null);
+        setMemoriaActiva(null);
         setIsDragging(false);
     };
 
     const handleDragStart = (event: any) => {
-        const item = placasBase.find((p) => p.id === event.active.id);
-        setPlacaBaseActiva(item || null);
+        const item = memoriasRam.find((p) => p.id === event.active.id);
+        setMemoriaActiva(item || null);
         setIsDragging(true);
     };
 
     const desplegar = () => {
-        setAsrockDesplegado(true);
-        setAsusDesplegado(true);
-        setMsiDesplegado(true);
-        setGigabyteDesplegado(true);
+        setAdataDesplegado(true);
+        setKingstonDesplegado(true);
+        setCorsairDesplegado(true);
+        setCrucialDesplegado(true);
+        setGSkillDesplegado(true);
     };
 
     const replegar = () => {
-        setAsrockDesplegado(false);
-        setAsusDesplegado(false);
-        setMsiDesplegado(false);
-        setGigabyteDesplegado(false);
+        setAdataDesplegado(false);
+        setKingstonDesplegado(false);
+        setCorsairDesplegado(false);
+        setCrucialDesplegado(false);
+        setGSkillDesplegado(false);
     };
 
     return (
         <>
-            <Head title="montaje - placa base" />
+            <Head title="montaje - memoria RAM" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
                 {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
@@ -106,7 +119,7 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                             <div className="sticky top-0 mt-2 w-full">
                                 <input
                                     type="text"
-                                    placeholder="Buscar placa base..."
+                                    placeholder="Buscar memoria RAM..."
                                     value={busquedaGeneral}
                                     onChange={(e) => {
                                         const valor = e.target.value;
@@ -120,43 +133,43 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                                 <Search className="absolute top-3 left-3 text-gray-400" size={18} />
                             </div>
 
-                            {/* 💀 ASROCK */}
-                            {placasBaseAsrock && (
-                                <Collapsible open={asRockDesplegado} onOpenChange={setAsrockDesplegado} className="w-full space-y-2">
+                            {/* 💀 CORSAIR */}
+                            {memoriasCorsair && (
+                                <Collapsible open={corsairDesplegado} onOpenChange={setCorsairDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            ASRock
+                                            Corsair
                                         </p>
                                         <CollapsibleTrigger asChild>
                                             <Button variant="ghost" size="sm">
-                                                {asRockDesplegado ? <Minus /> : <Plus />}
+                                                {corsairDesplegado ? <Minus /> : <Plus />}
                                             </Button>
                                         </CollapsibleTrigger>
                                     </div>
-                                    {!asRockDesplegado && (
+                                    {!corsairDesplegado && (
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseAsrock[0].id}
-                                                        nombre={placasBaseAsrock[0].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={memoriasCorsair[0].id}
+                                                        nombre={memoriasCorsair[0].nombre}
+                                                        icono={<MemoryStick />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseAsrock[1].id}
-                                                        nombre={placasBaseAsrock[1].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={memoriasCorsair[1].id}
+                                                        nombre={memoriasCorsair[1].nombre}
+                                                        icono={<MemoryStick />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseAsrock[2].id}
-                                                        nombre={placasBaseAsrock[2].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={memoriasCorsair[2].id}
+                                                        nombre={memoriasCorsair[2].nombre}
+                                                        icono={<MemoryStick />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -164,10 +177,10 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                                         </>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {placasBaseAsrock.map((placa) => (
-                                            <div key={placa.id} className="w-full">
+                                        {memoriasCorsair.map((memoria) => (
+                                            <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -176,55 +189,54 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                                 </Collapsible>
                             )}
 
-                            {/* 💀 ASUS */}
-                            {placasBaseAsus && (
-                                <Collapsible open={asusDesplegado} onOpenChange={setAsusDesplegado} className="w-full space-y-2">
+                            {/* 💀 CRUCIAL */}
+                            {memoriasCrucial && (
+                                <Collapsible open={crucialDesplegado} onOpenChange={setCrucialDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            Asus
+                                            Crucial
                                         </p>
                                         <CollapsibleTrigger asChild>
                                             <Button variant="ghost" size="sm">
-                                                {asusDesplegado ? <Minus /> : <Plus />}
+                                                {crucialDesplegado ? <Minus /> : <Plus />}
                                             </Button>
                                         </CollapsibleTrigger>
                                     </div>
-                                    {!asusDesplegado && (
+                                    {!crucialDesplegado && (
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseAsus[0].id}
-                                                        nombre={placasBaseAsus[0].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={memoriasCrucial[0].id}
+                                                        nombre={memoriasCrucial[0].nombre}
+                                                        icono={<MemoryStick />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseAsus[1].id}
-                                                        nombre={placasBaseAsus[1].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={memoriasCrucial[1].id}
+                                                        nombre={memoriasCrucial[1].nombre}
+                                                        icono={<MemoryStick />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseAsus[2].id}
-                                                        nombre={placasBaseAsus[2].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={memoriasCrucial[2].id}
+                                                        nombre={memoriasCrucial[2].nombre}
+                                                        icono={<MemoryStick />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
                                         </>
                                     )}
-
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {placasBaseAsus.map((placa) => (
-                                            <div key={placa.id} className="w-full">
+                                        {memoriasCrucial.map((memoria) => (
+                                            <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -233,55 +245,54 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                                 </Collapsible>
                             )}
 
-                            {/* 💀 MSI */}
-                            {placasBaseMsi && (
-                                <Collapsible open={msiDesplegado} onOpenChange={setMsiDesplegado} className="w-full space-y-2">
+                            {/* 💀 KINGSTON */}
+                            {memoriasKingston && (
+                                <Collapsible open={kingstonDesplegado} onOpenChange={setKingstonDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            MSI
+                                            Kingston
                                         </p>
                                         <CollapsibleTrigger asChild>
                                             <Button variant="ghost" size="sm">
-                                                {msiDesplegado ? <Minus /> : <Plus />}
+                                                {kingstonDesplegado ? <Minus /> : <Plus />}
                                             </Button>
                                         </CollapsibleTrigger>
                                     </div>
-                                    {!msiDesplegado && (
+                                    {!kingstonDesplegado && (
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseMsi[0].id}
-                                                        nombre={placasBaseMsi[0].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={memoriasKingston[0].id}
+                                                        nombre={memoriasKingston[0].nombre}
+                                                        icono={<MemoryStick />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseMsi[1].id}
-                                                        nombre={placasBaseMsi[1].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={memoriasKingston[1].id}
+                                                        nombre={memoriasKingston[1].nombre}
+                                                        icono={<MemoryStick />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseMsi[2].id}
-                                                        nombre={placasBaseMsi[2].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={memoriasKingston[2].id}
+                                                        nombre={memoriasKingston[2].nombre}
+                                                        icono={<MemoryStick />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
                                         </>
                                     )}
-
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {placasBaseMsi.map((placa) => (
-                                            <div key={placa.id} className="w-full">
+                                        {memoriasKingston.map((memoria) => (
+                                            <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -290,55 +301,94 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                                 </Collapsible>
                             )}
 
-                            {/* 💀 Gigabyte */}
-                            {placasBaseGigabyte && (
-                                <Collapsible open={gigabyteDesplegado} onOpenChange={setGigabyteDesplegado} className="w-full space-y-2">
+                            {/* 💀 G SKILL */}
+                            {memoriasGskill && (
+                                <Collapsible open={gSkillDesplegado} onOpenChange={setGSkillDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            Gigabyte
+                                            G SKILL
                                         </p>
                                         <CollapsibleTrigger asChild>
                                             <Button variant="ghost" size="sm">
-                                                {gigabyteDesplegado ? <Minus /> : <Plus />}
+                                                {gSkillDesplegado ? <Minus /> : <Plus />}
                                             </Button>
                                         </CollapsibleTrigger>
                                     </div>
-                                    {!gigabyteDesplegado && (
+                                    {!gSkillDesplegado && (
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseGigabyte[0].id}
-                                                        nombre={placasBaseGigabyte[0].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={memoriasGskill[0].id}
+                                                        nombre={memoriasGskill[0].nombre}
+                                                        icono={<MemoryStick />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseGigabyte[1].id}
-                                                        nombre={placasBaseGigabyte[1].nombre}
-                                                        icono={<CircuitBoard />}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseGigabyte[2].id}
-                                                        nombre={placasBaseGigabyte[2].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={memoriasGskill[1].id}
+                                                        nombre={memoriasGskill[1].nombre}
+                                                        icono={<MemoryStick />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
                                         </>
                                     )}
-
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {placasBaseGigabyte.map((placa) => (
-                                            <div key={placa.id} className="w-full">
+                                        {memoriasGskill.map((memoria) => (
+                                            <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                            </div>
+                                        ))}
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            )}
+
+                            {/* 💀 ADATA */}
+                            {memoriasAdata && (
+                                <Collapsible open={adataDesplegado} onOpenChange={setAdataDesplegado} className="w-full space-y-2">
+                                    <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
+                                        <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
+                                            ADATA
+                                        </p>
+                                        <CollapsibleTrigger asChild>
+                                            <Button variant="ghost" size="sm">
+                                                {adataDesplegado ? <Minus /> : <Plus />}
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                    </div>
+                                    {!adataDesplegado && (
+                                        <>
+                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={memoriasAdata[0].id}
+                                                        nombre={memoriasAdata[0].nombre}
+                                                        icono={<MemoryStick />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={memoriasAdata[1].id}
+                                                        nombre={memoriasAdata[1].nombre}
+                                                        icono={<MemoryStick />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                            </div>
+                                        </>
+                                    )}
+                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        {memoriasAdata.map((memoria) => (
+                                            <div key={memoria.id} className="w-full">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -352,77 +402,83 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                         <div className="flex h-full flex-col items-center gap-3 bg-black/20 text-white">
                             <div className="absolute left-[18%] flex items-center text-2xl">
                                 <ArrowLeft size={30} />
-                                <Link href={route('montaje.procesador')}>
-                                    <h1 className='font-["exo_2"] underline'>VOLVER AL PROCESADOR</h1>
+                                <Link href={route('montaje.placaBase')}>
+                                    <h1 className='font-["exo_2"] underline'>VOLVER A LA PLACA BASE</h1>
                                 </Link>
                             </div>
-                            {placaBaseActiva ? (
+                            {memoriaActiva ? (
                                 <div className="fade-down z-10 flex flex-col items-center gap-2 text-white">
                                     <h1 className="rerelative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
-                                        Arrastra tu placa base aquí
+                                        Arrastra tu memoria RAM aquí
                                     </h1>
                                     <ArrowBigDown className="h-32 w-32 text-[var(--morado-neon)]" />
                                 </div>
                             ) : (
                                 <h1 className="relative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
-                                    Placa base
+                                    Memoria RAM
                                 </h1>
                             )}
 
                             {/* Zona de drop con efecto cyberpunk */}
                             <div
-                                className={`relative z-20 h-[64px] w-[50%] border-2 ${placaBaseActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
+                                className={`relative z-20 h-[64px] w-[50%] border-2 ${memoriaActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
                                 <AreaSoltarItem>
-                                    {!placaBaseActiva && (
+                                    {!memoriaActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                            {placaBaseSeleccionada?.nombre}
+                                            {memoriaSeleccionada?.nombre}
                                         </h1>
                                     )}
                                 </AreaSoltarItem>
                             </div>
 
                             {/* Info del procesador con borde neón */}
-                            {placaBaseSeleccionada && (
+                            {memoriaSeleccionada && (
                                 <>
-                                    <div
-                                        className="grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3 fade-left"
-                                        key={placaBaseSeleccionada.id}
-                                    >
+                                    <div className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3" key={memoriaSeleccionada.id}>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Factory size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Marca
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{placaBaseSeleccionada.marca}</p>
+                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.marca}</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
-                                            <Cpu size={48} className="text-[var(--rojo-neon)]" />
+                                            <Microchip size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    Socket
+                                                    Tamaño
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{placaBaseSeleccionada.socket}</p>
+                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.almacenamiento}</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
-                                            <CircuitBoard size={48} className="text-[var(--rojo-neon)]" />
+                                            <MemoryStick size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    Factor forma
+                                                    Zócalo
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{placaBaseSeleccionada.factor_forma}</p>
+                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.tipo}</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Gauge size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    consumo
+                                                    Consumo
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{placaBaseSeleccionada.consumo}W</p>
+                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.consumo}W</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                            <Box size={48} className="text-[var(--rojo-neon)]" />
+                                            <div>
+                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                                    Pack
+                                                </h2>
+                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.pack} ud/s</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
@@ -431,18 +487,18 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                                                 <h2 className="mb-2 bg-gradient-to-r from-green-300 via-green-400 to-green-600 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Precio
                                                 </h2>
-                                                <p className="text-lg text-green-300">{placaBaseSeleccionada.precio}€</p>
+                                                <p className="text-lg text-green-300">{memoriaSeleccionada.precio}€</p>
                                             </div>
                                         </div>
                                     </div>
                                     <Button
                                         variant={'outline'}
-                                        className="border-[var(--morado-neon)] font-['exo_2'] fade-in"
+                                        className="fade-in border-[var(--morado-neon)] font-['exo_2']"
                                         onClick={() => {
-                                            guardarPlacaBase!(placaBaseSeleccionada);
+                                            guardarMemoriaRam!(memoriaSeleccionada);
                                         }}
                                     >
-                                        <Link href={route('montaje.memoriaRam')}>Siguiente</Link>
+                                        <Link href={route('home')}>Siguiente</Link>
                                     </Button>
                                 </>
                             )}
@@ -450,13 +506,8 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
                     }
                 />
                 <DragOverlay>
-                    {placaBaseActiva ? (
-                        <ItemArrastrable
-                            id={placaBaseActiva.id}
-                            nombre={placaBaseActiva.nombre}
-                            icono={<CircuitBoard />}
-                            iconoSecundario={<Move />}
-                        />
+                    {memoriaActiva ? (
+                        <ItemArrastrable id={memoriaActiva.id} nombre={memoriaActiva.nombre} icono={<MemoryStick />} iconoSecundario={<Move />} />
                     ) : null}
                 </DragOverlay>
             </DndContext>

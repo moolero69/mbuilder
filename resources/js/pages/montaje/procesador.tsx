@@ -13,7 +13,7 @@ import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import MontajeLayout from '@/layouts/app/montaje-layout';
 
 export default function Configurador({ procesadores }: { procesadores: Procesador[] }) {
-    const { guardarProcesadorSeleccionado } = useProgresoMontaje((state) => state);
+    const { guardarProcesador } = useProgresoMontaje((state) => state);
 
     const [procesadorSeleccionado, setProcesadorSeleccionado] = useState<Procesador | null>(null);
     const [procesadorActivo, setProcesadorActivo] = useState<Procesador | null>(null);
@@ -183,7 +183,7 @@ export default function Configurador({ procesadores }: { procesadores: Procesado
                     main={
                         <div className="flex h-full flex-col items-center gap-3 bg-black/10 text-white">
                             {procesadorActivo ? (
-                                <div className="z-10 flex flex-col items-center gap-2 text-white">
+                                <div className="z-10 flex flex-col items-center gap-2 text-white fade-down">
                                     <h1 className="rerelative z-20 text-center font-['orbitron'] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 font-extrabold text-6xl tracking-wider bg-gray-900 p-4">
                                         Arrastra tu procesador aquí
                                     </h1>
@@ -211,7 +211,7 @@ export default function Configurador({ procesadores }: { procesadores: Procesado
                             {/* Info del procesador con borde neón */}
                             {procesadorSeleccionado && (
                                 <>
-                                    <div className="grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3 justify-center">
+                                    <div className="grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3 justify-center fade-left" key={procesadorSeleccionado.id}>
                                         <div className="flex items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out transform hover:border-[var(--morado-neon)]">
                                             <Factory size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
@@ -269,7 +269,8 @@ export default function Configurador({ procesadores }: { procesadores: Procesado
                                             </div>
                                         </div>
                                     </div>
-                                    <Button variant={'outline'} className="border-[var(--morado-neon)] font-['exo_2']" onClick={() => { guardarProcesadorSeleccionado!(procesadorSeleccionado) }}>
+                                    <Button variant={'outline'} className="border-[var(--morado-neon)] font-['exo_2'] fade-in" 
+                                    onClick={() => { guardarProcesador!(procesadorSeleccionado) }}>
                                         <Link href={route('montaje.placaBase')}>Siguiente</Link>
                                     </Button>
                                 </>
