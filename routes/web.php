@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Montaje\MonatajeDiscoDuroController;
 use App\Http\Controllers\Montaje\MonatajeRamController;
 use App\Http\Controllers\Montaje\MontajePlacaBaseController;
 use App\Http\Controllers\Montaje\MontajeProcesadorController;
@@ -19,6 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('montaje/procesador', [MontajeProcesadorController::class, 'index'])->name('montaje.procesador');
     Route::get('montaje/placaBase', [MontajePlacaBaseController::class, 'index'])->name('montaje.placaBase');
     Route::get('montaje/memoriaRam', [MonatajeRamController::class, 'index'])->name('montaje.memoriaRam');
+    Route::get('montaje/discoDuro', [MonatajeDiscoDuroController::class, 'index'])->name('montaje.discoDuro');
     Route::get('pruebas', PruebasController::class)->name('pruebas');
 
 });

@@ -28,6 +28,7 @@ class ImportarDiscosDuros extends Command
         foreach ($csv as $fila) {
             DiscoDuro::create([
                 'nombre' => $fila['Nombre'],
+                'marca' => $fila['Marca'],
                 'tecnologia' => $fila['Tecnologia'],
                 'almacenamiento' => $fila['Almacenamiento'],
                 'conexion' => $fila['Conexion'],

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('discos_duros', function (Blueprint $table) {
             $table->string('id', 7)->primary();
             $table->string('nombre');
+            $table->string('marca');
             $table->string('tecnologia');
             $table->string('almacenamiento');
             $table->string('conexion');

@@ -14,6 +14,7 @@ class DiscoDuro extends Model
     protected $fillable = [
         "id",
         "nombre",
+        "marca",
         "tecnologia",
         "almacenamiento",
         "conexion",

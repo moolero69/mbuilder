@@ -371,7 +371,7 @@ export default function Configurador({ placasBase }: { placasBase: PlacaBase[] }
 
                             {/* Zona de drop con efecto cyberpunk */}
                             <div
-                                className={`relative z-20 h-[64px] w-[50%] border-2 ${placaBaseActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
+                                className={`relative z-20 h-[80px] w-[50%] border-2 ${placaBaseActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
                                 <AreaSoltarItem>
                                     {!placaBaseActiva && (

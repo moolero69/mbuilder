@@ -24,3 +24,4 @@
 # /.zed
 /vendor/bin/
 vite.config.ts
+./.github/workflows

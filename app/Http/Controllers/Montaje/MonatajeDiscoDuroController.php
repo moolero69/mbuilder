@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Montaje;
 
 use App\Http\Controllers\Controller;
+use App\Models\DiscoDuro;
 use App\Models\MemoriaRam;
 use Illuminate\Http\Request;
-use App\Models\PlacaBase;
 use Inertia\Inertia;
 
-class MonatajeRamController extends Controller
+class MonatajeDiscoDuroController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,10 @@ class MonatajeRamController extends Controller
     public function index()
     {
         $memoriasRam = MemoriaRam::all();
-        return Inertia::render('montaje/memoriaRam', [
-            'memoriasRam' => $memoriasRam
+        $discosDuros = DiscoDuro::all();
+        return Inertia::render('montaje/discoDuro', [
+            'memoriasRam' => $memoriasRam,
+            'discosDuros' => $discosDuros
         ]);
     }
 

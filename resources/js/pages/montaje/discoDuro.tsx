@@ -4,40 +4,40 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import MontajeLayout from '@/layouts/app/montaje-layout';
-import { MemoriaRam, PlacaBase } from '@/types';
+import { DiscoDuro, MemoriaRam } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, ArrowLeft, MemoryStick, Cpu, Euro, Factory, Gauge, Minus, Move, Plus, Search, Wrench, Microchip, Box } from 'lucide-react';
+import { ArrowBigDown, ArrowLeft, Box, CircuitBoard, Euro, Factory, Gauge, Microchip, Minus, Move, Plus, Search, Wrench } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[] }) {
-    const { procesadorGuardado, guardarMemoriaRam } = useProgresoMontaje((state) => state);
+export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam: MemoriaRam[]; discosDuros: DiscoDuro[] }) {
+    const { procesadorGuardado, guardarMemoriaRam, memoriaRamGuardada, guardarDiscoDuro } = useProgresoMontaje((state) => state);
 
-    const [memoriaSeleccionada, setMemoriaSeleccionada] = useState<MemoriaRam | null>(null);
+    const [discoSeleccionado, setDiscoSeleccionado] = useState<DiscoDuro | null>(null);
 
-    const [memoriaActiva, setMemoriaActiva] = useState<MemoriaRam | null>(null);
+    const [discoActivo, setDiscoActivo] = useState<DiscoDuro | null>(null);
 
     const [isDragging, setIsDragging] = useState(false);
 
-    const [corsairDesplegado, setCorsairDesplegado] = useState(false);
     const [crucialDesplegado, setCrucialDesplegado] = useState(false);
     const [kingstonDesplegado, setKingstonDesplegado] = useState(false);
-    const [adataDesplegado, setAdataDesplegado] = useState(false);
-    const [gSkillDesplegado, setGSkillDesplegado] = useState(false);
+    const [samsungDesplegado, setSamsungDesplegado] = useState(false);
+    const [seagateDesplegado, setSeagateDesplegado] = useState(false);
+    const [toshibaDesplegado, setToshibaDesplegado] = useState(false);
+    const [wdDesplegado, setWdDesplegado] = useState(false);
 
     const [busquedaGeneral, setBusquedaGeneral] = useState('');
 
-    const [memoriasFiltradas, setMemoriasFiltradas] = useState<MemoriaRam[]>();
+    const [discosFiltrados, setDiscosFiltrados] = useState<DiscoDuro[]>();
 
-    const memoriasCorsair = memoriasFiltradas?.filter((p) => p.marca === 'Corsair' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const memoriasCrucial = memoriasFiltradas?.filter((p) => p.marca === 'Crucial' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const memoriasKingston = memoriasFiltradas?.filter(
-        (p) => p.marca === 'Kingston' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()),
-    );
-    const memoriasAdata = memoriasFiltradas?.filter((p) => p.marca === 'ADATA' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const memoriasGskill = memoriasFiltradas?.filter((p) => p.marca === 'G.SKILL' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const discosCrucial = discosFiltrados?.filter((d) => d.marca === 'Crucial' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const discosKingston = discosFiltrados?.filter((p) => p.marca === 'Kingston' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const discosSamsung = discosFiltrados?.filter((d) => d.marca === 'Samsung' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const discosSeagate = discosFiltrados?.filter((d) => d.marca === 'Seagate' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const discosToshiba = discosFiltrados?.filter((d) => d.marca === 'Toshiba' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const discosWd = discosFiltrados?.filter((d) => d.marca === 'WD' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
 
     useEffect(() => {
         toast.custom(
@@ -47,7 +47,7 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                         <Wrench size={30} className="text-[var(--rojo-neon)]" />
                     </span>
                     <div className="flex w-full justify-center text-center text-xl">
-                        <p className="font-['exo_2']">Arrastra tu memoria RAM</p>
+                        <p className="font-['exo_2']">Arrastra tu disco duro</p>
                     </div>
                 </div>
             ),
@@ -55,17 +55,19 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
         );
 
         const comprobarCompatibilidad = () => {
-            const memoriasCompatibles = memoriasRam.filter((memoria) => {
-                const socket = procesadorGuardado?.socket;
-                const tipoMemoria = memoria.tipo;
+            const conexionesPorSocket: Record<string, string[]> = {
+                AM5: ['M.2', 'SATA'],
+                LGA1700: ['M.2', 'SATA'],
+                AM4: ['SATA'],
+                LGA1200: ['SATA'],
+            };
 
-                const socketsDDR5 = ['AM5', 'LGA1700'];
-                const socketsDDR4 = ['AM4', 'LGA1200'];
+            const socket = procesadorGuardado?.socket || '';
+            const conexionesValidas = conexionesPorSocket[socket] || [];
 
-                return (socketsDDR5.includes(socket!) && tipoMemoria === 'DDR5') || (socketsDDR4.includes(socket!) && tipoMemoria === 'DDR4');
-            });
+            const discosCompatibles = discosDuros.filter((disco) => conexionesValidas.includes(disco.conexion));
 
-            setMemoriasFiltradas(memoriasCompatibles);
+            setDiscosFiltrados(discosCompatibles);
         };
 
         comprobarCompatibilidad();
@@ -75,40 +77,41 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
         const { active, over } = event;
 
         if (over?.id === 'dropzone') {
-            const item = memoriasRam.find((p) => p.id === active.id);
+            const item = discosDuros.find((p) => p.id === active.id);
             if (item) {
-                setMemoriaSeleccionada(item);
+                setDiscoSeleccionado(item);
             }
         }
-        setMemoriaActiva(null);
+        setDiscoActivo(null);
         setIsDragging(false);
     };
 
     const handleDragStart = (event: any) => {
-        const item = memoriasRam.find((p) => p.id === event.active.id);
-        setMemoriaActiva(item || null);
+        const item = discosDuros.find((p) => p.id === event.active.id);
+        setDiscoActivo(item || null);
         setIsDragging(true);
     };
 
     const desplegar = () => {
-        setAdataDesplegado(true);
         setKingstonDesplegado(true);
-        setCorsairDesplegado(true);
         setCrucialDesplegado(true);
-        setGSkillDesplegado(true);
+        setSamsungDesplegado(true);
+        setSeagateDesplegado(true);
+        setToshibaDesplegado(true);
+        setWdDesplegado(true);
     };
 
     const replegar = () => {
-        setAdataDesplegado(false);
         setKingstonDesplegado(false);
-        setCorsairDesplegado(false);
         setCrucialDesplegado(false);
-        setGSkillDesplegado(false);
+        setSamsungDesplegado(false);
+        setSeagateDesplegado(false);
+        setToshibaDesplegado(false);
+        setWdDesplegado(false);
     };
-
     return (
         <>
-            <Head title="montaje - memoria RAM" />
+            <Head title="montaje - disco duro" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
                 {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
@@ -119,7 +122,7 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                             <div className="sticky top-0 mt-2 w-full">
                                 <input
                                     type="text"
-                                    placeholder="Buscar memoria RAM..."
+                                    placeholder="Buscar disco duro..."
                                     value={busquedaGeneral}
                                     onChange={(e) => {
                                         const valor = e.target.value;
@@ -133,64 +136,8 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                 <Search className="absolute top-3 left-3 text-gray-400" size={18} />
                             </div>
 
-                            {/* 💀 CORSAIR */}
-                            {memoriasCorsair && (
-                                <Collapsible open={corsairDesplegado} onOpenChange={setCorsairDesplegado} className="w-full space-y-2">
-                                    <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
-                                        <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            Corsair
-                                        </p>
-                                        <CollapsibleTrigger asChild>
-                                            <Button variant="ghost" size="sm">
-                                                {corsairDesplegado ? <Minus /> : <Plus />}
-                                            </Button>
-                                        </CollapsibleTrigger>
-                                    </div>
-                                    {!corsairDesplegado && (
-                                        <>
-                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={memoriasCorsair[0].id}
-                                                        nombre={memoriasCorsair[0].nombre}
-                                                        icono={<MemoryStick />}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={memoriasCorsair[1].id}
-                                                        nombre={memoriasCorsair[1].nombre}
-                                                        icono={<MemoryStick />}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={memoriasCorsair[2].id}
-                                                        nombre={memoriasCorsair[2].nombre}
-                                                        icono={<MemoryStick />}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                            </div>
-                                        </>
-                                    )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {memoriasCorsair.map((memoria) => (
-                                            <div key={memoria.id} className="w-full">
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                            </div>
-                                        ))}
-                                    </CollapsibleContent>
-                                </Collapsible>
-                            )}
-
                             {/* 💀 CRUCIAL */}
-                            {memoriasCrucial && (
+                            {discosCrucial && (
                                 <Collapsible open={crucialDesplegado} onOpenChange={setCrucialDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
@@ -207,25 +154,17 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={memoriasCrucial[0].id}
-                                                        nombre={memoriasCrucial[0].nombre}
-                                                        icono={<MemoryStick />}
+                                                        id={discosCrucial[0].id}
+                                                        nombre={discosCrucial[0].nombre}
+                                                        icono={<Box />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={memoriasCrucial[1].id}
-                                                        nombre={memoriasCrucial[1].nombre}
-                                                        icono={<MemoryStick />}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={memoriasCrucial[2].id}
-                                                        nombre={memoriasCrucial[2].nombre}
-                                                        icono={<MemoryStick />}
+                                                        id={discosCrucial[1].id}
+                                                        nombre={discosCrucial[1].nombre}
+                                                        icono={<Box />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -233,10 +172,10 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                         </>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {memoriasCrucial.map((memoria) => (
-                                            <div key={memoria.id} className="w-full">
+                                        {discosCrucial.map((disco) => (
+                                            <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
+                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -246,7 +185,7 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                             )}
 
                             {/* 💀 KINGSTON */}
-                            {memoriasKingston && (
+                            {discosKingston && (
                                 <Collapsible open={kingstonDesplegado} onOpenChange={setKingstonDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
@@ -263,25 +202,17 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={memoriasKingston[0].id}
-                                                        nombre={memoriasKingston[0].nombre}
-                                                        icono={<MemoryStick />}
+                                                        id={discosKingston[0].id}
+                                                        nombre={discosKingston[0].nombre}
+                                                        icono={<Box />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={memoriasKingston[1].id}
-                                                        nombre={memoriasKingston[1].nombre}
-                                                        icono={<MemoryStick />}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={memoriasKingston[2].id}
-                                                        nombre={memoriasKingston[2].nombre}
-                                                        icono={<MemoryStick />}
+                                                        id={discosKingston[1].id}
+                                                        nombre={discosKingston[1].nombre}
+                                                        icono={<Box />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -289,10 +220,10 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                         </>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {memoriasKingston.map((memoria) => (
-                                            <div key={memoria.id} className="w-full">
+                                        {discosKingston.map((disco) => (
+                                            <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
+                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -301,35 +232,35 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                 </Collapsible>
                             )}
 
-                            {/* 💀 G SKILL */}
-                            {memoriasGskill && (
-                                <Collapsible open={gSkillDesplegado} onOpenChange={setGSkillDesplegado} className="w-full space-y-2">
+                            {/* 💀 SAMSUNG */}
+                            {discosSamsung && (
+                                <Collapsible open={samsungDesplegado} onOpenChange={setSamsungDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            G SKILL
+                                            Samsung
                                         </p>
                                         <CollapsibleTrigger asChild>
                                             <Button variant="ghost" size="sm">
-                                                {gSkillDesplegado ? <Minus /> : <Plus />}
+                                                {samsungDesplegado ? <Minus /> : <Plus />}
                                             </Button>
                                         </CollapsibleTrigger>
                                     </div>
-                                    {!gSkillDesplegado && (
+                                    {!samsungDesplegado && (
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={memoriasGskill[0].id}
-                                                        nombre={memoriasGskill[0].nombre}
-                                                        icono={<MemoryStick />}
+                                                        id={discosSamsung[0].id}
+                                                        nombre={discosSamsung[0].nombre}
+                                                        icono={<Box />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={memoriasGskill[1].id}
-                                                        nombre={memoriasGskill[1].nombre}
-                                                        icono={<MemoryStick />}
+                                                        id={discosSamsung[1].id}
+                                                        nombre={discosSamsung[1].nombre}
+                                                        icono={<Box />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -337,10 +268,10 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                         </>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {memoriasGskill.map((memoria) => (
-                                            <div key={memoria.id} className="w-full">
+                                        {discosSamsung.map((disco) => (
+                                            <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
+                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -349,35 +280,35 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                 </Collapsible>
                             )}
 
-                            {/* 💀 ADATA */}
-                            {memoriasAdata && (
-                                <Collapsible open={adataDesplegado} onOpenChange={setAdataDesplegado} className="w-full space-y-2">
+                            {/* 💀 SEAGATE */}
+                            {discosSeagate && (
+                                <Collapsible open={seagateDesplegado} onOpenChange={setSeagateDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            ADATA
+                                            Seagate
                                         </p>
                                         <CollapsibleTrigger asChild>
                                             <Button variant="ghost" size="sm">
-                                                {adataDesplegado ? <Minus /> : <Plus />}
+                                                {seagateDesplegado ? <Minus /> : <Plus />}
                                             </Button>
                                         </CollapsibleTrigger>
                                     </div>
-                                    {!adataDesplegado && (
+                                    {!seagateDesplegado && (
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={memoriasAdata[0].id}
-                                                        nombre={memoriasAdata[0].nombre}
-                                                        icono={<MemoryStick />}
+                                                        id={discosSeagate[0].id}
+                                                        nombre={discosSeagate[0].nombre}
+                                                        icono={<Box />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={memoriasAdata[1].id}
-                                                        nombre={memoriasAdata[1].nombre}
-                                                        icono={<MemoryStick />}
+                                                        id={discosSeagate[1].id}
+                                                        nombre={discosSeagate[1].nombre}
+                                                        icono={<Box />}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -385,10 +316,98 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                         </>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {memoriasAdata.map((memoria) => (
-                                            <div key={memoria.id} className="w-full">
+                                        {discosSeagate.map((disco) => (
+                                            <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
+                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                            </div>
+                                        ))}
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            )}
+
+                            {/* 💀 WD */}
+                            {discosWd && (
+                                <Collapsible open={wdDesplegado} onOpenChange={setWdDesplegado} className="w-full space-y-2">
+                                    <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
+                                        <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
+                                            Western Digital
+                                        </p>
+                                        <CollapsibleTrigger asChild>
+                                            <Button variant="ghost" size="sm">
+                                                {wdDesplegado ? <Minus /> : <Plus />}
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                    </div>
+                                    {!wdDesplegado && (
+                                        <>
+                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={discosWd[0].id} nombre={discosWd[0].nombre} icono={<Box />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={discosWd[1].id} nombre={discosWd[1].nombre} icono={<Box />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                            </div>
+                                        </>
+                                    )}
+                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        {discosWd.map((disco) => (
+                                            <div key={disco.id} className="w-full">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                            </div>
+                                        ))}
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            )}
+
+                            {/* 💀 TOSHIBA */}
+                            {discosToshiba && (
+                                <Collapsible open={toshibaDesplegado} onOpenChange={setToshibaDesplegado} className="w-full space-y-2">
+                                    <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
+                                        <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
+                                            Toshiba
+                                        </p>
+                                        <CollapsibleTrigger asChild>
+                                            <Button variant="ghost" size="sm">
+                                                {toshibaDesplegado ? <Minus /> : <Plus />}
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                    </div>
+                                    {!toshibaDesplegado && (
+                                        <>
+                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={discosToshiba[0].id}
+                                                        nombre={discosToshiba[0].nombre}
+                                                        icono={<Box />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={discosToshiba[1].id}
+                                                        nombre={discosToshiba[1].nombre}
+                                                        icono={<Box />}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                            </div>
+                                        </>
+                                    )}
+                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        {discosToshiba.map((disco) => (
+                                            <div key={disco.id} className="w-full">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -402,47 +421,47 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                         <div className="flex h-full flex-col items-center gap-3 bg-black/20 text-white">
                             <div className="absolute left-[18%] flex items-center text-2xl">
                                 <ArrowLeft size={30} />
-                                <Link href={route('montaje.placaBase')}>
-                                    <h1 className='font-["exo_2"] underline'>VOLVER A LA PLACA BASE</h1>
+                                <Link href={route('montaje.memoriaRam')}>
+                                    <h1 className='font-["exo_2"] underline'>VOLVER A LA MEMORIA RAM</h1>
                                 </Link>
                             </div>
-                            {memoriaActiva ? (
+                            {discoActivo ? (
                                 <div className="fade-down z-10 flex flex-col items-center gap-2 text-white">
                                     <h1 className="rerelative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
-                                        Arrastra tu memoria RAM aquí
+                                        Arrastra tu disco duro aquí
                                     </h1>
                                     <ArrowBigDown className="h-32 w-32 text-[var(--morado-neon)]" />
                                 </div>
                             ) : (
                                 <h1 className="relative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
-                                    Memoria RAM
+                                    Disco duro
                                 </h1>
                             )}
 
                             {/* Zona de drop con efecto cyberpunk */}
                             <div
-                                className={`relative z-20 h-[80px] w-[50%] border-2 ${memoriaActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
+                                className={`relative z-20 h-[80px] w-[50%] border-2 ${discoActivo && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
                                 <AreaSoltarItem>
-                                    {!memoriaActiva && (
+                                    {!discoActivo && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                            {memoriaSeleccionada?.nombre}
+                                            {discoSeleccionado?.nombre}
                                         </h1>
                                     )}
                                 </AreaSoltarItem>
                             </div>
 
                             {/* Info del procesador con borde neón */}
-                            {memoriaSeleccionada && (
+                            {discoSeleccionado && (
                                 <>
-                                    <div className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3" key={memoriaSeleccionada.id}>
+                                    <div className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3" key={discoSeleccionado.id}>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Factory size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Marca
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.marca}</p>
+                                                <p className="text-lg text-gray-300">{discoSeleccionado.marca}</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
@@ -451,34 +470,34 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Tamaño
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.almacenamiento}</p>
+                                                <p className="text-lg text-gray-300">{discoSeleccionado.almacenamiento}</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
-                                            <MemoryStick size={48} className="text-[var(--rojo-neon)]" />
+                                            <CircuitBoard size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    Zócalo
+                                                    Tecnología
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.tipo}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
-                                            <Gauge size={48} className="text-[var(--rojo-neon)]" />
-                                            <div>
-                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    Consumo
-                                                </h2>
-                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.consumo}W</p>
+                                                <p className="text-lg text-gray-300">{discoSeleccionado.tecnologia}</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Box size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    Pack
+                                                    Dimensiones
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.pack} ud/s</p>
+                                                <p className="text-lg text-gray-300">{discoSeleccionado.pulgadas}"</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                            <Gauge size={48} className="text-[var(--rojo-neon)]" />
+                                            <div>
+                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                                    Velocidad
+                                                </h2>
+                                                <p className="text-lg text-gray-300">{discoSeleccionado.velocidad} MB/s</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
@@ -487,7 +506,7 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                                 <h2 className="mb-2 bg-gradient-to-r from-green-300 via-green-400 to-green-600 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Precio
                                                 </h2>
-                                                <p className="text-lg text-green-300">{memoriaSeleccionada.precio}€</p>
+                                                <p className="text-lg text-green-300">{discoSeleccionado.precio}€</p>
                                             </div>
                                         </div>
                                     </div>
@@ -495,10 +514,10 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                         variant={'outline'}
                                         className="fade-in border-[var(--morado-neon)] font-['exo_2']"
                                         onClick={() => {
-                                            guardarMemoriaRam!(memoriaSeleccionada);
+                                            guardarDiscoDuro!(discoSeleccionado);
                                         }}
                                     >
-                                        <Link href={route('montaje.discoDuro')}>Siguiente</Link>
+                                        <Link href={route('home')}>Siguiente</Link>
                                     </Button>
                                 </>
                             )}
@@ -506,8 +525,8 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                     }
                 />
                 <DragOverlay>
-                    {memoriaActiva ? (
-                        <ItemArrastrable id={memoriaActiva.id} nombre={memoriaActiva.nombre} icono={<MemoryStick />} iconoSecundario={<Move />} />
+                    {discoActivo ? (
+                        <ItemArrastrable id={discoActivo.id} nombre={discoActivo.nombre} icono={<Box />} iconoSecundario={<Move />} />
                     ) : null}
                 </DragOverlay>
             </DndContext>

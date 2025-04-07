@@ -190,7 +190,7 @@ export default function Configurador({ procesadores }: { procesadores: Procesado
                                     <ArrowBigDown className="h-32 w-32 text-[var(--morado-neon)]" />
                                 </div>
                             ) : (
-                                <h1 className="rerelative z-20 text-center font-['orbitron'] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 font-extrabold text-6xl tracking-wider bg-gray-900 p-4">
+                                <h1 className="relative z-20 text-center font-['orbitron'] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 font-extrabold text-6xl tracking-wider bg-gray-900 p-4">
                                     Procesador
                                 </h1>
                             )}

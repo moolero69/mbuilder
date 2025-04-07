@@ -45,6 +45,7 @@ export interface User {
 export interface DiscoDuro {
     id: string;
     nombre: string;
+    marca: string;
     tecnologia: string;
     almacenamiento: string;
     conexion: string;
