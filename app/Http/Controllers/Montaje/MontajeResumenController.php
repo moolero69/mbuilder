@@ -3,22 +3,17 @@
 namespace App\Http\Controllers\Montaje;
 
 use App\Http\Controllers\Controller;
-use App\Models\MemoriaRam;
 use Illuminate\Http\Request;
-use App\Models\PlacaBase;
 use Inertia\Inertia;
 
-class MonatajeRamController extends Controller
+class MontajeResumenController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $memoriasRam = MemoriaRam::all();
-        return Inertia::render('montaje/memoriaRam', [
-            'memoriasRam' => $memoriasRam
-        ]);
+        return Inertia::render('montaje/resumen');
     }
 
     /**

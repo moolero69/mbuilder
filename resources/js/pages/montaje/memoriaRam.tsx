@@ -8,11 +8,11 @@ import { MemoriaRam, PlacaBase } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, ArrowLeft, MemoryStick, Cpu, Euro, Factory, Gauge, Minus, Move, Plus, Search, Wrench, Microchip, Box } from 'lucide-react';
+import { ArrowBigDown, ArrowLeft, MemoryStick, Cpu, Euro, Factory, Gauge, Minus, Move, Plus, Search, Wrench, Microchip, Box, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[] }) {
+export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: MemoriaRam[] }) {
     const { procesadorGuardado, guardarMemoriaRam } = useProgresoMontaje((state) => state);
 
     const [memoriaSeleccionada, setMemoriaSeleccionada] = useState<MemoriaRam | null>(null);
@@ -464,7 +464,7 @@ export default function Configurador({ memoriasRam }: { memoriasRam: MemoriaRam[
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
-                                            <Gauge size={48} className="text-[var(--rojo-neon)]" />
+                                            <Zap size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Consumo

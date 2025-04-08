@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('marca');
             $table->string('tipo');
             $table->string('serie');
+            $table->string('tipo_memoria');
             $table->integer('memoria');
             $table->integer('passmark');
             $table->integer('consumo');

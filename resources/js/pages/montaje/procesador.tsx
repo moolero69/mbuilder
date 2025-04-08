@@ -6,13 +6,13 @@ import { Procesador, TarjetaGrafica } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, Cpu, Euro, Factory, Flame, Gauge, Minus, Move, Plus, Power, Search, Wrench, X, Zap } from 'lucide-react';
+import { ArrowBigDown, Cpu, Euro, Factory, Flame, Gauge, MemoryStick, Minus, Move, Plus, Power, Search, Wrench, X, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import MontajeLayout from '@/layouts/app/montaje-layout';
 
-export default function Configurador({ procesadores }: { procesadores: Procesador[] }) {
+export default function MontajeProcesador({ procesadores }: { procesadores: Procesador[] }) {
     const { guardarProcesador } = useProgresoMontaje((state) => state);
 
     const [procesadorSeleccionado, setProcesadorSeleccionado] = useState<Procesador | null>(null);
@@ -222,7 +222,7 @@ export default function Configurador({ procesadores }: { procesadores: Procesado
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out transform hover:border-[var(--morado-neon)]">
-                                            <Cpu size={48} className="text-[var(--rojo-neon)]" />
+                                            <MemoryStick size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Socket
@@ -231,7 +231,7 @@ export default function Configurador({ procesadores }: { procesadores: Procesado
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out transform hover:border-[var(--morado-neon)]">
-                                            <Power size={48} className="text-[var(--rojo-neon)]" />
+                                            <Zap size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Consumo
@@ -251,7 +251,7 @@ export default function Configurador({ procesadores }: { procesadores: Procesado
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out transform hover:border-[var(--morado-neon)]">
-                                            <Zap size={48} className="text-[var(--rojo-neon)]" />
+                                            <Cpu size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Núcleos / Hilos

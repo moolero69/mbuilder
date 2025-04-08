@@ -2,7 +2,7 @@ import { ItemArrastrableProps } from "@/types";
 import { useDraggable } from "@dnd-kit/core";
 import { useState } from "react";
 
-export function ItemArrastrable({ id, nombre, icono, iconoSecundario }: ItemArrastrableProps) {
+export function ItemArrastrable({ id, nombre, icono, iconoSecundario, textoSecundario }: ItemArrastrableProps) {
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id });
 
     return (
@@ -15,6 +15,7 @@ export function ItemArrastrable({ id, nombre, icono, iconoSecundario }: ItemArra
         >
             {icono}
             <span>{nombre}</span>
+            <span className="text-green-300 underline">{textoSecundario}</span>
             {iconoSecundario}
 
         </li>

@@ -63,6 +63,7 @@ export interface TarjetaGrafica {
     marca: string;
     tipo: string;
     serie: string;
+    tipo_memoria:string;
     memoria: number;
     passmark: number;
     consumo: number;
@@ -148,6 +149,7 @@ export interface ItemArrastrableProps {
     nombre: string;
     icono: ReactNode;
     iconoSecundario?: ReactNode;
+    textoSecundario?: string;
 }
 
 export interface EstadoMontaje {

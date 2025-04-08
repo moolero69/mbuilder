@@ -8,17 +8,15 @@ use App\Models\MemoriaRam;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class MonatajeDiscoDuroController extends Controller
+class MontajeDiscoDuroController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $memoriasRam = MemoriaRam::all();
         $discosDuros = DiscoDuro::all();
         return Inertia::render('montaje/discoDuro', [
-            'memoriasRam' => $memoriasRam,
             'discosDuros' => $discosDuros
         ]);
     }

@@ -15,7 +15,7 @@ export default defineConfig({
         tailwindcss(),
     ],server: {
         host: 'localhost',  // Poner la misma IP que usaste en `php artisan serve`
-        port: 5173,             // Puedes cambiar el puerto si es necesario
+        port: 5173,
         strictPort: true,
         watch: {
             usePolling: true

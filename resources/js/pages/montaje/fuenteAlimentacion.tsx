@@ -4,37 +4,41 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import MontajeLayout from '@/layouts/app/montaje-layout';
-import { PlacaBase } from '@/types';
+import { DiscoDuro, FuenteAlimentacion, MemoriaRam, TarjetaGrafica } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, ArrowLeft, CircuitBoard, Cpu, Euro, Factory, Gauge, MemoryStick, Minus, Move, Plus, Search, Wrench, Zap } from 'lucide-react';
+import { ArrowBigDown, ArrowLeft, Power, CircuitBoard, Euro, Factory, Gamepad2, Gauge, Microchip, Minus, Move, Plus, Search, Wrench, Zap, ScrollText, Puzzle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase[] }) {
-    const { procesadorGuardado, guardarPlacaBase } = useProgresoMontaje((state) => state);
+export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fuentesAlimentacion: FuenteAlimentacion[] }) {
+    const { procesadorGuardado, placaBaseGuardada, memoriaRamGuardada, discoDuroGuardado, tarjetaGraficaGuardada, guardarFuenteAlimentacion } = useProgresoMontaje((state) => state);
 
-    const [placaBaseSeleccionada, setPlacaBaseSeleccionada] = useState<PlacaBase | null>(null);
-    const [placaBaseActiva, setPlacaBaseActiva] = useState<PlacaBase | null>(null);
+
+    const [fuenteSeleccionada, setFuenteSeleccionada] = useState<FuenteAlimentacion | null>(null);
+
+    const [fuenteActiva, setFuenteActiva] = useState<FuenteAlimentacion | null>(null);
 
     const [isDragging, setIsDragging] = useState(false);
 
-    const [asRockDesplegado, setAsrockDesplegado] = useState(false);
-    const [asusDesplegado, setAsusDesplegado] = useState(false);
-    const [msiDesplegado, setMsiDesplegado] = useState(false);
-    const [gigabyteDesplegado, setGigabyteDesplegado] = useState(false);
+    const [corsairDesplegado, setCorsairDesplegado] = useState(false);
+    const [evgaDesplegado, setEvgaDesplegado] = useState(false);
+    const [thermaltakeDesplegado, setThermaltakeDesplegado] = useState(false);
+    const [bequietDesplegado, setBequietDesplegado] = useState(false);
 
     const [busquedaGeneral, setBusquedaGeneral] = useState('');
 
-    const [placasFiltradas, setPlacasFiltradas] = useState<PlacaBase[]>();
+    const [fuentesFiltradas, setFuentesFiltradas] = useState<FuenteAlimentacion[]>();
 
-    const placasBaseAsrock = placasFiltradas?.filter((p) => p.marca === 'ASRock' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const placasBaseAsus = placasFiltradas?.filter((p) => p.marca === 'ASUS' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const placasBaseMsi = placasFiltradas?.filter((p) => p.marca === 'MSI' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const placasBaseGigabyte = placasFiltradas?.filter(
-        (p) => p.marca === 'Gigabyte' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()),
-    );
+    const fuentesCorsair = fuentesFiltradas?.filter((f) => f.marca === 'Corsair' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const fuentesEvga = fuentesFiltradas?.filter((f) => f.marca === 'EVGA' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const fuentesThermaltake = fuentesFiltradas?.filter((f) => f.marca === 'Thermaltake' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const fuentesBequiet = fuentesFiltradas?.filter((f) => f.marca === 'Be Quiet!' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+
+    const [totalW, setTotalW] = useState<number>();
+
+
 
     useEffect(() => {
         toast.custom(
@@ -44,7 +48,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                         <Wrench size={30} className="text-[var(--rojo-neon)]" />
                     </span>
                     <div className="flex w-full justify-center text-center text-xl">
-                        <p className="font-['exo_2']">Arrastra tu placa base</p>
+                        <p className="font-['exo_2']">Arrastra tu fuente de alimentacion</p>
                     </div>
                 </div>
             ),
@@ -52,9 +56,12 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
         );
 
         const comprobarCompatibilidad = () => {
-            const placasCompatibles = placasBase.filter((placa) => procesadorGuardado?.socket === placa.socket);
+            const sumaTotalConsumo = procesadorGuardado!.consumo + placaBaseGuardada!.consumo + memoriaRamGuardada!.consumo + discoDuroGuardado!.consumo + tarjetaGraficaGuardada!.consumo;
 
-            setPlacasFiltradas(placasCompatibles);
+            const fuentesCompatibles = fuentesAlimentacion.filter(fuente => fuente.potencia > sumaTotalConsumo);
+
+            setFuentesFiltradas(fuentesCompatibles);
+            setTotalW(sumaTotalConsumo)
         };
 
         comprobarCompatibilidad();
@@ -64,38 +71,31 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
         const { active, over } = event;
 
         if (over?.id === 'dropzone') {
-            const item = placasBase.find((p) => p.id === active.id);
+            const item = fuentesAlimentacion.find((f) => f.id === active.id);
             if (item) {
-                setPlacaBaseSeleccionada(item);
+                setFuenteSeleccionada(item);
             }
         }
-        setPlacaBaseActiva(null);
+        setFuenteActiva(null);
         setIsDragging(false);
     };
 
     const handleDragStart = (event: any) => {
-        const item = placasBase.find((p) => p.id === event.active.id);
-        setPlacaBaseActiva(item || null);
+        const item = fuentesAlimentacion.find((f) => f.id === event.active.id);
+        setFuenteActiva(item || null);
         setIsDragging(true);
     };
 
     const desplegar = () => {
-        setAsrockDesplegado(true);
-        setAsusDesplegado(true);
-        setMsiDesplegado(true);
-        setGigabyteDesplegado(true);
+
     };
 
     const replegar = () => {
-        setAsrockDesplegado(false);
-        setAsusDesplegado(false);
-        setMsiDesplegado(false);
-        setGigabyteDesplegado(false);
-    };
 
+    };
     return (
         <>
-            <Head title="montaje - placa base" />
+            <Head title="montaje - fuente alimentacion" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
                 {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
@@ -106,7 +106,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                             <div className="sticky top-0 mt-2 w-full">
                                 <input
                                     type="text"
-                                    placeholder="Buscar placa base..."
+                                    placeholder="Buscar fuente de alimentacion..."
                                     value={busquedaGeneral}
                                     onChange={(e) => {
                                         const valor = e.target.value;
@@ -120,43 +120,37 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                 <Search className="absolute top-3 left-3 text-gray-400" size={18} />
                             </div>
 
-                            {/* 💀 ASROCK */}
-                            {placasBaseAsrock && (
-                                <Collapsible open={asRockDesplegado} onOpenChange={setAsrockDesplegado} className="w-full space-y-2">
+                            {/* 💀 CORSAIR */}
+                            {fuentesCorsair && (
+                                <Collapsible open={corsairDesplegado} onOpenChange={setCorsairDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            ASRock
+                                            Corsair
                                         </p>
                                         <CollapsibleTrigger asChild>
                                             <Button variant="ghost" size="sm">
-                                                {asRockDesplegado ? <Minus /> : <Plus />}
+                                                {corsairDesplegado ? <Minus /> : <Plus />}
                                             </Button>
                                         </CollapsibleTrigger>
                                     </div>
-                                    {!asRockDesplegado && (
+                                    {!corsairDesplegado && (
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseAsrock[0].id}
-                                                        nombre={placasBaseAsrock[0].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={fuentesCorsair[0].id}
+                                                        nombre={fuentesCorsair[0].nombre}
+                                                        icono={<Power />}
+                                                    // discosCrucial[0].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseAsrock[1].id}
-                                                        nombre={placasBaseAsrock[1].nombre}
-                                                        icono={<CircuitBoard />}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseAsrock[2].id}
-                                                        nombre={placasBaseAsrock[2].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={fuentesCorsair[1].id}
+                                                        nombre={fuentesCorsair[1].nombre}
+                                                        icono={<Power />}
+                                                    // discosCrucial[1].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -164,10 +158,10 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                         </>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {placasBaseAsrock.map((placa) => (
-                                            <div key={placa.id} className="w-full">
+                                        {fuentesCorsair.map((fuente) => (
+                                            <div key={fuente.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                    <ItemArrastrable id={fuente.id} nombre={fuente.nombre} icono={<Power />} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -176,55 +170,48 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                 </Collapsible>
                             )}
 
-                            {/* 💀 ASUS */}
-                            {placasBaseAsus && (
-                                <Collapsible open={asusDesplegado} onOpenChange={setAsusDesplegado} className="w-full space-y-2">
+                            {/* 💀 EVGA */}
+                            {fuentesEvga && (
+                                <Collapsible open={evgaDesplegado} onOpenChange={setEvgaDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            Asus
+                                            EVGA
                                         </p>
                                         <CollapsibleTrigger asChild>
                                             <Button variant="ghost" size="sm">
-                                                {asusDesplegado ? <Minus /> : <Plus />}
+                                                {evgaDesplegado ? <Minus /> : <Plus />}
                                             </Button>
                                         </CollapsibleTrigger>
                                     </div>
-                                    {!asusDesplegado && (
+                                    {!evgaDesplegado && (
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseAsus[0].id}
-                                                        nombre={placasBaseAsus[0].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={fuentesEvga[0].id}
+                                                        nombre={fuentesEvga[0].nombre}
+                                                        icono={<Power />}
+                                                    // discosCrucial[0].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseAsus[1].id}
-                                                        nombre={placasBaseAsus[1].nombre}
-                                                        icono={<CircuitBoard />}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseAsus[2].id}
-                                                        nombre={placasBaseAsus[2].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={fuentesEvga[1].id}
+                                                        nombre={fuentesEvga[1].nombre}
+                                                        icono={<Power />}
+                                                    // discosCrucial[1].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
                                         </>
                                     )}
-
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {placasBaseAsus.map((placa) => (
-                                            <div key={placa.id} className="w-full">
+                                        {fuentesEvga.map((fuente) => (
+                                            <div key={fuente.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                    <ItemArrastrable id={fuente.id} nombre={fuente.nombre} icono={<Power />} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -233,55 +220,101 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                 </Collapsible>
                             )}
 
-                            {/* 💀 MSI */}
-                            {placasBaseMsi && (
-                                <Collapsible open={msiDesplegado} onOpenChange={setMsiDesplegado} className="w-full space-y-2">
+                            {/* 💀 BE QUIET!
+                            {fuentesBequiet ? (
+                                <Collapsible open={bequietDesplegado} onOpenChange={setBequietDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            MSI
+                                            EVGA
                                         </p>
                                         <CollapsibleTrigger asChild>
                                             <Button variant="ghost" size="sm">
-                                                {msiDesplegado ? <Minus /> : <Plus />}
+                                                {evgaDesplegado ? <Minus /> : <Plus />}
                                             </Button>
                                         </CollapsibleTrigger>
                                     </div>
-                                    {!msiDesplegado && (
+                                    {!bequietDesplegado && (
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseMsi[0].id}
-                                                        nombre={placasBaseMsi[0].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={fuentesBequiet[0].id}
+                                                        nombre={fuentesBequiet[0].nombre}
+                                                        icono={<Power />}
+                                                    // discosCrucial[0].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
-                                                        id={placasBaseMsi[1].id}
-                                                        nombre={placasBaseMsi[1].nombre}
-                                                        icono={<CircuitBoard />}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseMsi[2].id}
-                                                        nombre={placasBaseMsi[2].nombre}
-                                                        icono={<CircuitBoard />}
+                                                        id={fuentesBequiet[1].id}
+                                                        nombre={fuentesBequiet[1].nombre}
+                                                        icono={<Power />}
+                                                    // discosCrucial[1].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
                                         </>
                                     )}
-
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {placasBaseMsi.map((placa) => (
-                                            <div key={placa.id} className="w-full">
+                                        {fuentesBequiet.map((fuente) => (
+                                            <div key={fuente.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                    <ItemArrastrable id={fuente.id} nombre={fuente.nombre} icono={<Power />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                            </div>
+                                        ))}
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            )
+                                :
+                                'No'
+                            } */}
+
+                            {/* 💀 Thermaltake */}
+                            {fuentesThermaltake && (
+                                <Collapsible open={thermaltakeDesplegado} onOpenChange={setThermaltakeDesplegado} className="w-full space-y-2">
+                                    <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
+                                        <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
+                                            Thermaltake
+                                        </p>
+                                        <CollapsibleTrigger asChild>
+                                            <Button variant="ghost" size="sm">
+                                                {thermaltakeDesplegado ? <Minus /> : <Plus />}
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                    </div>
+                                    {!thermaltakeDesplegado && (
+                                        <>
+                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={fuentesThermaltake[0].id}
+                                                        nombre={fuentesThermaltake[0].nombre}
+                                                        icono={<Power />}
+                                                    // discosCrucial[0].almacenamiento}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable
+                                                        id={fuentesThermaltake[1].id}
+                                                        nombre={fuentesThermaltake[1].nombre}
+                                                        icono={<Power />}
+                                                    // discosCrucial[1].almacenamiento}
+                                                    />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                            </div>
+                                        </>
+                                    )}
+                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        {fuentesThermaltake.map((fuente) => (
+                                            <div key={fuente.id} className="w-full">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={fuente.id} nombre={fuente.nombre} icono={<Power />} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -290,139 +323,81 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                 </Collapsible>
                             )}
 
-                            {/* 💀 Gigabyte */}
-                            {placasBaseGigabyte && (
-                                <Collapsible open={gigabyteDesplegado} onOpenChange={setGigabyteDesplegado} className="w-full space-y-2">
-                                    <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
-                                        <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            Gigabyte
-                                        </p>
-                                        <CollapsibleTrigger asChild>
-                                            <Button variant="ghost" size="sm">
-                                                {gigabyteDesplegado ? <Minus /> : <Plus />}
-                                            </Button>
-                                        </CollapsibleTrigger>
-                                    </div>
-                                    {!gigabyteDesplegado && (
-                                        <>
-                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseGigabyte[0].id}
-                                                        nombre={placasBaseGigabyte[0].nombre}
-                                                        icono={<CircuitBoard />}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseGigabyte[1].id}
-                                                        nombre={placasBaseGigabyte[1].nombre}
-                                                        icono={<CircuitBoard />}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseGigabyte[2].id}
-                                                        nombre={placasBaseGigabyte[2].nombre}
-                                                        icono={<CircuitBoard />}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                            </div>
-                                        </>
-                                    )}
-
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                        {placasBaseGigabyte.map((placa) => (
-                                            <div key={placa.id} className="w-full">
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                            </div>
-                                        ))}
-                                    </CollapsibleContent>
-                                </Collapsible>
-                            )}
                         </div>
                     }
                     main={
                         <div className="flex h-full flex-col items-center gap-3 bg-black/20 text-white">
                             <div className="absolute left-[18%] flex items-center text-2xl">
                                 <ArrowLeft size={30} />
-                                <Link href={route('montaje.procesador')}>
-                                    <h1 className='font-["exo_2"] underline'>VOLVER AL PROCESADOR</h1>
+                                <Link href={route('montaje.tarjetaGrafica')}>
+                                    <h1 className='font-["exo_2"] underline'>VOLVER A LA GRÁFICA </h1>
                                 </Link>
                             </div>
-                            {placaBaseActiva ? (
+                            {fuenteActiva ? (
                                 <div className="fade-down z-10 flex flex-col items-center gap-2 text-white">
                                     <h1 className="rerelative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
-                                        Arrastra tu placa base aquí
+                                        Arrastra tu fuente aquí
                                     </h1>
                                     <ArrowBigDown className="h-32 w-32 text-[var(--morado-neon)]" />
                                 </div>
                             ) : (
                                 <h1 className="relative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
-                                    Placa base
+                                    Fuente de alimentación
                                 </h1>
                             )}
 
                             {/* Zona de drop con efecto cyberpunk */}
                             <div
-                                className={`relative z-20 h-[80px] w-[50%] border-2 ${placaBaseActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
+                                className={`relative z-20 h-[80px] w-[50%] border-2 ${fuenteActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
                                 <AreaSoltarItem>
-                                    {!placaBaseActiva && (
+                                    {!fuenteActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                            {placaBaseSeleccionada?.nombre}
+                                            {fuenteSeleccionada?.nombre}
                                         </h1>
                                     )}
                                 </AreaSoltarItem>
+                                <h1>{`Total W: ${totalW}`}</h1>
                             </div>
 
                             {/* Info del procesador con borde neón */}
-                            {placaBaseSeleccionada && (
+                            {fuenteSeleccionada && (
                                 <>
-                                    <div
-                                        className="grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3 fade-left"
-                                        key={placaBaseSeleccionada.id}
-                                    >
+                                    <div className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3" key={fuenteSeleccionada.id}>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Factory size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Marca
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{placaBaseSeleccionada.marca}</p>
+                                                <p className="text-lg text-gray-300">{fuenteSeleccionada.marca}</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
-                                            <MemoryStick size={48} className="text-[var(--rojo-neon)]" />
+                                            <ScrollText size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    Socket
+                                                    Certificación
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{placaBaseSeleccionada.socket}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
-                                            <CircuitBoard size={48} className="text-[var(--rojo-neon)]" />
-                                            <div>
-                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    Factor forma
-                                                </h2>
-                                                <p className="text-lg text-gray-300">{placaBaseSeleccionada.factor_forma}</p>
+                                                <p className="text-lg text-gray-300">{fuenteSeleccionada.certificacion}</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Zap size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    consumo
+                                                    Potencia
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{placaBaseSeleccionada.consumo}W</p>
+                                                <p className="text-lg text-gray-300">{fuenteSeleccionada.potencia} W</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                            <Puzzle size={48} className="text-[var(--rojo-neon)]" />
+                                            <div>
+                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                                    Modular
+                                                </h2>
+                                                <p className="text-lg text-gray-300">{fuenteSeleccionada.modular}</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
@@ -431,18 +406,18 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                 <h2 className="mb-2 bg-gradient-to-r from-green-300 via-green-400 to-green-600 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Precio
                                                 </h2>
-                                                <p className="text-lg text-green-300">{placaBaseSeleccionada.precio}€</p>
+                                                <p className="text-lg text-green-300">{fuenteSeleccionada.precio}€</p>
                                             </div>
                                         </div>
                                     </div>
                                     <Button
                                         variant={'outline'}
-                                        className="border-[var(--morado-neon)] font-['exo_2'] fade-in"
+                                        className="fade-in border-[var(--morado-neon)] font-['exo_2']"
                                         onClick={() => {
-                                            guardarPlacaBase!(placaBaseSeleccionada);
+                                            guardarFuenteAlimentacion!(fuenteSeleccionada);
                                         }}
                                     >
-                                        <Link href={route('montaje.memoriaRam')}>Siguiente</Link>
+                                        <Link href={route('montaje.resumen')}>Siguiente</Link>
                                     </Button>
                                 </>
                             )}
@@ -450,13 +425,8 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                     }
                 />
                 <DragOverlay>
-                    {placaBaseActiva ? (
-                        <ItemArrastrable
-                            id={placaBaseActiva.id}
-                            nombre={placaBaseActiva.nombre}
-                            icono={<CircuitBoard />}
-                            iconoSecundario={<Move />}
-                        />
+                    {fuenteActiva ? (
+                        <ItemArrastrable id={fuenteActiva.id} nombre={fuenteActiva.nombre} icono={<Power />} iconoSecundario={<Move />} />
                     ) : null}
                 </DragOverlay>
             </DndContext>

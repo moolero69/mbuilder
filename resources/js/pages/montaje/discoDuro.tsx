@@ -12,8 +12,8 @@ import { ArrowBigDown, ArrowLeft, Box, CircuitBoard, Euro, Factory, Gauge, Micro
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam: MemoriaRam[]; discosDuros: DiscoDuro[] }) {
-    const { procesadorGuardado, guardarMemoriaRam, memoriaRamGuardada, guardarDiscoDuro } = useProgresoMontaje((state) => state);
+export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDuro[] }) {
+    const { procesadorGuardado, guardarDiscoDuro } = useProgresoMontaje((state) => state);
 
     const [discoSeleccionado, setDiscoSeleccionado] = useState<DiscoDuro | null>(null);
 
@@ -157,6 +157,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                                         id={discosCrucial[0].id}
                                                         nombre={discosCrucial[0].nombre}
                                                         icono={<Box />}
+                                                        textoSecundario={discosCrucial[0].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -165,6 +166,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                                         id={discosCrucial[1].id}
                                                         nombre={discosCrucial[1].nombre}
                                                         icono={<Box />}
+                                                        textoSecundario={discosCrucial[1].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -175,7 +177,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                         {discosCrucial.map((disco) => (
                                             <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} />
+                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} textoSecundario={disco.almacenamiento} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -205,6 +207,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                                         id={discosKingston[0].id}
                                                         nombre={discosKingston[0].nombre}
                                                         icono={<Box />}
+                                                        textoSecundario={discosKingston[0].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -213,6 +216,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                                         id={discosKingston[1].id}
                                                         nombre={discosKingston[1].nombre}
                                                         icono={<Box />}
+                                                        textoSecundario={discosKingston[1].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -223,7 +227,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                         {discosKingston.map((disco) => (
                                             <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} />
+                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} textoSecundario={disco.almacenamiento} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -253,6 +257,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                                         id={discosSamsung[0].id}
                                                         nombre={discosSamsung[0].nombre}
                                                         icono={<Box />}
+                                                        textoSecundario={discosSamsung[0].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -261,6 +266,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                                         id={discosSamsung[1].id}
                                                         nombre={discosSamsung[1].nombre}
                                                         icono={<Box />}
+                                                        textoSecundario={discosSamsung[1].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -271,7 +277,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                         {discosSamsung.map((disco) => (
                                             <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} />
+                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} textoSecundario={disco.almacenamiento}/>
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -301,6 +307,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                                         id={discosSeagate[0].id}
                                                         nombre={discosSeagate[0].nombre}
                                                         icono={<Box />}
+                                                        textoSecundario={discosSeagate[0].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -309,6 +316,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                                         id={discosSeagate[1].id}
                                                         nombre={discosSeagate[1].nombre}
                                                         icono={<Box />}
+                                                        textoSecundario={discosSeagate[1].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -319,7 +327,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                         {discosSeagate.map((disco) => (
                                             <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} />
+                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} iconoSecundario={disco.almacenamiento}/>
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -345,11 +353,11 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={discosWd[0].id} nombre={discosWd[0].nombre} icono={<Box />} />
+                                                    <ItemArrastrable id={discosWd[0].id} nombre={discosWd[0].nombre} icono={<Box />} textoSecundario={discosWd[0].almacenamiento} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={discosWd[1].id} nombre={discosWd[1].nombre} icono={<Box />} />
+                                                    <ItemArrastrable id={discosWd[1].id} nombre={discosWd[1].nombre} icono={<Box />} textoSecundario={discosWd[1].almacenamiento}/>
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -359,7 +367,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                         {discosWd.map((disco) => (
                                             <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} />
+                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} textoSecundario={disco.almacenamiento}/>
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -389,6 +397,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                                         id={discosToshiba[0].id}
                                                         nombre={discosToshiba[0].nombre}
                                                         icono={<Box />}
+                                                        textoSecundario={discosToshiba[0].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -397,6 +406,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                                         id={discosToshiba[1].id}
                                                         nombre={discosToshiba[1].nombre}
                                                         icono={<Box />}
+                                                        textoSecundario={discosToshiba[1].almacenamiento}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -407,7 +417,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                         {discosToshiba.map((disco) => (
                                             <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} />
+                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} iconoSecundario={disco.almacenamiento}/>
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -517,7 +527,7 @@ export default function Configurador({ memoriasRam, discosDuros }: { memoriasRam
                                             guardarDiscoDuro!(discoSeleccionado);
                                         }}
                                     >
-                                        <Link href={route('home')}>Siguiente</Link>
+                                        <Link href={route('montaje.tarjetaGrafica')}>Siguiente</Link>
                                     </Button>
                                 </>
                             )}

@@ -11,7 +11,7 @@ const Header: React.FC = () => {
     return (
         <>
             <Toaster position="bottom-center" />
-            <header className="sticky top-0 z-100 flex w-full h-[120px] items-center justify-between border-b-3 border-[var(--verde-neon)] bg-black px-6 py-4 text-white">
+            <header className="sticky top-0 z-100 flex w-full h-[120px] items-center justify-between border-b-3  bg-black px-6 py-4 text-white  colores-borde">
                 <div className="flex flex-row justify-center gap-3 px-5 align-middle">
                     <img src="/img/logo-64px.png" alt="logo mbuilder" className="bg-white" />
                     <Link href={route('home')} className="inline">
