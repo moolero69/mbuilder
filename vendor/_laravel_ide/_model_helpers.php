@@ -331,10 +331,12 @@ namespace App\Models {
      * @property string $conexion
      * @property string $almacenamiento
      * @property string $tecnologia
+     * @property string $marca
      * @property string $nombre
      * @property string $id
      * @method static \Illuminate\Database\Eloquent\Builder<DiscoDuro>|DiscoDuro whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<DiscoDuro>|DiscoDuro whereNombre($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<DiscoDuro>|DiscoDuro whereMarca($value)
      * @method static \Illuminate\Database\Eloquent\Builder<DiscoDuro>|DiscoDuro whereTecnologia($value)
      * @method static \Illuminate\Database\Eloquent\Builder<DiscoDuro>|DiscoDuro whereAlmacenamiento($value)
      * @method static \Illuminate\Database\Eloquent\Builder<DiscoDuro>|DiscoDuro whereConexion($value)

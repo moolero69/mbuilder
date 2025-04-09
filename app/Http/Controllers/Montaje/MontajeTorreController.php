@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\Montaje;
 
 use App\Http\Controllers\Controller;
-use App\Models\DiscoDuro;
+use App\Models\Torre;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class MontajeDiscoDuroController extends Controller
+class MontajeTorreController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $discosDuros = DiscoDuro::all();
-        return Inertia::render('montaje/discoDuro', [
-            'discosDuros' => $discosDuros
+        $torres = Torre::all();
+        return Inertia::render('montaje/torre', [
+            'torres' => $torres
         ]);
     }
 

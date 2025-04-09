@@ -429,7 +429,7 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                             guardarFuenteAlimentacion!(fuenteSeleccionada);
                                         }}
                                     >
-                                        <Link href={route('montaje.resumen')}>Siguiente</Link>
+                                        <Link href={route('montaje.torre')}>Siguiente</Link>
                                     </Button>
                                 </>
                             )}

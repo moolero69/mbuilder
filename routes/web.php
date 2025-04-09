@@ -7,6 +7,7 @@ use App\Http\Controllers\Montaje\MontajeProcesadorController;
 use App\Http\Controllers\Montaje\MontajeRamController;
 use App\Http\Controllers\Montaje\MontajeResumenController;
 use App\Http\Controllers\Montaje\MontajeTarjetaGraficaController;
+use App\Http\Controllers\Montaje\MontajeTorreController;
 use App\Http\Controllers\PruebasController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,6 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('montaje/discoDuro', [MontajeDiscoDuroController::class, 'index'])->name('montaje.discoDuro');
     Route::get('montaje/tarjetaGrafica', [MontajeTarjetaGraficaController::class, 'index'])->name('montaje.tarjetaGrafica');
     Route::get('montaje/fuenteAlimentacion', [MontajeFuenteAlimentacionController::class, 'index'])->name('montaje.fuenteAlimentacion');
+    Route::get('montaje/torre', [MontajeTorreController::class, 'index'])->name('montaje.torre');
     Route::get('montaje/resumen', [MontajeResumenController::class, 'index'])->name('montaje.resumen');
     Route::get('pruebas', PruebasController::class)->name('pruebas');
 
