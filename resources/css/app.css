@@ -114,6 +114,7 @@
     --rojo-neon: #ff073a;
     --azul-neon: #00ffff;
     --morado-neon: #9d00ff;
+    --violeta-neon: #9d00ff;
     --amarillo-neon: #ffff00;
     --naranja-neon: #ff8800;
     --rosa-neon: #ff00ff;
@@ -247,6 +248,33 @@
             border-color: var(--verde-neon);
         }
     }
+
+    @keyframes glitch {
+        0% { text-shadow: 2px 2px var(--azul-neon), -2px -2px var(--rojo-neon); }
+        20% { text-shadow: -2px 2px var(--azul-neon), 2px -2px var(--rojo-neon); }
+        40% { text-shadow: 2px -2px var(--rojo-neon), -2px 2px var(--azul-neon); }
+        60% { text-shadow: -1px 1px var(--rojo-neon), 1px -1px var(--azul-neon); }
+        80% { text-shadow: 1px 1px var(--azul-neon), -1px -1px var(--rojo-neon); }
+        100% { text-shadow: 2px 2px var(--azul-neon), -2px -2px var(--rojo-neon); }
+      }
+
+      @keyframes flicker {
+        0%, 100% { opacity: 1; }
+        10% { opacity: 0.9; }
+        20% { opacity: 0.4; }
+        30% { opacity: 1; }
+        40% { opacity: 0.8; }
+        50% { opacity: 0.3; }
+        60% { opacity: 1; }
+        70% { opacity: 0.7; }
+        80% { opacity: 1; }
+        90% { opacity: 0.9; }
+      }
+      
+      @keyframes pulseNeon {
+        0%, 100% { box-shadow: 0 0 5px var(--azul-neon), 0 0 15px var(--azul-neon); }
+        50% { box-shadow: 0 0 10px var(--azul-neon), 0 0 25px var(--azul-neon); }
+      }
 }
 
 .fade-left {

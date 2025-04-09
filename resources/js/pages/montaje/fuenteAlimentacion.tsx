@@ -31,10 +31,25 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
 
     const [fuentesFiltradas, setFuentesFiltradas] = useState<FuenteAlimentacion[]>();
 
-    const fuentesCorsair = fuentesFiltradas?.filter((f) => f.marca === 'Corsair' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const fuentesEvga = fuentesFiltradas?.filter((f) => f.marca === 'EVGA' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const fuentesThermaltake = fuentesFiltradas?.filter((f) => f.marca === 'Thermaltake' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const fuentesBequiet = fuentesFiltradas?.filter((f) => f.marca === 'Be Quiet!' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const fuentesCorsair = (() => {
+        const f = fuentesFiltradas?.filter(f => f.marca === 'Corsair' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return f?.length ? f : null;
+    })();
+    
+    const fuentesEvga = (() => {
+        const f = fuentesFiltradas?.filter(f => f.marca === 'EVGA' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return f?.length ? f : null;
+    })();
+    
+    const fuentesThermaltake = (() => {
+        const f = fuentesFiltradas?.filter(f => f.marca === 'Thermaltake' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return f?.length ? f : null;
+    })();
+    
+    const fuentesBequiet = (() => {
+        const f = fuentesFiltradas?.filter(f => f.marca === 'Be Quiet!' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return f?.length ? f : null;
+    })();
 
     const [totalW, setTotalW] = useState<number>();
 
@@ -220,8 +235,8 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                 </Collapsible>
                             )}
 
-                            {/* 💀 BE QUIET!
-                            {fuentesBequiet ? (
+                            {/* 💀 BE QUIET! */}
+                            {fuentesBequiet && (
                                 <Collapsible open={bequietDesplegado} onOpenChange={setBequietDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
@@ -268,10 +283,7 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                         ))}
                                     </CollapsibleContent>
                                 </Collapsible>
-                            )
-                                :
-                                'No'
-                            } */}
+                            )}
 
                             {/* 💀 Thermaltake */}
                             {fuentesThermaltake && (

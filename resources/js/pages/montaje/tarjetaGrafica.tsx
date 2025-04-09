@@ -33,9 +33,20 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
 
     const [graficasFiltradas, setGraficasFiltradas] = useState<TarjetaGrafica[]>();
 
-    const graficasNvidia = graficasFiltradas?.filter((g) => g.marca === 'NVIDIA' && g.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const graficasIntel = graficasFiltradas?.filter((g) => g.marca === 'Intel' && g.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const graficasAmd = graficasFiltradas?.filter((g) => g.marca === 'AMD' && g.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const graficasNvidia = (() => {
+        const g = graficasFiltradas?.filter(g => g.marca === 'NVIDIA' && g.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return g?.length ? g : null;
+    })();
+    
+    const graficasIntel = (() => {
+        const g = graficasFiltradas?.filter(g => g.marca === 'Intel' && g.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return g?.length ? g : null;
+    })();
+    
+    const graficasAmd = (() => {
+        const g = graficasFiltradas?.filter(g => g.marca === 'AMD' && g.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return g?.length ? g : null;
+    })();
 
 
 

@@ -22,8 +22,15 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
     const [amdDesplegado, setAmdDesplegado] = useState(false);
     const [busquedaGeneral, setBusquedaGeneral] = useState('');
 
-    const procesadoresAmd = procesadores.filter((p) => p.marca === 'AMD' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const procesadoresIntel = procesadores.filter((p) => p.marca === 'Intel' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const procesadoresAmd = (() => {
+        const p = procesadores.filter(p => p.marca === 'AMD' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return p.length ? p : null;
+    })();
+
+    const procesadoresIntel = (() => {
+        const p = procesadores.filter(p => p.marca === 'Intel' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return p.length ? p : null;
+    })();
 
     useEffect(() => {
         toast.custom(
@@ -99,85 +106,90 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
                             </div>
 
                             {/* 🔵 INTEL */}
-                            <Collapsible open={intelDesplegado} onOpenChange={setIntelDesplegado} className="w-full space-y-2">
-                                <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
-                                    <p className="font-['exo_2'] text-xl font-semibold bg-gradient-to-r from-blue-400 via-blue-500 to-blue-700 bg-clip-text text-transparent">Intel</p>
-                                    <CollapsibleTrigger asChild>
-                                        <Button variant="ghost" size="sm">
-                                            {intelDesplegado ? <Minus /> : <Plus />}
-                                        </Button>
-                                    </CollapsibleTrigger>
-                                </div>
-                                {!intelDesplegado && (
-                                    <>
-                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={procesadoresIntel[0].id} nombre={procesadoresIntel[0].nombre} icono={<Cpu />} iconoSecundario={<Flame />} />
+                            {procesadoresIntel && (
+                                <Collapsible open={intelDesplegado} onOpenChange={setIntelDesplegado} className="w-full space-y-2">
+                                    <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
+                                        <p className="font-['exo_2'] text-xl font-semibold bg-gradient-to-r from-blue-400 via-blue-500 to-blue-700 bg-clip-text text-transparent">Intel</p>
+                                        <CollapsibleTrigger asChild>
+                                            <Button variant="ghost" size="sm">
+                                                {intelDesplegado ? <Minus /> : <Plus />}
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                    </div>
+                                    {!intelDesplegado && (
+                                        <>
+                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={procesadoresIntel[0].id} nombre={procesadoresIntel[0].nombre} icono={<Cpu />} iconoSecundario={<Flame />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={procesadoresIntel[1].id} nombre={procesadoresIntel[1].nombre} icono={<Cpu />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={procesadoresIntel[2].id} nombre={procesadoresIntel[2].nombre} icono={<Cpu />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
                                             </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={procesadoresIntel[1].id} nombre={procesadoresIntel[1].nombre} icono={<Cpu />} />
+                                        </>
+                                    )}
+                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        {procesadoresIntel.map((procesador) => (
+                                            <div key={procesador.id} className="w-full">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={procesador.id} nombre={procesador.nombre} icono={<Cpu />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
                                             </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={procesadoresIntel[2].id} nombre={procesadoresIntel[2].nombre} icono={<Cpu />} />
-                                            </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                        </div>
-                                    </>
-                                )}
-                                <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                    {procesadoresIntel.map((procesador) => (
-                                        <div key={procesador.id} className="w-full">
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={procesador.id} nombre={procesador.nombre} icono={<Cpu />} />
-                                            </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                        </div>
-                                    ))}
-                                </CollapsibleContent>
-                            </Collapsible>
+                                        ))}
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            )}
+
 
                             {/* 🔴 AMD */}
-                            <Collapsible open={amdDesplegado} onOpenChange={setAmdDesplegado} className="w-full space-y-2">
-                                <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
-                                    <p className="font-['exo_2'] text-xl font-semibold bg-gradient-to-r from-red-400 via-red-500 to-red-700 bg-clip-text text-transparent">AMD</p>
-                                    <CollapsibleTrigger asChild>
-                                        <Button variant="ghost" size="sm">
-                                            {amdDesplegado ? <Minus /> : <Plus />}
-                                        </Button>
-                                    </CollapsibleTrigger>
-                                </div>
-                                {!amdDesplegado && (
-                                    <>
-                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={procesadoresAmd[0].id} nombre={procesadoresAmd[0].nombre} icono={<Cpu />} />
+                            {procesadoresAmd && (
+                                <Collapsible open={amdDesplegado} onOpenChange={setAmdDesplegado} className="w-full space-y-2">
+                                    <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
+                                        <p className="font-['exo_2'] text-xl font-semibold bg-gradient-to-r from-red-400 via-red-500 to-red-700 bg-clip-text text-transparent">AMD</p>
+                                        <CollapsibleTrigger asChild>
+                                            <Button variant="ghost" size="sm">
+                                                {amdDesplegado ? <Minus /> : <Plus />}
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                    </div>
+                                    {!amdDesplegado && (
+                                        <>
+                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={procesadoresAmd[0].id} nombre={procesadoresAmd[0].nombre} icono={<Cpu />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={procesadoresAmd[1].id} nombre={procesadoresAmd[1].nombre} icono={<Cpu />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={procesadoresAmd[2].id} nombre={procesadoresAmd[2].nombre} icono={<Cpu />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
                                             </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={procesadoresAmd[1].id} nombre={procesadoresAmd[1].nombre} icono={<Cpu />} />
-                                            </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={procesadoresAmd[2].id} nombre={procesadoresAmd[2].nombre} icono={<Cpu />} />
-                                            </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                        </div>
-                                    </>
-                                )}
+                                        </>
+                                    )}
 
-                                <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
-                                    {procesadoresAmd.map((procesador) => (
-                                        <div key={procesador.id} className="w-full">
-                                            <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                <ItemArrastrable id={procesador.id} nombre={procesador.nombre} icono={<Cpu />} />
+                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        {procesadoresAmd.map((procesador) => (
+                                            <div key={procesador.id} className="w-full">
+                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                    <ItemArrastrable id={procesador.id} nombre={procesador.nombre} icono={<Cpu />} />
+                                                </div>
+                                                <Separator className="border-[1px] border-gray-600" />
                                             </div>
-                                            <Separator className="border-[1px] border-gray-600" />
-                                        </div>
-                                    ))}
-                                </CollapsibleContent>
-                            </Collapsible>
+                                        ))}
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            )}
                         </div>
                     }
                     main={
@@ -269,8 +281,8 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
                                             </div>
                                         </div>
                                     </div>
-                                    <Button variant={'outline'} className="border-[var(--morado-neon)] font-['exo_2'] fade-in" 
-                                    onClick={() => { guardarProcesador!(procesadorSeleccionado) }}>
+                                    <Button variant={'outline'} className="border-[var(--morado-neon)] font-['exo_2'] fade-in"
+                                        onClick={() => { guardarProcesador!(procesadorSeleccionado) }}>
                                         <Link href={route('montaje.placaBase')}>Siguiente</Link>
                                     </Button>
                                 </>

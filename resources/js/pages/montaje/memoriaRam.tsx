@@ -31,13 +31,30 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
 
     const [memoriasFiltradas, setMemoriasFiltradas] = useState<MemoriaRam[]>();
 
-    const memoriasCorsair = memoriasFiltradas?.filter((p) => p.marca === 'Corsair' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const memoriasCrucial = memoriasFiltradas?.filter((p) => p.marca === 'Crucial' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const memoriasKingston = memoriasFiltradas?.filter(
-        (p) => p.marca === 'Kingston' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()),
-    );
-    const memoriasAdata = memoriasFiltradas?.filter((p) => p.marca === 'ADATA' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const memoriasGskill = memoriasFiltradas?.filter((p) => p.marca === 'G.SKILL' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const memoriasCorsair = (() => {
+        const m = memoriasFiltradas?.filter(m => m.marca === 'Corsair' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return m?.length ? m : null;
+    })();
+    
+    const memoriasCrucial = (() => {
+        const m = memoriasFiltradas?.filter(m => m.marca === 'Crucial' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return m?.length ? m : null;
+    })();
+    
+    const memoriasKingston = (() => {
+        const m = memoriasFiltradas?.filter(m => m.marca === 'Kingston' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return m?.length ? m : null;
+    })();
+    
+    const memoriasAdata = (() => {
+        const m = memoriasFiltradas?.filter(m => m.marca === 'ADATA' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return m?.length ? m : null;
+    })();
+    
+    const memoriasGskill = (() => {
+        const m = memoriasFiltradas?.filter(m => m.marca === 'G.SKILL' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return m?.length ? m : null;
+    })();
 
     useEffect(() => {
         toast.custom(
@@ -154,6 +171,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasCorsair[0].id}
                                                         nombre={memoriasCorsair[0].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasCorsair[0].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -162,6 +180,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasCorsair[1].id}
                                                         nombre={memoriasCorsair[1].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasCorsair[1].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -170,6 +189,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasCorsair[2].id}
                                                         nombre={memoriasCorsair[2].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasCorsair[2].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -180,7 +200,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                         {memoriasCorsair.map((memoria) => (
                                             <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
+                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} textoSecundario={`${memoria.almacenamiento}GB`}/>
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -210,6 +230,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasCrucial[0].id}
                                                         nombre={memoriasCrucial[0].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasCrucial[0].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -218,6 +239,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasCrucial[1].id}
                                                         nombre={memoriasCrucial[1].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasCrucial[1].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -226,6 +248,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasCrucial[2].id}
                                                         nombre={memoriasCrucial[2].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasCrucial[2].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -236,7 +259,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                         {memoriasCrucial.map((memoria) => (
                                             <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
+                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} textoSecundario={`${memoria.almacenamiento}GB`}/>
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -266,6 +289,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasKingston[0].id}
                                                         nombre={memoriasKingston[0].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasKingston[0].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -274,6 +298,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasKingston[1].id}
                                                         nombre={memoriasKingston[1].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasKingston[1].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -282,6 +307,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasKingston[2].id}
                                                         nombre={memoriasKingston[2].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasKingston[2].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -322,6 +348,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasGskill[0].id}
                                                         nombre={memoriasGskill[0].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasGskill[0].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -330,6 +357,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasGskill[1].id}
                                                         nombre={memoriasGskill[1].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasGskill[1].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -340,7 +368,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                         {memoriasGskill.map((memoria) => (
                                             <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
+                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} textoSecundario={`${memoria.almacenamiento}GB`}/>
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -370,6 +398,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasAdata[0].id}
                                                         nombre={memoriasAdata[0].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasAdata[0].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -378,6 +407,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoriasAdata[1].id}
                                                         nombre={memoriasAdata[1].nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoriasAdata[1].almacenamiento}GB`}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -388,7 +418,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                         {memoriasAdata.map((memoria) => (
                                             <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
+                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} textoSecundario={`${memoria.almacenamiento}GB`}/>
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -451,7 +481,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Tamaño
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.almacenamiento}</p>
+                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.almacenamiento} GB</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">

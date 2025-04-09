@@ -32,13 +32,36 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
 
     const [discosFiltrados, setDiscosFiltrados] = useState<DiscoDuro[]>();
 
-    const discosCrucial = discosFiltrados?.filter((d) => d.marca === 'Crucial' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const discosKingston = discosFiltrados?.filter((p) => p.marca === 'Kingston' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const discosSamsung = discosFiltrados?.filter((d) => d.marca === 'Samsung' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const discosSeagate = discosFiltrados?.filter((d) => d.marca === 'Seagate' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const discosToshiba = discosFiltrados?.filter((d) => d.marca === 'Toshiba' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const discosWd = discosFiltrados?.filter((d) => d.marca === 'WD' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+    const discosKingston = (() => {
+        const filtrados = discosFiltrados?.filter((d) => d.marca === 'Kingston' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return filtrados?.length ? filtrados : null;
+    })();
 
+    const discosCrucial = (() => {
+        const d = discosFiltrados?.filter(d => d.marca === 'Crucial' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return d?.length ? d : null;
+    })();
+    
+    const discosSamsung = (() => {
+        const d = discosFiltrados?.filter(d => d.marca === 'Samsung' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return d?.length ? d : null;
+    })();
+    
+    const discosSeagate = (() => {
+        const d = discosFiltrados?.filter(d => d.marca === 'Seagate' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return d?.length ? d : null;
+    })();
+    
+    const discosToshiba = (() => {
+        const d = discosFiltrados?.filter(d => d.marca === 'Toshiba' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return d?.length ? d : null;
+    })();
+    
+    const discosWd = (() => {
+        const d = discosFiltrados?.filter(d => d.marca === 'WD' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return d?.length ? d : null;
+    })();
+    
     useEffect(() => {
         toast.custom(
             (t) => (

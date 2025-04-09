@@ -29,12 +29,25 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
 
     const [placasFiltradas, setPlacasFiltradas] = useState<PlacaBase[]>();
 
-    const placasBaseAsrock = placasFiltradas?.filter((p) => p.marca === 'ASRock' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const placasBaseAsus = placasFiltradas?.filter((p) => p.marca === 'ASUS' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const placasBaseMsi = placasFiltradas?.filter((p) => p.marca === 'MSI' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-    const placasBaseGigabyte = placasFiltradas?.filter(
-        (p) => p.marca === 'Gigabyte' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()),
-    );
+    const placasBaseAsrock = (() => {
+        const p = placasFiltradas?.filter(p => p.marca === 'ASRock' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return p?.length ? p : null;
+    })();
+    
+    const placasBaseAsus = (() => {
+        const p = placasFiltradas?.filter(p => p.marca === 'ASUS' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return p?.length ? p : null;
+    })();
+    
+    const placasBaseMsi = (() => {
+        const p = placasFiltradas?.filter(p => p.marca === 'MSI' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return p?.length ? p : null;
+    })();
+    
+    const placasBaseGigabyte = (() => {
+        const p = placasFiltradas?.filter(p => p.marca === 'Gigabyte' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return p?.length ? p : null;
+    })();
 
     useEffect(() => {
         toast.custom(
@@ -399,7 +412,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
-                                            <MemoryStick size={48} className="text-[var(--rojo-neon)]" />
+                                            <Cpu size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Socket
