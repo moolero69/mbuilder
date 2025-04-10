@@ -1923,6 +1923,7 @@ namespace App\Models {
      * @property int $consumo
      * @property int $passmark
      * @property int $memoria
+     * @property string $tipo_memoria
      * @property string $serie
      * @property string $tipo
      * @property string $marca
@@ -1933,6 +1934,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica whereMarca($value)
      * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica whereTipo($value)
      * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica whereSerie($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica whereTipoMemoria($value)
      * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica whereMemoria($value)
      * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica wherePassmark($value)
      * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica whereConsumo($value)

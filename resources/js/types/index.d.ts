@@ -119,7 +119,7 @@ export interface Torre {
     nombre: string;
     marca: string;
     factor_forma: string;
-    soporte_rgb: string;
+    soporte_RGB: string;
     precio: number;
     fecha_creacion: Date;
     fecha_actualizacion: Date;

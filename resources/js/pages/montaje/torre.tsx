@@ -8,7 +8,7 @@ import { Torre } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, ArrowLeft, PcCase, CircuitBoard, Euro, Factory, Gauge, Microchip, Minus, Move, Plus, Search, Wrench } from 'lucide-react';
+import { ArrowBigDown, ArrowLeft, PcCase, CircuitBoard, Euro, Factory, Gauge, Microchip, Minus, Move, Plus, Search, Wrench, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -739,12 +739,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
-                                            <CircuitBoard size={48} className="text-[var(--rojo-neon)]" />
+                                            <Sun size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Soporte RGB
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{torreSeleccionada.soporte_rgb}</p>
+                                                <p className="text-lg text-gray-300">{torreSeleccionada.soporte_RGB}</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">

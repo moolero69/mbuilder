@@ -4,8 +4,32 @@ import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import { Head, Link } from '@inertiajs/react';
 
 export default function ResumenMontaje() {
-    const { procesadorGuardado, placaBaseGuardada, memoriaRamGuardada, discoDuroGuardado, tarjetaGraficaGuardada, fuenteAlimentacionGuardada } =
-        useProgresoMontaje((state) => state);
+    const {
+        procesadorGuardado,
+        placaBaseGuardada,
+        memoriaRamGuardada,
+        discoDuroGuardado,
+        tarjetaGraficaGuardada,
+        fuenteAlimentacionGuardada,
+        torreGuardada,
+    } = useProgresoMontaje((state) => state);
+
+    const precioTotal =
+    Number(procesadorGuardado!.precio) +
+    Number(placaBaseGuardada!.precio) +
+    Number(memoriaRamGuardada!.precio) +
+    Number(discoDuroGuardado!.precio) +
+    Number(tarjetaGraficaGuardada!.precio) +
+    Number(fuenteAlimentacionGuardada!.precio) +
+    Number(torreGuardada!.precio);
+
+
+    const consumoTotal =
+        procesadorGuardado!.consumo +
+        placaBaseGuardada!.consumo +
+        memoriaRamGuardada!.consumo +
+        discoDuroGuardado!.consumo +
+        tarjetaGraficaGuardada!.consumo;
 
     const Componente = ({ nombre, componente, color }: { nombre: string; componente: any; color: string }) => {
         if (!componente) return null;
@@ -101,6 +125,24 @@ export default function ResumenMontaje() {
                             <p>Potencia: {fuenteAlimentacionGuardada.potencia}W</p>
                         </div>
                     )}
+                    {torreGuardada && (
+                        <div className="rounded border border-[var(--naranja-neon)] bg-gradient-to-br from-black via-[var(--naranja-neon)]/10 to-black p-4">
+                            <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--naranja-neon)]">Torre</h3>
+                            <p>{torreGuardada.nombre}</p>
+                        </div>
+                    )}
+                </div>
+                <div className="m-5 flex items-center justify-center gap-6">
+                    <div className="w-[25%] rounded border border-[var(--verde-neon)] bg-gradient-to-br from-black via-[var(--verde-neon)]/10 to-black p-4">
+                        <h3 className="animate-[flicker_3s_infinite] justify-end align-middle text-xl font-bold text-white">
+                            {`PRECIO TOTAL: ${precioTotal}€`}
+                        </h3>
+                    </div>
+                    <div className="w-[25%] rounded border border-[var(--morado-neon)] bg-gradient-to-br from-black via-[var(--morado-neon)]/10 to-black p-4">
+                        <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-white">
+                            {`CONSUMO DEL PC: ${consumoTotal}W`}
+                        </h3>
+                    </div>
                 </div>
                 <div className="mt-8 flex flex-col items-center justify-center gap-4 md:flex-row">
                     <button

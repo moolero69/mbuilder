@@ -16,7 +16,7 @@ class Torre extends Model
         "nombre",
         "marca",
         "factor_forma",
-        "soporte_rgb",
+        "soporte_RGB",
         "precio"
     ];
 
