@@ -7,7 +7,7 @@ export interface Auth {
 }
 
 export interface BreadcrumbItem {
-    title: string;
+    titulo: string;
     href: string;
 }
 
@@ -53,8 +53,8 @@ export interface DiscoDuro {
     velocidad: number;
     consumo: number;
     precio: number;
-    fecha_creacion: Date;
-    fecha_actualizacion: Date;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export interface TarjetaGrafica {
@@ -63,13 +63,13 @@ export interface TarjetaGrafica {
     marca: string;
     tipo: string;
     serie: string;
-    tipo_memoria:string;
+    tipo_memoria: string;
     memoria: number;
     passmark: number;
     consumo: number;
     precio: number;
-    fecha_creacion: Date;
-    fecha_actualizacion: Date;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export interface Procesador {
@@ -85,8 +85,8 @@ export interface Procesador {
     passmark: number;
     consumo: number;
     precio: number;
-    fecha_creacion: Date;
-    fecha_actualizacion: Date;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export interface FuenteAlimentacion {
@@ -97,8 +97,8 @@ export interface FuenteAlimentacion {
     potencia: number;
     modular: string;
     precio: number;
-    fecha_creacion: Date;
-    fecha_actualizacion: Date;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export interface PlacaBase {
@@ -109,8 +109,8 @@ export interface PlacaBase {
     factor_forma: string;
     consumo: number;
     precio: number;
-    fecha_creacion: Date;
-    fecha_actualizacion: Date;
+    created_at: Date;
+    updated_at: Date;
     compatible?: boolean;
 }
 
@@ -121,8 +121,8 @@ export interface Torre {
     factor_forma: string;
     soporte_RGB: string;
     precio: number;
-    fecha_creacion: Date;
-    fecha_actualizacion: Date;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export interface MemoriaRam {
@@ -135,13 +135,8 @@ export interface MemoriaRam {
     frecuencia: number;
     consumo: number;
     precio: number;
-    fecha_creacion: Date;
-    fecha_actualizacion: Date;
-}
-
-export interface ConfiguradorLayoutProps {
-    sidebar: ReactNode;
-    main: ReactNode;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export interface ItemArrastrableProps {
@@ -150,6 +145,32 @@ export interface ItemArrastrableProps {
     icono: ReactNode;
     iconoSecundario?: ReactNode;
     textoSecundario?: string;
+    precio?: number;
+}
+export interface MontajeLayoutProps {
+    sidebar: ReactNode;
+    main: ReactNode;
+    breadcrums?: BreadcrumbItem[];
+    progresoMontaje?: Array;
+}
+
+export interface Montaje {
+    id: number;
+    nombre: string;
+    datos: string;
+    created_at: Date;
+    updated_at: Date;
+}
+
+export interface ComponentesMontaje {
+    procesador: Procesador;
+    placa_base: PlacaBase;
+    memoria_ram: MemoriaRam;
+    disco_duro: DiscoDuro;
+    tarjeta_grafica: TarjetaGrafica;
+    fuente_alimentacion: FuenteAlimentacion;
+    torre: Torre;
+    otros?: {precio: number, potencia: number, nombre: string};
 }
 
 export interface EstadoMontaje {
@@ -166,5 +187,9 @@ export interface EstadoMontaje {
     fuenteAlimentacionGuardada?: FuenteAlimentacion | null;
     guardarFuenteAlimentacion?: (fuenteAlimentacion: FuenteAlimentacion | null) => void;
     torreGuardada?: Torre | null;
-    guardarTorre?: (fuenteAlimentacion: Torre | null) => void;
+    guardarTorre?: (torre: Torre | null) => void;
+    editarMontaje?: boolean | null;
+    guardarEditarMontaje?: (editarMontaje: boolean | null) => void;
+    montajeAnterior?: ComponentesMontaje | null;
+    guardarMontajeAnterior?: (montajeAnterior: ComponentesMontaje | null) => void;
 }

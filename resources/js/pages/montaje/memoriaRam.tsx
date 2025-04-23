@@ -4,18 +4,36 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import MontajeLayout from '@/layouts/app/montaje-layout';
-import { MemoriaRam, PlacaBase } from '@/types';
+import { BreadcrumbItem, MemoriaRam } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, ArrowLeft, MemoryStick, Cpu, Euro, Factory, Gauge, Minus, Move, Plus, Search, Wrench, Microchip, Box, Zap } from 'lucide-react';
+import { ArrowBigDown, Box, Euro, Factory, MemoryStick, Microchip, Minus, Move, Plus, Search, Wrench, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: MemoriaRam[] }) {
-    const { procesadorGuardado, guardarMemoriaRam } = useProgresoMontaje((state) => state);
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        titulo: 'Procesador',
+        href: '/montaje/procesador',
+    },
+    {
+        titulo: 'Placa base',
+        href: '/montaje/placaBase',
+    },
+    {
+        titulo: 'Memoria Ram',
+        href: '/montaje/memoriaRam',
+    },
+];
 
-    const [memoriaSeleccionada, setMemoriaSeleccionada] = useState<MemoriaRam | null>(null);
+const progresoMontaje = ['procesador', 'placaBase'];
+
+export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: MemoriaRam[] }) {
+    const { procesadorGuardado, guardarMemoriaRam, editarMontaje, memoriaRamGuardada } = useProgresoMontaje((state) => state);
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
+
+    const [memoriaSeleccionada, setMemoriaSeleccionada] = useState<MemoriaRam | null>(editarMontaje ? memoriaRamGuardada! : null);
 
     const [memoriaActiva, setMemoriaActiva] = useState<MemoriaRam | null>(null);
 
@@ -32,60 +50,64 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
     const [memoriasFiltradas, setMemoriasFiltradas] = useState<MemoriaRam[]>();
 
     const memoriasCorsair = (() => {
-        const m = memoriasFiltradas?.filter(m => m.marca === 'Corsair' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const m = memoriasFiltradas?.filter((m) => m.marca === 'Corsair' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return m?.length ? m : null;
     })();
-    
+
     const memoriasCrucial = (() => {
-        const m = memoriasFiltradas?.filter(m => m.marca === 'Crucial' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const m = memoriasFiltradas?.filter((m) => m.marca === 'Crucial' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return m?.length ? m : null;
     })();
-    
+
     const memoriasKingston = (() => {
-        const m = memoriasFiltradas?.filter(m => m.marca === 'Kingston' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const m = memoriasFiltradas?.filter((m) => m.marca === 'Kingston' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return m?.length ? m : null;
     })();
-    
+
     const memoriasAdata = (() => {
-        const m = memoriasFiltradas?.filter(m => m.marca === 'ADATA' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const m = memoriasFiltradas?.filter((m) => m.marca === 'ADATA' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return m?.length ? m : null;
     })();
-    
+
     const memoriasGskill = (() => {
-        const m = memoriasFiltradas?.filter(m => m.marca === 'G.SKILL' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const m = memoriasFiltradas?.filter((m) => m.marca === 'G.SKILL' && m.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return m?.length ? m : null;
     })();
 
     useEffect(() => {
-        toast.custom(
-            (t) => (
-                <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl bg-black/80 p-4 text-white shadow-lg">
-                    <span>
-                        <Wrench size={30} className="text-[var(--rojo-neon)]" />
-                    </span>
-                    <div className="flex w-full justify-center text-center text-xl">
-                        <p className="font-['exo_2']">Arrastra tu memoria RAM</p>
+        !editarMontaje &&
+            toast.custom(
+                (t) => (
+                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
+                        <span>
+                            <Wrench size={30} className="text-[var(--rojo-neon)]" />
+                        </span>
+                        <div className="flex w-full justify-center text-center text-xl">
+                            <p className="font-['exo_2']">Arrastra tu memoria RAM</p>
+                        </div>
                     </div>
-                </div>
-            ),
-            { duration: 3500 },
-        );
+                ),
+                { duration: 3500 },
+            );
 
-        const comprobarCompatibilidad = () => {
+        const comprobarCompatibilidad = (memoria: MemoriaRam) => {
+            const socketsDDR5 = ['AM5', 'LGA1700'];
+            const socketsDDR4 = ['AM4', 'LGA1200'];
+
             const memoriasCompatibles = memoriasRam.filter((memoria) => {
                 const socket = procesadorGuardado?.socket;
                 const tipoMemoria = memoria.tipo;
-
-                const socketsDDR5 = ['AM5', 'LGA1700'];
-                const socketsDDR4 = ['AM4', 'LGA1200'];
-
                 return (socketsDDR5.includes(socket!) && tipoMemoria === 'DDR5') || (socketsDDR4.includes(socket!) && tipoMemoria === 'DDR4');
             });
 
+            const compatible =
+                (socketsDDR5.includes(procesadorGuardado!.socket) && memoria?.tipo === 'DDR5') ||
+                (socketsDDR4.includes(procesadorGuardado!.socket) && memoria?.tipo === 'DDR4');
+
+            setEsCompatible(compatible);
             setMemoriasFiltradas(memoriasCompatibles);
         };
-
-        comprobarCompatibilidad();
+        comprobarCompatibilidad(memoriaRamGuardada!);
     }, []);
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -99,6 +121,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
         }
         setMemoriaActiva(null);
         setIsDragging(false);
+        setEsCompatible(true);
     };
 
     const handleDragStart = (event: any) => {
@@ -130,6 +153,8 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                 {/* Blur de fondo al arrastrar */}
                 {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
                 <MontajeLayout
+                    breadcrums={breadcrumbs}
+                    progresoMontaje={progresoMontaje}
                     sidebar={
                         <div className="w-full space-y-4">
                             {/* 🔍 Barra de búsqueda general */}
@@ -172,6 +197,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasCorsair[0].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasCorsair[0].almacenamiento}GB`}
+                                                        precio={memoriasCorsair[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -181,6 +207,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasCorsair[1].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasCorsair[1].almacenamiento}GB`}
+                                                        precio={memoriasCorsair[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -190,6 +217,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasCorsair[2].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasCorsair[2].almacenamiento}GB`}
+                                                        precio={memoriasCorsair[2].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -200,7 +228,13 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                         {memoriasCorsair.map((memoria) => (
                                             <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} textoSecundario={`${memoria.almacenamiento}GB`}/>
+                                                    <ItemArrastrable
+                                                        id={memoria.id}
+                                                        nombre={memoria.nombre}
+                                                        icono={<MemoryStick />}
+                                                        textoSecundario={`${memoria.almacenamiento}GB`}
+                                                        precio={memoria.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -231,6 +265,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasCrucial[0].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasCrucial[0].almacenamiento}GB`}
+                                                        precio={memoriasCrucial[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -240,6 +275,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasCrucial[1].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasCrucial[1].almacenamiento}GB`}
+                                                        precio={memoriasCrucial[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -249,6 +285,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasCrucial[2].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasCrucial[2].almacenamiento}GB`}
+                                                        precio={memoriasCrucial[2].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -259,7 +296,13 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                         {memoriasCrucial.map((memoria) => (
                                             <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} textoSecundario={`${memoria.almacenamiento}GB`}/>
+                                                    <ItemArrastrable
+                                                        id={memoria.id}
+                                                        nombre={memoria.nombre}
+                                                        icono={<MemoryStick />}
+                                                        textoSecundario={`${memoria.almacenamiento}GB`}
+                                                        precio={memoria.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -290,6 +333,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasKingston[0].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasKingston[0].almacenamiento}GB`}
+                                                        precio={memoriasKingston[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -299,6 +343,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasKingston[1].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasKingston[1].almacenamiento}GB`}
+                                                        precio={memoriasKingston[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -308,6 +353,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasKingston[2].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasKingston[2].almacenamiento}GB`}
+                                                        precio={memoriasKingston[2].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -318,7 +364,12 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                         {memoriasKingston.map((memoria) => (
                                             <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} />
+                                                    <ItemArrastrable
+                                                        id={memoria.id}
+                                                        nombre={memoria.nombre}
+                                                        icono={<MemoryStick />}
+                                                        precio={memoria.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -349,6 +400,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasGskill[0].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasGskill[0].almacenamiento}GB`}
+                                                        precio={memoriasGskill[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -358,6 +410,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasGskill[1].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasGskill[1].almacenamiento}GB`}
+                                                        precio={memoriasGskill[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -368,7 +421,13 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                         {memoriasGskill.map((memoria) => (
                                             <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} textoSecundario={`${memoria.almacenamiento}GB`}/>
+                                                    <ItemArrastrable
+                                                        id={memoria.id}
+                                                        nombre={memoria.nombre}
+                                                        icono={<MemoryStick />}
+                                                        textoSecundario={`${memoria.almacenamiento}GB`}
+                                                        precio={memoria.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -399,6 +458,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasAdata[0].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasAdata[0].almacenamiento}GB`}
+                                                        precio={memoriasAdata[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -408,6 +468,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         nombre={memoriasAdata[1].nombre}
                                                         icono={<MemoryStick />}
                                                         textoSecundario={`${memoriasAdata[1].almacenamiento}GB`}
+                                                        precio={memoriasAdata[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -418,7 +479,13 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                         {memoriasAdata.map((memoria) => (
                                             <div key={memoria.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={memoria.id} nombre={memoria.nombre} icono={<MemoryStick />} textoSecundario={`${memoria.almacenamiento}GB`}/>
+                                                    <ItemArrastrable
+                                                        id={memoria.id}
+                                                        nombre={memoria.nombre}
+                                                        icono={<MemoryStick />}
+                                                        textoSecundario={`${memoria.almacenamiento}GB`}
+                                                        precio={memoria.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -430,15 +497,9 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                     }
                     main={
                         <div className="flex h-full flex-col items-center gap-3 bg-black/20 text-white">
-                            <div className="absolute left-[18%] flex items-center text-2xl">
-                                <ArrowLeft size={30} />
-                                <Link href={route('montaje.placaBase')}>
-                                    <h1 className='font-["exo_2"] underline'>VOLVER A LA PLACA BASE</h1>
-                                </Link>
-                            </div>
                             {memoriaActiva ? (
                                 <div className="fade-down z-10 flex flex-col items-center gap-2 text-white">
-                                    <h1 className="rerelative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
+                                    <h1 className="relative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
                                         Arrastra tu memoria RAM aquí
                                     </h1>
                                     <ArrowBigDown className="h-32 w-32 text-[var(--morado-neon)]" />
@@ -521,15 +582,28 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                             </div>
                                         </div>
                                     </div>
-                                    <Button
-                                        variant={'outline'}
-                                        className="fade-in border-[var(--morado-neon)] font-['exo_2']"
-                                        onClick={() => {
-                                            guardarMemoriaRam!(memoriaSeleccionada);
-                                        }}
-                                    >
-                                        <Link href={route('montaje.discoDuro')}>Siguiente</Link>
-                                    </Button>
+                                    {esCompatible ? (
+                                        <Button
+                                            variant={'outline'}
+                                            className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${memoriaActiva && 'hidden'}`}
+                                            onClick={() => {
+                                                guardarMemoriaRam!(memoriaSeleccionada);
+                                            }}
+                                            asChild
+                                        >
+                                            <Link href={route('montaje.discoDuro')}>Siguiente</Link>
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant={'outline'}
+                                            className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${memoriaActiva && 'hidden'} disabled hover:cursor-no-drop`}
+                                            onClick={() => {
+                                                guardarMemoriaRam!(memoriaSeleccionada);
+                                            }}
+                                        >
+                                            <h1>Incompatible</h1>
+                                        </Button>
+                                    )}
                                 </>
                             )}
                         </div>

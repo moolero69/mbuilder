@@ -4,9 +4,9 @@ const Footer: React.FC = () => {
     const ahora = new Date;
     const año = ahora.getFullYear();
   return (
-    <footer className="bg-gray-800 text-white p-4 w-full mt-auto">
+    <footer className="bg-black text-white p-4 w-full mt-auto">
       <div className="container mx-auto text-center">
-        <p>&copy; {año} mbuilder. Todos los derechos reservados.</p>
+        <p className="font-['Exo_2']">&copy; {año} mbuilder. Todos los derechos reservados.</p>
       </div>
     </footer>
   );

@@ -4,18 +4,32 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import MontajeLayout from '@/layouts/app/montaje-layout';
-import { PlacaBase } from '@/types';
+import { BreadcrumbItem, PlacaBase } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, ArrowLeft, CircuitBoard, Cpu, Euro, Factory, Gauge, MemoryStick, Minus, Move, Plus, Search, Wrench, Zap } from 'lucide-react';
+import { ArrowBigDown, CircuitBoard, Cpu, Euro, Factory, Minus, Move, Plus, Search, Wrench, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase[] }) {
-    const { procesadorGuardado, guardarPlacaBase } = useProgresoMontaje((state) => state);
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        titulo: 'Procesador',
+        href: '/montaje/procesador',
+    },
+    {
+        titulo: 'Placa base',
+        href: '/montaje/placaBase',
+    },
+];
 
-    const [placaBaseSeleccionada, setPlacaBaseSeleccionada] = useState<PlacaBase | null>(null);
+const progresoMontaje = ['procesador'];
+
+export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase[] }) {
+    const { procesadorGuardado, guardarPlacaBase, editarMontaje, placaBaseGuardada } = useProgresoMontaje((state) => state);
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
+
+    const [placaBaseSeleccionada, setPlacaBaseSeleccionada] = useState<PlacaBase | null>(editarMontaje ? placaBaseGuardada! : null);
     const [placaBaseActiva, setPlacaBaseActiva] = useState<PlacaBase | null>(null);
 
     const [isDragging, setIsDragging] = useState(false);
@@ -30,47 +44,50 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
     const [placasFiltradas, setPlacasFiltradas] = useState<PlacaBase[]>();
 
     const placasBaseAsrock = (() => {
-        const p = placasFiltradas?.filter(p => p.marca === 'ASRock' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const p = placasFiltradas?.filter((p) => p.marca === 'ASRock' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return p?.length ? p : null;
     })();
-    
+
     const placasBaseAsus = (() => {
-        const p = placasFiltradas?.filter(p => p.marca === 'ASUS' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const p = placasFiltradas?.filter((p) => p.marca === 'ASUS' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return p?.length ? p : null;
     })();
-    
+
     const placasBaseMsi = (() => {
-        const p = placasFiltradas?.filter(p => p.marca === 'MSI' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const p = placasFiltradas?.filter((p) => p.marca === 'MSI' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return p?.length ? p : null;
     })();
-    
+
     const placasBaseGigabyte = (() => {
-        const p = placasFiltradas?.filter(p => p.marca === 'Gigabyte' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const p = placasFiltradas?.filter((p) => p.marca === 'Gigabyte' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return p?.length ? p : null;
     })();
 
     useEffect(() => {
-        toast.custom(
-            (t) => (
-                <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl bg-black/80 p-4 text-white shadow-lg">
-                    <span>
-                        <Wrench size={30} className="text-[var(--rojo-neon)]" />
-                    </span>
-                    <div className="flex w-full justify-center text-center text-xl">
-                        <p className="font-['exo_2']">Arrastra tu placa base</p>
+        !editarMontaje &&
+            toast.custom(
+                (t) => (
+                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
+                        <span>
+                            <Wrench size={30} className="text-[var(--rojo-neon)]" />
+                        </span>
+                        <div className="flex w-full justify-center text-center text-xl">
+                            <p className="font-['exo_2']">Arrastra tu placa base</p>
+                        </div>
                     </div>
-                </div>
-            ),
-            { duration: 3500 },
-        );
+                ),
+                { duration: 3500 },
+            );
 
-        const comprobarCompatibilidad = () => {
+        const comprobarCompatibilidad = (placa: PlacaBase) => {
+            const esCompatible = procesadorGuardado?.socket === placa?.socket;
+            setEsCompatible(esCompatible);
+
             const placasCompatibles = placasBase.filter((placa) => procesadorGuardado?.socket === placa.socket);
-
             setPlacasFiltradas(placasCompatibles);
         };
 
-        comprobarCompatibilidad();
+        comprobarCompatibilidad(placaBaseGuardada!);
     }, []);
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -84,6 +101,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
         }
         setPlacaBaseActiva(null);
         setIsDragging(false);
+        setEsCompatible(true);
     };
 
     const handleDragStart = (event: any) => {
@@ -113,6 +131,8 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                 {/* Blur de fondo al arrastrar */}
                 {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
                 <MontajeLayout
+                    breadcrums={breadcrumbs}
+                    progresoMontaje={progresoMontaje}
                     sidebar={
                         <div className="w-full space-y-4">
                             {/* 🔍 Barra de búsqueda general */}
@@ -154,6 +174,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                         id={placasBaseAsrock[0].id}
                                                         nombre={placasBaseAsrock[0].nombre}
                                                         icono={<CircuitBoard />}
+                                                        precio={placasBaseAsrock[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -162,6 +183,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                         id={placasBaseAsrock[1].id}
                                                         nombre={placasBaseAsrock[1].nombre}
                                                         icono={<CircuitBoard />}
+                                                        precio={placasBaseAsrock[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -170,6 +192,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                         id={placasBaseAsrock[2].id}
                                                         nombre={placasBaseAsrock[2].nombre}
                                                         icono={<CircuitBoard />}
+                                                        precio={placasBaseAsrock[2].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -180,7 +203,12 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                         {placasBaseAsrock.map((placa) => (
                                             <div key={placa.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                    <ItemArrastrable
+                                                        id={placa.id}
+                                                        nombre={placa.nombre}
+                                                        icono={<CircuitBoard />}
+                                                        precio={placa.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -210,6 +238,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                         id={placasBaseAsus[0].id}
                                                         nombre={placasBaseAsus[0].nombre}
                                                         icono={<CircuitBoard />}
+                                                        precio={placasBaseAsus[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -218,6 +247,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                         id={placasBaseAsus[1].id}
                                                         nombre={placasBaseAsus[1].nombre}
                                                         icono={<CircuitBoard />}
+                                                        precio={placasBaseAsus[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -226,6 +256,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                         id={placasBaseAsus[2].id}
                                                         nombre={placasBaseAsus[2].nombre}
                                                         icono={<CircuitBoard />}
+                                                        precio={placasBaseAsus[2].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -237,7 +268,12 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                         {placasBaseAsus.map((placa) => (
                                             <div key={placa.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                    <ItemArrastrable
+                                                        id={placa.id}
+                                                        nombre={placa.nombre}
+                                                        icono={<CircuitBoard />}
+                                                        precio={placa.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -267,6 +303,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                         id={placasBaseMsi[0].id}
                                                         nombre={placasBaseMsi[0].nombre}
                                                         icono={<CircuitBoard />}
+                                                        precio={placasBaseMsi[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -275,6 +312,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                         id={placasBaseMsi[1].id}
                                                         nombre={placasBaseMsi[1].nombre}
                                                         icono={<CircuitBoard />}
+                                                        precio={placasBaseMsi[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -283,6 +321,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                         id={placasBaseMsi[2].id}
                                                         nombre={placasBaseMsi[2].nombre}
                                                         icono={<CircuitBoard />}
+                                                        precio={placasBaseMsi[2].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -294,7 +333,12 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                         {placasBaseMsi.map((placa) => (
                                             <div key={placa.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                    <ItemArrastrable
+                                                        id={placa.id}
+                                                        nombre={placa.nombre}
+                                                        icono={<CircuitBoard />}
+                                                        precio={placa.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -324,6 +368,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                         id={placasBaseGigabyte[0].id}
                                                         nombre={placasBaseGigabyte[0].nombre}
                                                         icono={<CircuitBoard />}
+                                                        precio={placasBaseGigabyte[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -332,6 +377,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                         id={placasBaseGigabyte[1].id}
                                                         nombre={placasBaseGigabyte[1].nombre}
                                                         icono={<CircuitBoard />}
+                                                        precio={placasBaseGigabyte[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -340,6 +386,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                         id={placasBaseGigabyte[2].id}
                                                         nombre={placasBaseGigabyte[2].nombre}
                                                         icono={<CircuitBoard />}
+                                                        precio={placasBaseGigabyte[2].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -351,7 +398,12 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                         {placasBaseGigabyte.map((placa) => (
                                             <div key={placa.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={placa.id} nombre={placa.nombre} icono={<CircuitBoard />} />
+                                                    <ItemArrastrable
+                                                        id={placa.id}
+                                                        nombre={placa.nombre}
+                                                        icono={<CircuitBoard />}
+                                                        precio={placa.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -363,12 +415,6 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                     }
                     main={
                         <div className="flex h-full flex-col items-center gap-3 bg-black/20 text-white">
-                            <div className="absolute left-[18%] flex items-center text-2xl">
-                                <ArrowLeft size={30} />
-                                <Link href={route('montaje.procesador')}>
-                                    <h1 className='font-["exo_2"] underline'>VOLVER AL PROCESADOR</h1>
-                                </Link>
-                            </div>
                             {placaBaseActiva ? (
                                 <div className="fade-down z-10 flex flex-col items-center gap-2 text-white">
                                     <h1 className="rerelative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
@@ -399,7 +445,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                             {placaBaseSeleccionada && (
                                 <>
                                     <div
-                                        className="grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3 fade-left"
+                                        className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3"
                                         key={placaBaseSeleccionada.id}
                                     >
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
@@ -448,15 +494,28 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                             </div>
                                         </div>
                                     </div>
-                                    <Button
-                                        variant={'outline'}
-                                        className="border-[var(--morado-neon)] font-['exo_2'] fade-in"
-                                        onClick={() => {
-                                            guardarPlacaBase!(placaBaseSeleccionada);
-                                        }}
-                                    >
-                                        <Link href={route('montaje.memoriaRam')}>Siguiente</Link>
-                                    </Button>
+                                    {esCompatible ? (
+                                        <Button
+                                            variant={'outline'}
+                                            className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${placaBaseActiva && 'hidden'}`}
+                                            onClick={() => {
+                                                guardarPlacaBase!(placaBaseSeleccionada);
+                                            }}
+                                            asChild
+                                        >
+                                            <Link href={route('montaje.memoriaRam')}>Siguiente</Link>
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant={'outline'}
+                                            className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${placaBaseActiva && 'hidden'} disabled hover:cursor-no-drop`}
+                                            onClick={() => {
+                                                guardarPlacaBase!(placaBaseSeleccionada);
+                                            }}
+                                        >
+                                            <h1>Incompatible</h1>
+                                        </Button>
+                                    )}
                                 </>
                             )}
                         </div>

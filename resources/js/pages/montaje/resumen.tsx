@@ -1,9 +1,23 @@
 import Header from '@/components/header-principal';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { Label } from '@radix-ui/react-label';
+import { Check } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
+type MontajeForm = {
+    nombre: string;
+    datos: any;
+};
 
 export default function ResumenMontaje() {
+    const [dialogoNombreAbierto, setDialogoNombreAbierto] = useState(false);
+    const [montajeGuardado, setMontajeGuardado] = useState(false);
+
     const {
         procesadorGuardado,
         placaBaseGuardada,
@@ -14,15 +28,35 @@ export default function ResumenMontaje() {
         torreGuardada,
     } = useProgresoMontaje((state) => state);
 
-    const precioTotal =
-    Number(procesadorGuardado!.precio) +
-    Number(placaBaseGuardada!.precio) +
-    Number(memoriaRamGuardada!.precio) +
-    Number(discoDuroGuardado!.precio) +
-    Number(tarjetaGraficaGuardada!.precio) +
-    Number(fuenteAlimentacionGuardada!.precio) +
-    Number(torreGuardada!.precio);
+    const { data, setData, post } = useForm<MontajeForm>({
+        nombre: '',
+        datos: {},
+    });
 
+    useEffect(() => {
+        setData({
+            nombre: data.nombre,
+            datos: {
+                procesador: procesadorGuardado || null,
+                placa_base: placaBaseGuardada || null,
+                memoria_ram: memoriaRamGuardada || null,
+                disco_duro: discoDuroGuardado || null,
+                tarjeta_grafica: tarjetaGraficaGuardada || null,
+                fuente_alimentacion: fuenteAlimentacionGuardada || null,
+                torre: torreGuardada || null,
+                otros: otros,
+            },
+        });
+    }, []);
+
+    const precioTotal =
+        Number(procesadorGuardado!.precio) +
+        Number(placaBaseGuardada!.precio) +
+        Number(memoriaRamGuardada!.precio) +
+        Number(discoDuroGuardado!.precio) +
+        Number(tarjetaGraficaGuardada!.precio) +
+        Number(fuenteAlimentacionGuardada!.precio) +
+        Number(torreGuardada!.precio);
 
     const consumoTotal =
         procesadorGuardado!.consumo +
@@ -31,57 +65,46 @@ export default function ResumenMontaje() {
         discoDuroGuardado!.consumo +
         tarjetaGraficaGuardada!.consumo;
 
-    const Componente = ({ nombre, componente, color }: { nombre: string; componente: any; color: string }) => {
-        if (!componente) return null;
+    const otros = {
+        precio: precioTotal,
+        consumo: consumoTotal,
+        nombre: data.nombre,
+    };
 
-        return (
-            <div className={`rounded-md border-l-4 bg-[#1f1f1f] p-4 border-[var(--${color})] shadow-[0_0_5px_var(--${color})]`}>
-                <h3 className={`text-[var(--${color})] mb-1 text-xl font-semibold`}>{nombre}</h3>
-                <p className="text-sm text-white">{componente.nombre}</p>
-                <p className="text-xs text-gray-400">{componente.marca}</p>
-            </div>
-        );
+    const construirJsonMontaje = () => {
+        post(route('montaje.guardar'), {
+            onSuccess: () => {
+                toast.custom(
+                    (t) => (
+                        <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl bg-white/90 p-4 text-black shadow-lg">
+                            <span>
+                                <Check size={30} className="text-[var(--rojo-neon)]" />
+                            </span>
+                            <div className="flex w-full justify-center text-center text-xl">
+                                <p className="font-['exo_2']">Montaje guardado</p>
+                            </div>
+                        </div>
+                    ),
+                    { duration: 3500 },
+                );
+                setMontajeGuardado(true);
+            },
+            onError: (error: any) => {
+                toast.error('Error al guardar el montaje');
+                console.error(error);
+            },
+        });
     };
 
     return (
         <>
             <Head title="Resumen del Montaje" />
             <Header />
-            {/* <div className="bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] border-4 border-[var(--azul-neon)] rounded-xl p-8 shadow-[0_0_20px_var(--azul-neon)] font-['Orbitron'] text-white space-y-6 max-w-4xl mx-auto">
-            <Header />
-             <h2 className="text-4xl text-[var(--rosa-neon)] drop-shadow-[0_0_10px_var(--rosa-neon)] animate-[glitch_1s_infinite]">
-                 Resumen del Montaje
-             </h2>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm md:text-base">
-
-                 <Componente nombre="Procesador" componente={procesadorGuardado} color="verde-neon" />
-                 <Componente nombre="Placa Base" componente={placaBaseGuardada} color="azul-neon" />
-                 <Componente nombre="Memoria RAM" componente={memoriaRamGuardada} color="violeta-neon" />
-                 <Componente nombre="Disco Duro" componente={discoDuroGuardado} color="rojo-neon" />
-                 <Componente nombre="Tarjeta Gráfica" componente={tarjetaGraficaGuardada} color="amarillo-neon" />
-                 <Componente nombre="Fuente" componente={fuenteAlimentacionGuardada} color="naranja-neon" />
-             </div>
-
-             <hr className="border-[var(--azul-neon)] opacity-40" />
-
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mt-6">
-                 <div className="p-4 rounded-lg border border-[var(--verde-neon)] shadow-[0_0_10px_var(--verde-neon)]">
-                     <h3 className="text-[var(--verde-neon)] text-lg font-bold">Consumo Total</h3>
-                     <p className="text-white text-xl">1000W</p>
-                 </div>
-
-                 <div className="p-4 rounded-lg border border-[var(--rosa-neon)] shadow-[0_0_10px_var(--rosa-neon)]">
-                     <h3 className="text-[var(--rosa-neon)] text-lg font-bold">Precio Total</h3>
-                     <p className="text-white text-xl">1300€</p>
-                 </div>
-             </div>
-         </div> */}
-
+            {dialogoNombreAbierto && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-xs"></div>}
             <div className="mt-5 animate-[pulseNeon_2s_infinite] rounded-xl border-2 border-[var(--azul-neon)] bg-black p-6 shadow-lg">
                 <h2 className="mb-6 animate-[glitch_1s_infinite] text-center font-['Orbitron'] text-6xl font-bold text-[var(--rosa-neon)] drop-shadow-[0_0_10px_var(--rosa-neon)]">
                     RESUMEN DEL MONTAJE
                 </h2>
-
                 <div className="grid grid-cols-1 gap-6 font-['Exo_2'] text-white md:grid-cols-2">
                     {procesadorGuardado && (
                         <div className="rounded border border-[var(--azul-neon)] bg-gradient-to-br from-black via-[var(--azul-neon)]/10 to-black p-4">
@@ -132,25 +155,31 @@ export default function ResumenMontaje() {
                         </div>
                     )}
                 </div>
-                <div className="m-5 flex items-center justify-center gap-6">
-                    <div className="w-[25%] rounded border border-[var(--verde-neon)] bg-gradient-to-br from-black via-[var(--verde-neon)]/10 to-black p-4">
-                        <h3 className="animate-[flicker_3s_infinite] justify-end align-middle text-xl font-bold text-white">
-                            {`PRECIO TOTAL: ${precioTotal}€`}
+                <div className="m-5 flex flex-col items-center justify-center gap-6 md:flex-row">
+                    <div className="w-full max-w-sm rounded-xl border border-[var(--verde-neon)] bg-black p-6 shadow-[0_0_20px_var(--verde-neon)] transition hover:scale-[1.03] hover:shadow-[0_0_35px_var(--verde-neon)]">
+                        <h3 className="text-center font-['Orbitron'] text-2xl font-extrabold text-[var(--verde-neon)] drop-shadow-[0_0_6px_var(--verde-neon)]">
+                            PRECIO TOTAL
                         </h3>
+                        <p className="mt-2 text-center text-xl tracking-wide text-white">{precioTotal.toFixed(2)}€</p>
                     </div>
-                    <div className="w-[25%] rounded border border-[var(--morado-neon)] bg-gradient-to-br from-black via-[var(--morado-neon)]/10 to-black p-4">
-                        <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-white">
-                            {`CONSUMO DEL PC: ${consumoTotal}W`}
+
+                    <div className="w-full max-w-sm rounded-xl border border-[var(--morado-neon)] bg-black p-6 shadow-[0_0_20px_var(--morado-neon)] transition hover:scale-[1.03] hover:shadow-[0_0_35px_var(--morado-neon)]">
+                        <h3 className="text-center font-['Orbitron'] text-2xl font-extrabold text-[var(--morado-neon)] drop-shadow-[0_0_6px_var(--morado-neon)]">
+                            CONSUMO DEL PC
                         </h3>
+                        <p className="mt-2 text-center text-xl tracking-wide text-white">{consumoTotal}W</p>
                     </div>
                 </div>
+
                 <div className="mt-8 flex flex-col items-center justify-center gap-4 md:flex-row">
-                    <button
-                        className="rounded-lg border border-[var(--verde-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--verde-neon)] transition-colors duration-1000 hover:bg-[var(--verde-neon)] hover:text-black"
-                        // onClick={handleGuardarMontaje}
+                    <Button
+                        variant={'outline'}
+                        className="hover: h-13 cursor-pointer rounded-lg border border-[var(--verde-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--verde-neon)] transition-colors duration-1000 hover:bg-[var(--verde-neon)] hover:text-black"
+                        onClick={() => setDialogoNombreAbierto(true)}
+                        disabled={montajeGuardado}
                     >
                         Guardar montaje en mi perfil
-                    </button>
+                    </Button>
 
                     <button
                         className="rounded-lg border border-[var(--azul-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--azul-neon)] transition-colors duration-1000 hover:bg-[var(--azul-neon)] hover:text-black"
@@ -167,14 +196,47 @@ export default function ResumenMontaje() {
                     </button>
 
                     <Button
+                        variant={'outline'}
                         className="rounded-lg border border-[var(--rojo-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--rojo-neon)] transition-colors duration-1000 hover:bg-[var(--rojo-neon)] hover:text-black"
-                        // onClick={handleExportarPDF}
                         asChild
                     >
                         <Link href={route('home')}>Salir</Link>
                     </Button>
                 </div>
             </div>
+
+            <Dialog open={dialogoNombreAbierto} onOpenChange={setDialogoNombreAbierto}>
+                <DialogContent className="border-[var(--verde-neon)] bg-[#0d0d0d] text-white shadow-[0_0_15px_var(--verde-neon)] sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Guardar montaje</DialogTitle>
+                        <DialogDescription>Dale un nombre a tu montaje antes de guardarlo.</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="nombre" className="text-right">
+                                Nombre
+                            </Label>
+                            <Input
+                                id="nombre"
+                                onChange={(e) => setData('nombre', e.target.value)}
+                                className="col-span-3"
+                                value={data.nombre ?? ''}
+                                placeholder='"La bestia"'
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            onClick={() => {
+                                construirJsonMontaje();
+                                setDialogoNombreAbierto(false);
+                            }}
+                        >
+                            Guardar montaje
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

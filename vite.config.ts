@@ -14,7 +14,7 @@ export default defineConfig({
         react(),
         tailwindcss(),
     ],server: {
-        host: 'localhost',  // Poner la misma IP que usaste en `php artisan serve`
+        host: '192.168.1.23',  // Poner la misma IP que en el host de `php artisan serve`
         port: 5173,
         strictPort: true,
         watch: {

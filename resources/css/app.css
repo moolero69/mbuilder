@@ -238,43 +238,130 @@
         25% {
             border-color: var(--azul-neon);
         }
-        50%{
+        50% {
             border-color: var(--rojo-neon);
         }
         75% {
             border-color: var(--morado-neon);
         }
-        100%{
+        100% {
             border-color: var(--verde-neon);
         }
     }
 
-    @keyframes glitch {
-        0% { text-shadow: 2px 2px var(--azul-neon), -2px -2px var(--rojo-neon); }
-        20% { text-shadow: -2px 2px var(--azul-neon), 2px -2px var(--rojo-neon); }
-        40% { text-shadow: 2px -2px var(--rojo-neon), -2px 2px var(--azul-neon); }
-        60% { text-shadow: -1px 1px var(--rojo-neon), 1px -1px var(--azul-neon); }
-        80% { text-shadow: 1px 1px var(--azul-neon), -1px -1px var(--rojo-neon); }
-        100% { text-shadow: 2px 2px var(--azul-neon), -2px -2px var(--rojo-neon); }
-      }
+    @keyframes coloresBordeGlow {
+        0% {
+            border-color: var(--verde-neon);
+            box-shadow: 0 0 10px var(--verde-neon);
+        }
+        25% {
+            border-color: var(--azul-neon);
+            box-shadow: 0 0 10px var(--azul-neon);
+        }
+        50% {
+            border-color: var(--rojo-neon);
+            box-shadow: 0 0 10px var(--rojo-neon);
+        }
+        75% {
+            border-color: var(--morado-neon);
+            box-shadow: 0 0 10px var(--morado-neon);
+        }
+        100% {
+            border-color: var(--verde-neon);
+            box-shadow: 0 0 10px var(--verde-neon);
+        }
+    }
 
-      @keyframes flicker {
-        0%, 100% { opacity: 1; }
-        10% { opacity: 0.9; }
-        20% { opacity: 0.4; }
-        30% { opacity: 1; }
-        40% { opacity: 0.8; }
-        50% { opacity: 0.3; }
-        60% { opacity: 1; }
-        70% { opacity: 0.7; }
-        80% { opacity: 1; }
-        90% { opacity: 0.9; }
-      }
-      
-      @keyframes pulseNeon {
-        0%, 100% { box-shadow: 0 0 5px var(--azul-neon), 0 0 15px var(--azul-neon); }
-        50% { box-shadow: 0 0 10px var(--azul-neon), 0 0 25px var(--azul-neon); }
-      }
+    @keyframes glitch {
+        0% {
+            text-shadow:
+                2px 2px var(--azul-neon),
+                -2px -2px var(--rojo-neon);
+        }
+        20% {
+            text-shadow:
+                -2px 2px var(--azul-neon),
+                2px -2px var(--rojo-neon);
+        }
+        40% {
+            text-shadow:
+                2px -2px var(--rojo-neon),
+                -2px 2px var(--azul-neon);
+        }
+        60% {
+            text-shadow:
+                -1px 1px var(--rojo-neon),
+                1px -1px var(--azul-neon);
+        }
+        80% {
+            text-shadow:
+                1px 1px var(--azul-neon),
+                -1px -1px var(--rojo-neon);
+        }
+        100% {
+            text-shadow:
+                2px 2px var(--azul-neon),
+                -2px -2px var(--rojo-neon);
+        }
+    }
+
+    @keyframes flicker {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        10% {
+            opacity: 0.9;
+        }
+        20% {
+            opacity: 0.4;
+        }
+        30% {
+            opacity: 1;
+        }
+        40% {
+            opacity: 0.8;
+        }
+        50% {
+            opacity: 0.3;
+        }
+        60% {
+            opacity: 1;
+        }
+        70% {
+            opacity: 0.7;
+        }
+        80% {
+            opacity: 1;
+        }
+        90% {
+            opacity: 0.9;
+        }
+    }
+
+    @keyframes pulseNeon {
+        0%,
+        100% {
+            box-shadow:
+                0 0 5px var(--azul-neon),
+                0 0 15px var(--azul-neon);
+        }
+        50% {
+            box-shadow:
+                0 0 10px var(--azul-neon),
+                0 0 25px var(--azul-neon);
+        }
+    }
+
+    @keyframes glow {
+        0%,
+        100% {
+            text-shadow: 0 0 5px var(--azul-neon);
+        }
+        50% {
+            text-shadow: 0 0 10px var(--azul-neon);
+        }
+    }
 }
 
 .fade-left {
@@ -291,4 +378,42 @@
 
 .colores-borde {
     animation: coloresBorde 60s linear infinite;
+}
+
+.colores-borde-glow {
+    animation: coloresBordeGlow 60s linear infinite;
+    transition: all 0.3s ease;
+}
+
+.breadcrumb-gaming {
+    --breadcrumb-color: var(--verde-neon);
+    --breadcrumb-hover: var(--rosa-neon);
+    --breadcrumb-active: var(--azul-neon);
+}
+
+.breadcrumb-gaming a {
+    color: var(--breadcrumb-color);
+    text-shadow: 0 0 2px var(--breadcrumb-color);
+    transition: all 0.3s ease;
+}
+
+.breadcrumb-gaming a:hover {
+    color: var(--breadcrumb-hover);
+    text-shadow:
+        0 0 8px var(--breadcrumb-hover),
+        0 0 12px var(--breadcrumb-hover);
+}
+
+.breadcrumb-gaming .current-page {
+    color: var(--breadcrumb-active);
+    font-weight: bold;
+    text-shadow:
+        0 0 2px var(--breadcrumb-active),
+        0 0 6px var(--breadcrumb-active);
+}
+
+.breadcrumb-gaming .separator {
+    color: var(--naranja-neon);
+    padding: 0 0.5rem;
+    animation: glow 2s ease-in-out infinite;
 }

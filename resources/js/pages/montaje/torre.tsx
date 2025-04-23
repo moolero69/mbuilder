@@ -1,21 +1,63 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import MontajeLayout from '@/layouts/app/montaje-layout';
-import { Torre } from '@/types';
+import { BreadcrumbItem, Torre } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, ArrowLeft, PcCase, CircuitBoard, Euro, Factory, Gauge, Microchip, Minus, Move, Plus, Search, Wrench, Sun } from 'lucide-react';
+import { Label } from '@radix-ui/react-label';
+import { ArrowBigDown, Euro, Factory, Microchip, Minus, Move, PcCase, Plus, Search, Sun, Wrench } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function MontajeTorre({ torres }: { torres: Torre[] }) {
-    const { placaBaseGuardada, guardarTorre } = useProgresoMontaje((state) => state);
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        titulo: 'Procesador',
+        href: '/montaje/procesador',
+    },
+    {
+        titulo: 'Placa base',
+        href: '/montaje/placaBase',
+    },
+    {
+        titulo: 'Memoria Ram',
+        href: '/montaje/memoriaRam',
+    },
+    {
+        titulo: 'Disco Duro',
+        href: '/montaje/discoDuro',
+    },
+    {
+        titulo: 'Tarjeta Gráfica',
+        href: '/montaje/tarjetaGrafica',
+    },
+    {
+        titulo: 'Fuente de Alimentacion',
+        href: '/montaje/fuenteAlimentacion',
+    },
+    {
+        titulo: 'Torre',
+        href: '/montaje/torre',
+    },
+];
 
-    const [torreSeleccionada, setTorreSeleccionada] = useState<Torre | null>(null);
+const progresoMontaje = ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion'];
+
+export default function MontajeTorre({ torres }: { torres: Torre[] }) {
+    const { placaBaseGuardada, guardarTorre, editarMontaje, torreGuardada } = useProgresoMontaje((state) => state);
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
+
+    const [dialogoEditarAbierto, setDialogoEditarAbierto] = useState(false);
+    const nombreMontajeEditar: any = sessionStorage.getItem('nombreMontajeEditar');
+    const [nuevoNombre, setNuevoNombre] = useState(nombreMontajeEditar);
+    const [nombreAntiguo, setNombreAntiguo] = useState(nombreMontajeEditar);
+
+    const [torreSeleccionada, setTorreSeleccionada] = useState<Torre | null>(editarMontaje ? torreGuardada! : null);
 
     const [torreActiva, setTorreActiva] = useState<Torre | null>(null);
 
@@ -109,27 +151,30 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
     })();
 
     useEffect(() => {
-        toast.custom(
-            (t) => (
-                <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl bg-black/80 p-4 text-white shadow-lg">
-                    <span>
-                        <Wrench size={30} className="text-[var(--rojo-neon)]" />
-                    </span>
-                    <div className="flex w-full justify-center text-center text-xl">
-                        <p className="font-['exo_2']">Arrastra tu torre</p>
+        !editarMontaje &&
+            toast.custom(
+                (t) => (
+                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
+                        <span>
+                            <Wrench size={30} className="text-[var(--rojo-neon)]" />
+                        </span>
+                        <div className="flex w-full justify-center text-center text-xl">
+                            <p className="font-['exo_2']">Arrastra tu torre</p>
+                        </div>
                     </div>
-                </div>
-            ),
-            { duration: 3500 },
-        );
+                ),
+                { duration: 3500 },
+            );
 
-        const comprobarCompatibilidad = () => {
+        const comprobarCompatibilidad = (torre: Torre) => {
             const torresCompatibles = torres.filter((t) => t.factor_forma === placaBaseGuardada?.factor_forma);
 
+            const compatible = torre?.factor_forma === placaBaseGuardada!.factor_forma;
+            setEsCompatible(compatible);
             setTorresFiltradas(torresCompatibles);
         };
 
-        comprobarCompatibilidad();
+        comprobarCompatibilidad(torreSeleccionada!);
     }, []);
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -143,6 +188,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
         }
         setTorreActiva(null);
         setIsDragging(false);
+        setEsCompatible(true);
     };
 
     const handleDragStart = (event: any) => {
@@ -182,13 +228,20 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
         setSharkoonDesplegado(false);
         setThermalTakeDesplegado(false);
     };
+
+    useEffect(() => {
+        nuevoNombre && sessionStorage.setItem('nuevoNombreEditar', nuevoNombre);
+    }, [nuevoNombre]);
     return (
         <>
             <Head title="montaje - torre" />
+            {dialogoEditarAbierto && <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs"></div>}
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
                 {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
                 <MontajeLayout
+                    breadcrums={breadcrumbs}
+                    progresoMontaje={progresoMontaje}
                     sidebar={
                         <div className="w-full space-y-4">
                             {/* 🔍 Barra de búsqueda general */}
@@ -226,7 +279,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torresCorsair[0].id} nombre={torresCorsair[0].nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable
+                                                        id={torresCorsair[0].id}
+                                                        nombre={torresCorsair[0].nombre}
+                                                        icono={<PcCase />}
+                                                        precio={torresCorsair[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -236,7 +294,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresCorsair.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -262,7 +320,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torresNox[0].id} nombre={torresNox[0].nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable
+                                                        id={torresNox[0].id}
+                                                        nombre={torresNox[0].nombre}
+                                                        icono={<PcCase />}
+                                                        precio={torresNox[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -272,7 +335,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresNox.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -302,6 +365,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                                         id={torresCoolerMaster[0].id}
                                                         nombre={torresCoolerMaster[0].nombre}
                                                         icono={<PcCase />}
+                                                        precio={torresCoolerMaster[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -312,7 +376,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresCoolerMaster.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -326,7 +390,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                 <Collapsible open={aeroCoolDesplegado} onOpenChange={setAeroCoolDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            Cooler Master
+                                            Aerocool
                                         </p>
                                         <CollapsibleTrigger asChild>
                                             <Button variant="ghost" size="sm">
@@ -338,7 +402,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torresAeroCool[0].id} nombre={torresAeroCool[0].nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable
+                                                        id={torresAeroCool[0].id}
+                                                        nombre={torresAeroCool[0].nombre}
+                                                        icono={<PcCase />}
+                                                        precio={torresAeroCool[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -348,7 +417,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresAeroCool.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -374,7 +443,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torresDeepCool[0].id} nombre={torresDeepCool[0].nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable
+                                                        id={torresDeepCool[0].id}
+                                                        nombre={torresDeepCool[0].nombre}
+                                                        icono={<PcCase />}
+                                                        precio={torresDeepCool[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -384,7 +458,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresDeepCool.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -410,7 +484,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torresFractal[0].id} nombre={torresFractal[0].nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable
+                                                        id={torresFractal[0].id}
+                                                        nombre={torresFractal[0].nombre}
+                                                        icono={<PcCase />}
+                                                        precio={torresFractal[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -420,7 +499,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresFractal.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -446,7 +525,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torresNfortec[0].id} nombre={torresNfortec[0].nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable
+                                                        id={torresNfortec[0].id}
+                                                        nombre={torresNfortec[0].nombre}
+                                                        icono={<PcCase />}
+                                                        precio={torresNfortec[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -456,7 +540,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresNfortec.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -482,7 +566,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torresLianLi[0].id} nombre={torresLianLi[0].nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable
+                                                        id={torresLianLi[0].id}
+                                                        nombre={torresLianLi[0].nombre}
+                                                        icono={<PcCase />}
+                                                        precio={torresLianLi[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -492,7 +581,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresLianLi.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -518,7 +607,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torresMars[0].id} nombre={torresMars[0].nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable
+                                                        id={torresMars[0].id}
+                                                        nombre={torresMars[0].nombre}
+                                                        icono={<PcCase />}
+                                                        precio={torresMars[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -528,7 +622,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresMars.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -554,7 +648,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torresNzxt[0].id} nombre={torresNzxt[0].nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable
+                                                        id={torresNzxt[0].id}
+                                                        nombre={torresNzxt[0].nombre}
+                                                        icono={<PcCase />}
+                                                        precio={torresNzxt[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -564,7 +663,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresNzxt.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -590,7 +689,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torresPhanteks[0].id} nombre={torresPhanteks[0].nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable
+                                                        id={torresPhanteks[0].id}
+                                                        nombre={torresPhanteks[0].nombre}
+                                                        icono={<PcCase />}
+                                                        precio={torresPhanteks[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -600,7 +704,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresPhanteks.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -626,7 +730,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torresSharkoon[0].id} nombre={torresSharkoon[0].nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable
+                                                        id={torresSharkoon[0].id}
+                                                        nombre={torresSharkoon[0].nombre}
+                                                        icono={<PcCase />}
+                                                        precio={torresSharkoon[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -636,7 +745,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresSharkoon.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -662,7 +771,12 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torresThermalTake[0].id} nombre={torresThermalTake[0].nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable
+                                                        id={torresThermalTake[0].id}
+                                                        nombre={torresThermalTake[0].nombre}
+                                                        icono={<PcCase />}
+                                                        precio={torresThermalTake[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -672,7 +786,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                         {torresThermalTake.map((torre) => (
                                             <div key={torre.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} />
+                                                    <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -684,12 +798,6 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                     }
                     main={
                         <div className="flex h-full flex-col items-center gap-3 bg-black/20 text-white">
-                            <div className="absolute left-[18%] flex items-center text-2xl">
-                                <ArrowLeft size={30} />
-                                <Link href={route('montaje.fuenteAlimentacion')}>
-                                    <h1 className='font-["exo_2"] underline'>VOLVER A LA FUENTE</h1>
-                                </Link>
-                            </div>
                             {torreActiva ? (
                                 <div className="fade-down z-10 flex flex-col items-center gap-2 text-white">
                                     <h1 className="rerelative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
@@ -757,15 +865,32 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </div>
                                     </div>
-                                    <Button
-                                        variant={'outline'}
-                                        className="fade-in border-[var(--morado-neon)] font-['exo_2']"
-                                        onClick={() => {
-                                            guardarTorre!(torreSeleccionada);
-                                        }}
-                                    >
-                                        <Link href={route('montaje.resumen')}>Siguiente</Link>
-                                    </Button>
+                                    {esCompatible ? (
+                                        <Button
+                                            variant={'outline'}
+                                            className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:cursor-pointer hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${torreActiva && 'hidden'}`}
+                                            onClick={() => {
+                                                guardarTorre!(torreSeleccionada);
+                                            }}
+                                            asChild
+                                        >
+                                            {editarMontaje ? (
+                                                <h1 onClick={() => setDialogoEditarAbierto(true)}>Editar</h1>
+                                            ) : (
+                                                <Link href={route('montaje.resumen')}>Resumen</Link>
+                                            )}
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant={'outline'}
+                                            className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${torreActiva && 'hidden'} disabled hover:cursor-no-drop`}
+                                            onClick={() => {
+                                                guardarTorre!(torreSeleccionada);
+                                            }}
+                                        >
+                                            <h1>Incompatible</h1>
+                                        </Button>
+                                    )}
                                 </>
                             )}
                         </div>
@@ -777,6 +902,40 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                     ) : null}
                 </DragOverlay>
             </DndContext>
+
+            <Dialog open={dialogoEditarAbierto} onOpenChange={setDialogoEditarAbierto}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Cambiar nombre (opcional) </DialogTitle>
+                        <DialogDescription>Cambia el nombre de tu montaje antes de guardarlo.</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="nombre" className="text-right">
+                                Nombre
+                            </Label>
+                            <Input
+                                id="nombre"
+                                onChange={(e) => setNuevoNombre(e.target.value)}
+                                onInput={(e) => setNombreAntiguo(e.currentTarget.value)}
+                                className="col-span-3"
+                                value={nombreAntiguo}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            onClick={() => {
+                                // construirJsonMontaje();
+                                setDialogoEditarAbierto(false);
+                            }}
+                            asChild
+                        >
+                            <Link href={route('montaje.editar.confirmar')}>Editar</Link>
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

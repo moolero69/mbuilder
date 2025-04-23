@@ -4,18 +4,41 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import MontajeLayout from '@/layouts/app/montaje-layout';
-import { DiscoDuro, MemoriaRam } from '@/types';
+import { BreadcrumbItem, DiscoDuro } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, ArrowLeft, Box, CircuitBoard, Euro, Factory, Gauge, Microchip, Minus, Move, Plus, Search, Wrench } from 'lucide-react';
+import { ArrowBigDown, Box, CircuitBoard, Euro, Factory, Gauge, Microchip, Minus, Move, Plus, Search, Wrench } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDuro[] }) {
-    const { procesadorGuardado, guardarDiscoDuro } = useProgresoMontaje((state) => state);
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        titulo: 'Procesador',
+        href: '/montaje/procesador',
+    },
+    {
+        titulo: 'Placa base',
+        href: '/montaje/placaBase',
+    },
+    {
+        titulo: 'Memoria Ram',
+        href: '/montaje/memoriaRam',
+    },
+    {
+        titulo: 'Disco Duro',
+        href: '/montaje/discoDuro',
+    },
+];
 
-    const [discoSeleccionado, setDiscoSeleccionado] = useState<DiscoDuro | null>(null);
+const progresoMontaje = ['procesador', 'placaBase', 'memoriaRam'];
+
+export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDuro[] }) {
+    const { procesadorGuardado, guardarDiscoDuro, editarMontaje, discoDuroGuardado } = useProgresoMontaje((state) => state);
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
+
+
+    const [discoSeleccionado, setDiscoSeleccionado] = useState<DiscoDuro | null>(editarMontaje ? discoDuroGuardado! : null);
 
     const [discoActivo, setDiscoActivo] = useState<DiscoDuro | null>(null);
 
@@ -38,46 +61,47 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
     })();
 
     const discosCrucial = (() => {
-        const d = discosFiltrados?.filter(d => d.marca === 'Crucial' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const d = discosFiltrados?.filter((d) => d.marca === 'Crucial' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return d?.length ? d : null;
     })();
-    
-    const discosSamsung = (() => {
-        const d = discosFiltrados?.filter(d => d.marca === 'Samsung' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-        return d?.length ? d : null;
-    })();
-    
-    const discosSeagate = (() => {
-        const d = discosFiltrados?.filter(d => d.marca === 'Seagate' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-        return d?.length ? d : null;
-    })();
-    
-    const discosToshiba = (() => {
-        const d = discosFiltrados?.filter(d => d.marca === 'Toshiba' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-        return d?.length ? d : null;
-    })();
-    
-    const discosWd = (() => {
-        const d = discosFiltrados?.filter(d => d.marca === 'WD' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-        return d?.length ? d : null;
-    })();
-    
-    useEffect(() => {
-        toast.custom(
-            (t) => (
-                <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl bg-black/80 p-4 text-white shadow-lg">
-                    <span>
-                        <Wrench size={30} className="text-[var(--rojo-neon)]" />
-                    </span>
-                    <div className="flex w-full justify-center text-center text-xl">
-                        <p className="font-['exo_2']">Arrastra tu disco duro</p>
-                    </div>
-                </div>
-            ),
-            { duration: 3500 },
-        );
 
-        const comprobarCompatibilidad = () => {
+    const discosSamsung = (() => {
+        const d = discosFiltrados?.filter((d) => d.marca === 'Samsung' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return d?.length ? d : null;
+    })();
+
+    const discosSeagate = (() => {
+        const d = discosFiltrados?.filter((d) => d.marca === 'Seagate' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return d?.length ? d : null;
+    })();
+
+    const discosToshiba = (() => {
+        const d = discosFiltrados?.filter((d) => d.marca === 'Toshiba' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return d?.length ? d : null;
+    })();
+
+    const discosWd = (() => {
+        const d = discosFiltrados?.filter((d) => d.marca === 'WD' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return d?.length ? d : null;
+    })();
+
+    useEffect(() => {
+        !editarMontaje &&
+            toast.custom(
+                (t) => (
+                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
+                        <span>
+                            <Wrench size={30} className="text-[var(--rojo-neon)]" />
+                        </span>
+                        <div className="flex w-full justify-center text-center text-xl">
+                            <p className="font-['exo_2']">Arrastra tu disco duro</p>
+                        </div>
+                    </div>
+                ),
+                { duration: 3500 },
+            );
+
+        const comprobarCompatibilidad = (disco: DiscoDuro) => {
             const conexionesPorSocket: Record<string, string[]> = {
                 AM5: ['M.2', 'SATA'],
                 LGA1700: ['M.2', 'SATA'],
@@ -89,11 +113,13 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
             const conexionesValidas = conexionesPorSocket[socket] || [];
 
             const discosCompatibles = discosDuros.filter((disco) => conexionesValidas.includes(disco.conexion));
+            const compatible = conexionesValidas.includes(disco?.conexion);
 
+            setEsCompatible(compatible);
             setDiscosFiltrados(discosCompatibles);
         };
 
-        comprobarCompatibilidad();
+        comprobarCompatibilidad(discoDuroGuardado!);
     }, []);
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -107,6 +133,7 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
         }
         setDiscoActivo(null);
         setIsDragging(false);
+        setEsCompatible(true);
     };
 
     const handleDragStart = (event: any) => {
@@ -139,6 +166,8 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                 {/* Blur de fondo al arrastrar */}
                 {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
                 <MontajeLayout
+                    breadcrums={breadcrumbs}
+                    progresoMontaje={progresoMontaje}
                     sidebar={
                         <div className="w-full space-y-4">
                             {/* 🔍 Barra de búsqueda general */}
@@ -181,6 +210,7 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                                         nombre={discosCrucial[0].nombre}
                                                         icono={<Box />}
                                                         textoSecundario={discosCrucial[0].almacenamiento}
+                                                        precio={discosCrucial[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -190,6 +220,7 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                                         nombre={discosCrucial[1].nombre}
                                                         icono={<Box />}
                                                         textoSecundario={discosCrucial[1].almacenamiento}
+                                                        precio={discosCrucial[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -200,7 +231,13 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                         {discosCrucial.map((disco) => (
                                             <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} textoSecundario={disco.almacenamiento} />
+                                                    <ItemArrastrable
+                                                        id={disco.id}
+                                                        nombre={disco.nombre}
+                                                        icono={<Box />}
+                                                        textoSecundario={disco.almacenamiento}
+                                                        precio={disco.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -231,6 +268,7 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                                         nombre={discosKingston[0].nombre}
                                                         icono={<Box />}
                                                         textoSecundario={discosKingston[0].almacenamiento}
+                                                        precio={discosKingston[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -240,6 +278,7 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                                         nombre={discosKingston[1].nombre}
                                                         icono={<Box />}
                                                         textoSecundario={discosKingston[1].almacenamiento}
+                                                        precio={discosKingston[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -250,7 +289,13 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                         {discosKingston.map((disco) => (
                                             <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} textoSecundario={disco.almacenamiento} />
+                                                    <ItemArrastrable
+                                                        id={disco.id}
+                                                        nombre={disco.nombre}
+                                                        icono={<Box />}
+                                                        textoSecundario={disco.almacenamiento}
+                                                        precio={disco.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -281,6 +326,7 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                                         nombre={discosSamsung[0].nombre}
                                                         icono={<Box />}
                                                         textoSecundario={discosSamsung[0].almacenamiento}
+                                                        precio={discosSamsung[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -290,6 +336,7 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                                         nombre={discosSamsung[1].nombre}
                                                         icono={<Box />}
                                                         textoSecundario={discosSamsung[1].almacenamiento}
+                                                        precio={discosSamsung[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -300,7 +347,13 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                         {discosSamsung.map((disco) => (
                                             <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} textoSecundario={disco.almacenamiento}/>
+                                                    <ItemArrastrable
+                                                        id={disco.id}
+                                                        nombre={disco.nombre}
+                                                        icono={<Box />}
+                                                        textoSecundario={disco.almacenamiento}
+                                                        precio={disco.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -331,6 +384,7 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                                         nombre={discosSeagate[0].nombre}
                                                         icono={<Box />}
                                                         textoSecundario={discosSeagate[0].almacenamiento}
+                                                        precio={discosSeagate[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -340,6 +394,7 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                                         nombre={discosSeagate[1].nombre}
                                                         icono={<Box />}
                                                         textoSecundario={discosSeagate[1].almacenamiento}
+                                                        precio={discosSeagate[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -350,7 +405,13 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                         {discosSeagate.map((disco) => (
                                             <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} iconoSecundario={disco.almacenamiento}/>
+                                                    <ItemArrastrable
+                                                        id={disco.id}
+                                                        nombre={disco.nombre}
+                                                        icono={<Box />}
+                                                        iconoSecundario={disco.almacenamiento}
+                                                        precio={disco.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -376,11 +437,23 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={discosWd[0].id} nombre={discosWd[0].nombre} icono={<Box />} textoSecundario={discosWd[0].almacenamiento} />
+                                                    <ItemArrastrable
+                                                        id={discosWd[0].id}
+                                                        nombre={discosWd[0].nombre}
+                                                        icono={<Box />}
+                                                        textoSecundario={discosWd[0].almacenamiento}
+                                                        precio={discosWd[0].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={discosWd[1].id} nombre={discosWd[1].nombre} icono={<Box />} textoSecundario={discosWd[1].almacenamiento}/>
+                                                    <ItemArrastrable
+                                                        id={discosWd[1].id}
+                                                        nombre={discosWd[1].nombre}
+                                                        icono={<Box />}
+                                                        textoSecundario={discosWd[1].almacenamiento}
+                                                        precio={discosWd[1].precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -390,7 +463,13 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                         {discosWd.map((disco) => (
                                             <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} textoSecundario={disco.almacenamiento}/>
+                                                    <ItemArrastrable
+                                                        id={disco.id}
+                                                        nombre={disco.nombre}
+                                                        icono={<Box />}
+                                                        textoSecundario={disco.almacenamiento}
+                                                        precio={disco.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -421,6 +500,7 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                                         nombre={discosToshiba[0].nombre}
                                                         icono={<Box />}
                                                         textoSecundario={discosToshiba[0].almacenamiento}
+                                                        precio={discosToshiba[0].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -430,6 +510,7 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                                         nombre={discosToshiba[1].nombre}
                                                         icono={<Box />}
                                                         textoSecundario={discosToshiba[1].almacenamiento}
+                                                        precio={discosToshiba[1].precio}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -440,7 +521,13 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                         {discosToshiba.map((disco) => (
                                             <div key={disco.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={disco.id} nombre={disco.nombre} icono={<Box />} iconoSecundario={disco.almacenamiento}/>
+                                                    <ItemArrastrable
+                                                        id={disco.id}
+                                                        nombre={disco.nombre}
+                                                        icono={<Box />}
+                                                        textoSecundario={disco.almacenamiento}
+                                                        precio={disco.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -452,12 +539,6 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                     }
                     main={
                         <div className="flex h-full flex-col items-center gap-3 bg-black/20 text-white">
-                            <div className="absolute left-[18%] flex items-center text-2xl">
-                                <ArrowLeft size={30} />
-                                <Link href={route('montaje.memoriaRam')}>
-                                    <h1 className='font-["exo_2"] underline'>VOLVER A LA MEMORIA RAM</h1>
-                                </Link>
-                            </div>
                             {discoActivo ? (
                                 <div className="fade-down z-10 flex flex-col items-center gap-2 text-white">
                                     <h1 className="rerelative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
@@ -519,9 +600,9 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                             <Box size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    Dimensiones
+                                                    Conexión
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{discoSeleccionado.pulgadas}"</p>
+                                                <p className="text-lg text-gray-300">{discoSeleccionado.conexion}</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
@@ -543,15 +624,28 @@ export default function MontajeDiscoDuro({discosDuros }: { discosDuros: DiscoDur
                                             </div>
                                         </div>
                                     </div>
-                                    <Button
-                                        variant={'outline'}
-                                        className="fade-in border-[var(--morado-neon)] font-['exo_2']"
-                                        onClick={() => {
-                                            guardarDiscoDuro!(discoSeleccionado);
-                                        }}
-                                    >
-                                        <Link href={route('montaje.tarjetaGrafica')}>Siguiente</Link>
-                                    </Button>
+                                    {esCompatible ? (
+                                        <Button
+                                            variant={'outline'}
+                                            className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${discoActivo && 'hidden'}`}
+                                            onClick={() => {
+                                                guardarDiscoDuro!(discoSeleccionado);
+                                            }}
+                                            asChild
+                                        >
+                                            <Link href={route('montaje.tarjetaGrafica')}>Siguiente</Link>
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant={'outline'}
+                                            className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${discoActivo && 'hidden'} disabled hover:cursor-no-drop`}
+                                            onClick={() => {
+                                                guardarDiscoDuro!(discoSeleccionado);
+                                            }}
+                                        >
+                                            <h1>Incompatible</h1>
+                                        </Button>
+                                    )}
                                 </>
                             )}
                         </div>

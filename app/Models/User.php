@@ -45,4 +45,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function montajes()
+    {
+        return $this->hasMany(Montaje::class); //Indica que un usuario tiene montajes
+    }
 }
