@@ -1,13 +1,10 @@
 import { Toaster } from '@/components/ui/sonner';
+import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import { DatosCompartidos } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import React from 'react';
 import { Button } from './ui/button';
-import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
-import { NavUser } from './nav-user';
 import UsuarioHeader from './usuario-header';
-
 
 const Header: React.FC = () => {
     const page = usePage<DatosCompartidos>();
@@ -16,47 +13,52 @@ const Header: React.FC = () => {
     return (
         <>
             <Toaster position="bottom-center" />
-            <header className="colores-borde sticky top-0 z-50 flex h-[120px] w-full items-center justify-between overflow-hidden border-b-3 bg-black px-6 py-4 text-white">
-                {/* <video autoPlay muted loop playsInline className="absolute top-0 left-0 z-0 h-[120px] w-full object-fill opacity-30">
-                <source src="vid/video-header.mp4" type="video/mp4" />
-                </video> */}
-
-                <div className="relative z-10 flex flex-row justify-center gap-3 px-5 align-middle">
-                    <img src="/img/logo-64px.png" alt="logo mbuilder" className="bg-white" />
-                    <Link href={route('home')} className="inline" onClick={() => {guardarEditarMontaje!(false); sessionStorage.clear()}}>
-                        <h1 className="mx-4 font-['Orbitron'] text-5xl font-bold text-white drop-shadow-[5px_5px_6px_var(--azul-neon)]">MBUILDER</h1>
+            <header className="sticky top-0 z-50 flex h-[120px] w-full items-center justify-between border-b-3 bg-gradient-to-r from-[#0d0d0d] via-[#131313] to-[#0d0d0d] px-6 py-4 colores-borde">
+                <div className="relative z-10 flex items-center gap-4 px-5">
+                    <img src="/img/logo-64px.png" alt="logo mbuilder" className="rounded-sm bg-white shadow-md" />
+                    <Link
+                        href={route('home')}
+                        onClick={() => {
+                            guardarEditarMontaje!(false);
+                            sessionStorage.clear();
+                        }}
+                    >
+                        <h1 className="font-['Orbitron'] text-5xl font-extrabold tracking-widest text-white drop-shadow-[5px_5px_6px_var(--azul-neon)] transition duration-500 hover:text-[var(--azul-neon)]">
+                            MBUILDER
+                        </h1>
                     </Link>
                 </div>
 
                 <div className="relative z-10">
-                    <Button variant={'outline'} className="border-[var(--rosa-neon)]" asChild>
+                    <Button variant={'outline'} className="border-[var(--rosa-neon)] transition hover:bg-[var(--rosa-neon)]/10" asChild>
                         <Link href={route('pruebas')}>Pruebas</Link>
                     </Button>
                 </div>
 
                 <nav className="relative z-10">
-                    <ul className="flex space-x-10">
+                    <ul className="flex items-center space-x-6">
                         {auth.user ? (
-                            <div className="flex items-center justify-center gap-7 p-3 align-middle">
-                                <UsuarioHeader/>
-                                <Button variant={'link'} asChild>
+                            <div className="flex items-center gap-5 px-2 py-1">
+                                <Button variant={'link'} className="text-[var(--verde-neon)] hover:text-white" asChild>
                                     <Link href={route('usuario.montajes')}>Mis montajes</Link>
                                 </Button>
-                                <Link
-                                    href={route('logout')}
-                                    method="post"
-                                    className="inline-flex h-[40px] items-center justify-center gap-2 rounded-md border border-[var(--rojo-neon)] px-4 py-2 font-['exo_2'] text-sm hover:cursor-pointer hover:bg-red-500/10"
-                                >
-                                    Cerrar Sesión
-                                </Link>
+                                <UsuarioHeader />
                             </div>
                         ) : (
                             <>
-                                <Button variant={'outline'} className="border-[var(--verde-neon)] font-['exo_2']" asChild>
-                                    <Link href={route('login')}>Iniciar Sesion</Link>
+                                <Button
+                                    variant={'outline'}
+                                    className="border-[var(--verde-neon)] font-['exo_2'] text-[var(--verde-neon)] transition hover:bg-[var(--verde-neon)]/10"
+                                    asChild
+                                >
+                                    <Link href={route('login')}>Iniciar Sesión</Link>
                                 </Button>
-                                <Button variant={'outline'} className="border-[var(--azul-neon)] font-['exo_2']" asChild>
-                                    <Link href={route('register')}>Registrate</Link>
+                                <Button
+                                    variant={'outline'}
+                                    className="border-[var(--azul-neon)] font-['exo_2'] text-[var(--azul-neon)] transition hover:bg-[var(--azul-neon)]/10"
+                                    asChild
+                                >
+                                    <Link href={route('register')}>Regístrate</Link>
                                 </Button>
                             </>
                         )}

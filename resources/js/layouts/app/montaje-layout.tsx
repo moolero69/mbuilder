@@ -22,7 +22,7 @@ export default function MontajeLayout({ sidebar, main, breadcrums, progresoMonta
                     )}
                     {
                         montajeEditado && (
-                            <div className="absolute right-1 top-1 flex w-[250px] items-center justify-center gap-2 rounded-lg border border-[var(--azul-neon)]  p-3 shadow-[0_0_20px_var(--azul-neon)] backdrop-blur-sm">
+                            <div className="absolute right-1 top-1 flex w-[250px] items-center justify-center gap-2 rounded-lg border border-[var(--azul-neon)] p-3 shadow-[0_0_20px_var(--azul-neon)] backdrop-blur-sm">
                                 <Pencil />
                                 <p className='font-["Orbitron"] text-xl font-bold'>
                                     {montajeEditado}
@@ -34,7 +34,7 @@ export default function MontajeLayout({ sidebar, main, breadcrums, progresoMonta
                     <div className="flex h-full w-full justify-center">
                         <div className="flex-1">{main}</div>
                         {progresoMontaje && (
-                            <div className="relative mt-4 right-0 z-20 h-auto w-[300px] overflow-y-auto border-l-4 colores-borde border-[var(--verde-neon)] bg-black/80 p-4 text-white shadow-lg">
+                            <div className={`relative right-0 z-20 h-auto w-[300px] overflow-y-auto border-l-4 colores-borde border-[var(--verde-neon)] bg-black/80 p-4 text-white shadow-lg ${montajeEditado && 'mt-4'}`}>
                                 <ProgresoMontaje componentes={progresoMontaje} />
                             </div>
                         )}

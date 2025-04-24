@@ -1,24 +1,16 @@
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
-
-import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuPortal,
     DropdownMenuSeparator,
     DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { usePage } from "@inertiajs/react";
-import { DatosCompartidos } from "@/types";
-
+} from '@/components/ui/dropdown-menu';
+import { DatosCompartidos } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 export default function UsuarioHeader() {
     const page = usePage<DatosCompartidos>();
@@ -27,28 +19,40 @@ export default function UsuarioHeader() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <div className="flex flex-col items-center justify-center gap-2 cursor-pointer rounded-2xl px-4 py-2 transition duration-300 hover:shadow-[0_0_10px_var(--verde-neon)] hover:bg-[var(--verde-neon)]/10">
+                <div className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl px-4 py-2 transition duration-300 hover:bg-[var(--azul-neon)]/10 hover:shadow-[0_0_10px_var(--azul-neon)]">
                     <Avatar>
                         <AvatarImage src="/img/avatar.png" className="h-[40px] w-[40px]" />
                         <AvatarFallback className="text-[var(--verde-neon)]">MB</AvatarFallback>
                     </Avatar>
-                    <h2 className="text-sm font-['Orbitron'] text-[var(--verde-neon)]"> {auth.user.name} </h2>
+                    <h2 className="font-['Orbitron'] text-sm text-[var(--naranja-neon)]"> {auth.user.name} </h2>
                 </div>
             </DropdownMenuTrigger>
-
-            <DropdownMenuContent className="w-56 bg-[#0d0d0d] text-white border border-[var(--verde-neon)] shadow-[0_0_10px_var(--verde-neon)]">
-                <DropdownMenuLabel className="text-[var(--verde-neon)] font-['Orbitron']">Mi cuenta</DropdownMenuLabel>
+            <DropdownMenuContent className="w-56 border border-[var(--verde-neon)] bg-[#0d0d0d] colores-borde-glow">
+                <DropdownMenuLabel className="font-['Orbitron'] text-[var(--verde-neon)]">Mi cuenta</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                    <DropdownMenuItem>Perfil <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut></DropdownMenuItem>
-                    <DropdownMenuItem>Billing <DropdownMenuShortcut>⌘B</DropdownMenuShortcut></DropdownMenuItem>
-                    <DropdownMenuItem>Settings <DropdownMenuShortcut>⌘S</DropdownMenuShortcut></DropdownMenuItem>
-                    <DropdownMenuItem>Keyboard shortcuts <DropdownMenuShortcut>⌘K</DropdownMenuShortcut></DropdownMenuItem>
+                    <DropdownMenuItem className='hover:cursor-pointer' asChild>
+                        <Link href={route('perfil.editar')}>Ajustes</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        Billing <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        Ajustes <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                    </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-[var(--rojo-neon)]">Cerrar sesión <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut></DropdownMenuItem>
+                <DropdownMenuItem className="text-[var(--rojo-neon)]">
+                    {' '}
+                    <Link
+                        href={route('logout')}
+                        method="post"
+                        className="text-[var(--rojo-neon)] font-['exo_2'] text-sm hover:cursor-pointer hover:bg-red-500/10"
+                    >
+                        Cerrar Sesión
+                    </Link>
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
-
-    )
+    );
 }

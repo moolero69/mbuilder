@@ -1,0 +1,41 @@
+Nombre,Marca,Tecnologia,Almacenamiento,Conexion,Pulgadas,Velocidad de Escritura,Consumo,Precio
+Samsung 970 EVO Plus,Samsung,SSD,500 GB,M.2,2.5,3500,6,69
+Samsung 970 EVO Plus,Samsung,SSD,1 TB,M.2,2.5,3500,6,119
+WD Blue SN550,WD,SSD,500 GB,M.2,2.5,2600,5,55
+WD Blue SN550,WD,SSD,1 TB,M.2,2.5,2600,5,85
+Crucial P5,Crucial,SSD,500 GB,M.2,2.5,3400,5,65
+Crucial P5,Crucial,SSD,1 TB,M.2,2.5,3400,5,105
+Kingston A2000,Kingston,SSD,500 GB,M.2,2.5,2200,4,50
+Kingston A2000,Kingston,SSD,1 TB,M.2,2.5,2200,4,95
+Seagate Barracuda,Seagate,SSD,500 GB,SATA,3.5,560,4,55
+Seagate Barracuda,Seagate,SSD,1 TB,SATA,3.5,560,4,85
+Seagate IronWolf,Seagate,HDD,4 TB,SATA,3.5,150,7,115
+Seagate IronWolf,Seagate,HDD,8 TB,SATA,3.5,150,8,170
+WD Blue,WD,SSD,500 GB,SATA,2.5,560,3,60
+WD Blue,WD,SSD,1 TB,SATA,2.5,560,3,110
+WD Black,WD,SSD,500 GB,M.2,2.5,3400,6,85
+WD Black,WD,SSD,1 TB,M.2,2.5,3400,6,150
+Samsung 860 EVO,Samsung,SSD,500 GB,SATA,2.5,550,4,70
+Samsung 860 EVO,Samsung,SSD,1 TB,SATA,2.5,550,4,120
+Seagate FireCuda,Seagate,SSD,500 GB,M.2,2.5,3500,5,90
+Seagate FireCuda,Seagate,SSD,1 TB,M.2,2.5,3500,5,160
+Seagate Exos,Seagate,SSD,4 TB,M.2,2.5,500,6,250
+Seagate Exos,Seagate,SSD,8 TB,M.2,2.5,500,7,450
+WD Black SN850,WD,SSD,500 GB,M.2,2.5,7000,7,110
+WD Black SN850,WD,SSD,1 TB,M.2,2.5,7000,7,210
+Crucial MX500,Crucial,SSD,500 GB,SATA,2.5,550,4,70
+Crucial MX500,Crucial,SSD,1 TB,SATA,2.5,550,4,120
+Toshiba XG6,Toshiba,SSD,500 GB,M.2,2.5,3200,5,55
+Toshiba XG6,Toshiba,SSD,1 TB,M.2,2.5,3200,5,95
+Samsung 980 PRO,Samsung,SSD,500 GB,M.2,2.5,7000,8,125
+Samsung 980 PRO,Samsung,SSD,1 TB,M.2,2.5,7000,8,220
+Seagate Momentus,Seagate,SSD,500 GB,SATA,2.5,520,3,45
+Seagate Momentus,Seagate,SSD,1 TB,SATA,2.5,520,3,85
+Kingston KC2500,Kingston,SSD,500 GB,M.2,2.5,3500,5,80
+Kingston KC2500,Kingston,SSD,1 TB,M.2,2.5,3500,5,145
+Toshiba P300,Toshiba,HDD, 1 TB, SATA, 3.5, 150, 6, 45
+Toshiba P300,Toshiba,HDD, 2 TB, SATA, 3.5, 150, 6, 65
+Seagate Barracuda,Seagate, HDD, 2 TB, SATA, 3.5, 180, 5, 70
+Seagate Barracuda,Seagate, HDD, 3 TB, SATA, 3.5, 180, 6, 90
+WD Red,WD, HDD, 4 TB, SATA, 3.5, 150, 7, 120
+WD Red,WD, HDD, 8 TB, SATA, 3.5, 150, 8, 180

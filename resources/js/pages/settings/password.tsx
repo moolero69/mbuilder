@@ -1,5 +1,4 @@
 import InputError from '@/components/input-error';
-import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { type BreadcrumbItem } from '@/types';
 import { Transition } from '@headlessui/react';
@@ -31,7 +30,7 @@ export default function Password() {
     const updatePassword: FormEventHandler = (e) => {
         e.preventDefault();
 
-        put(route('password.update'), {
+        put(route('contraseña.actualizar'), {
             preserveScroll: true,
             onSuccess: () => reset(),
             onError: (errors) => {
@@ -49,8 +48,8 @@ export default function Password() {
     };
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Profile settings" />
+        <>
+            <Head title="Ajustes de contraseña" />
 
             <SettingsLayout>
                 <div className="space-y-6">
@@ -123,6 +122,6 @@ export default function Password() {
                     </form>
                 </div>
             </SettingsLayout>
-        </AppLayout>
+        </>
     );
 }

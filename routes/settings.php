@@ -8,14 +8,14 @@ use Inertia\Inertia;
 Route::middleware('auth')->group(function () {
     Route::redirect('settings', 'settings/profile');
 
-    Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('ajustes/perfil', [ProfileController::class, 'edit'])->name('perfil.editar');
+    Route::patch('ajustes/perfil', [ProfileController::class, 'update'])->name('perfil.actualizar');
+    Route::delete('ajustes/perfil', [ProfileController::class, 'destroy'])->name('perfil.eliminar');
 
-    Route::get('settings/password', [PasswordController::class, 'edit'])->name('password.edit');
-    Route::put('settings/password', [PasswordController::class, 'update'])->name('password.update');
+    Route::get('ajustes/contraseña', [PasswordController::class, 'edit'])->name('password.edit');
+    Route::put('ajustes/contraseña', [PasswordController::class, 'update'])->name('contraseña.actualizar');
 
-    Route::get('settings/appearance', function () {
+    Route::get('ajustes/apariencia', function () {
         return Inertia::render('settings/appearance');
     })->name('appearance');
 });

@@ -1,0 +1,71 @@
+Nombre,Marca,Almacenamiento,Tipo,Pack,Frecuencia,Consumo,Precio
+Corsair Vengeance LPX,Corsair,16,DDR4,1,3200,5,70
+Corsair Vengeance LPX,Corsair,8,DDR4,1,3200,3,40
+Corsair Vengeance LPX,Corsair,32,DDR4,1,3200,7,140
+G.SKILL Ripjaws V,G.SKILL,8,DDR4,1,3200,3,35
+G.SKILL Ripjaws V,G.SKILL,16,DDR4,1,3200,5,65
+G.SKILL Ripjaws V,G.SKILL,32,DDR4,1,3200,7,130
+Kingston HyperX Fury,Kingston,8,DDR4,1,2666,3,30
+Kingston HyperX Fury,Kingston,16,DDR4,1,2666,5,60
+Kingston HyperX Fury,Kingston,32,DDR4,1,2666,7,125
+ADATA XPG Z1,ADATA,8,DDR4,1,3000,3,35
+ADATA XPG Z1,ADATA,16,DDR4,1,3000,5,60
+ADATA XPG Z1,ADATA,32,DDR4,1,3000,7,125
+Crucial Ballistix,Crucial,8,DDR4,1,2666,3,35
+Crucial Ballistix,Crucial,16,DDR4,1,2666,5,60
+Crucial Ballistix,Crucial,32,DDR4,1,2666,7,120
+Corsair Vengeance LPX,Corsair,16,DDR4,2,3200,6,85
+Corsair Vengeance LPX,Corsair,32,DDR4,2,3200,10,140
+G.SKILL Ripjaws V,G.SKILL,16,DDR4,2,3200,6,60
+G.SKILL Ripjaws V,G.SKILL,32,DDR4,2,3200,10,125
+Corsair Vengeance RGB Pro,Corsair,16,DDR4,1,3600,5,80
+Corsair Vengeance RGB Pro,Corsair,32,DDR4,1,3600,7,150
+G.SKILL Trident Z,G.SKILL,16,DDR4,1,3600,5,90
+G.SKILL Trident Z,G.SKILL,32,DDR4,1,3600,7,160
+Kingston HyperX Predator,Kingston,16,DDR4,1,3000,5,75
+Kingston HyperX Predator,Kingston,32,DDR4,1,3000,7,145
+Corsair Dominator Platinum,Corsair,16,DDR4,1,4000,5,95
+Corsair Dominator Platinum,Corsair,32,DDR4,1,4000,7,170
+Corsair Vengeance LPX,Corsair,8,DDR4,1,2133,3,25
+Corsair Vengeance LPX,Corsair,16,DDR4,1,2133,5,50
+Corsair Vengeance LPX,Corsair,32,DDR4,1,2133,7,110
+G.SKILL Ripjaws V,G.SKILL,8,DDR4,1,2400,3,30
+G.SKILL Ripjaws V,G.SKILL,16,DDR4,1,2400,5,55
+G.SKILL Ripjaws V,G.SKILL,32,DDR4,1,2400,7,115
+Corsair Vengeance LPX,Corsair,16,DDR4,2,240,6,60
+Corsair Vengeance LPX,Corsair,32,DDR4,2,2400,10,120
+Corsair Vengeance LPX,Corsair,8,DDR4,2,2400,5,40
+Corsair Vengeance LPX,Corsair,16,DDR5,1,4800,6,100
+Corsair Vengeance LPX,Corsair,32,DDR5,1,4800,8,180
+G.SKILL Ripjaws V,G.SKILL,16,DDR5,1,5200,6,110
+G.SKILL Ripjaws V,G.SKILL,32,DDR5,1,5200,8,190
+Kingston Fury Beast,Kingston,16,DDR5,1,5200,6,120
+Kingston Fury Beast,Kingston,32,DDR5,1,5200,8,200
+Crucial Ballistix,Crucial,16,DDR5,1,4800,6,95
+Crucial Ballistix,Crucial,32,DDR5,1,4800,8,170
+Corsair Vengeance DDR5,Corsair,16,DDR5,1,5200,6,130
+Corsair Vengeance DDR5,Corsair,32,DDR5,1,5200,8,210
+G.SKILL Ripjaws DDR5,G.SKILL,16,DDR5,1,5600,6,140
+G.SKILL Ripjaws DDR5,G.SKILL,32,DDR5,1,5600,8,220
+Kingston Fury Renegade,Kingston,16,DDR5,1,6000,7,150
+Kingston Fury Renegade,Kingston,32,DDR5,1,6000,9,240
+Crucial Ballistix Max,Crucial,16,DDR5,1,6400,7,160
+Crucial Ballistix Max,Crucial,32,DDR5,1,6400,9,250
+TeamGroup T-Force Delta RGB,TeamGroup,16,DDR5,1,6000,7,170
+TeamGroup T-Force Delta RGB,TeamGroup,32,DDR5,1,6000,9,260
+Corsair Dominator Platinum RGB,Corsair,16,DDR5,1,6400,7,180
+Corsair Dominator Platinum RGB,Corsair,32,DDR5,1,6400,9,280
+G.SKILL Trident Z5,G.SKILL,16,DDR5,1,6600,7,190
+G.SKILL Trident Z5,G.SKILL,32,DDR5,1,6600,9,290
+Kingston Fury Impact,Kingston,16,DDR5,1,4800,6,130
+Kingston Fury Impact,Kingston,32,DDR5,1,4800,8,210
+ADATA XPG Lancer,ADATA,16,DDR5,1,5200,6,140
+ADATA XPG Lancer,ADATA,32,DDR5,1,520,8,220
+Patriot Viper Steel,Patriot,16,DDR5,1,5600,7,150
+Patriot Viper Steel,Patriot,32,DDR5,1,5600,9,230
+Corsair Vengeance LPX, Corsair,16,DDR5,1,5200,6,120
+Corsair Vengeance LPX, Corsair,32,DDR5,1,5200,8,210
+Kingston Fury Beast, Kingston,16,DDR5,1,4800,6,110
+Kingston Fury Beast, Kingston,32,DDR5,1,480,8,190
+Crucial Ballistix Elite, Crucial,16,DDR5,1,6000,7,150
+Crucial Ballistix Elite, Crucial,32,DDR5,1,6000,9,240

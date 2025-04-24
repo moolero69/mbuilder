@@ -1,68 +1,77 @@
+import Header from '@/components/header-principal';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
+import { KeyRound, SunMoon, UserRoundPen } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
 
 const sidebarNavItems: NavItem[] = [
     {
-        title: 'Profile',
-        href: '/settings/profile',
-        icon: null,
+        title: 'Perfil',
+        href: '/ajustes/perfil',
+        icon: <UserRoundPen />,
     },
     {
-        title: 'Password',
-        href: '/settings/password',
-        icon: null,
+        title: 'Contraseña',
+        href: '/ajustes/contraseña',
+        icon: <KeyRound/>,
     },
     {
-        title: 'Appearance',
-        href: '/settings/appearance',
-        icon: null,
+        title: 'Apariencia!!!??',
+        href: '/ajustes/apariencia',
+        icon: <SunMoon/>,
     },
 ];
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
     // When server-side rendering, we only render the layout on the client...
-    if (typeof window === 'undefined') {
-        return null;
-    }
+    // if (typeof window === 'undefined') {
+    //     return null;
+    // }
 
     const currentPath = window.location.pathname;
 
     return (
-        <div className="px-4 py-6">
-            <Heading title="Settings" description="Manage your profile and account settings" />
-
-            <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
-                <aside className="w-full max-w-xl lg:w-48">
-                    <nav className="flex flex-col space-y-1 space-x-0">
-                        {sidebarNavItems.map((item) => (
-                            <Button
-                                key={item.href}
-                                size="sm"
-                                variant="ghost"
-                                asChild
-                                className={cn('w-full justify-start', {
-                                    'bg-muted': currentPath === item.href,
-                                })}
-                            >
-                                <Link href={item.href} prefetch>
-                                    {item.title}
-                                </Link>
-                            </Button>
-                        ))}
-                    </nav>
-                </aside>
-
-                <Separator className="my-6 md:hidden" />
-
-                <div className="flex-1 md:max-w-2xl">
-                    <section className="max-w-xl space-y-12">{children}</section>
+        <>
+            <Header />
+            <div className="flex min-h-screen items-start justify-center bg-gradient-to-b from-black to-[#0d0d0d] px-4 py-10">
+                <div className="w-full max-w-6xl rounded-xl border border-[var(--morado-neon)] bg-[#0d0d0d]/70 p-10 shadow-[0_0_15px_var(--morado-neon)]">
+                    <Heading title="⚙️ Ajustes de Cuenta" description="Configura tu perfil, preferencias y opciones avanzadas" />
+                    <div className="mt-10 flex flex-col gap-12 lg:flex-row">
+                        <aside className="w-full max-w-xs rounded-lg border border-[var(--gris-neon)] bg-gradient-to-br from-[#0a0a0a] via-[#121212] to-[#1a1a1a] p-6 shadow-[0_0_10px_var(--gris-neon)/30]">
+                            <nav className="flex flex-col gap-3">
+                                {sidebarNavItems.map((item) => (
+                                    <Button
+                                        key={item.href}
+                                        size="lg"
+                                        variant="ghost"
+                                        asChild
+                                        className={cn(
+                                            `flex w-full items-center justify-start gap-3 rounded-md border border-transparent px-4 py-3 text-left font-['Orbitron'] text-base text-[var(--gris-neon)] transition-all duration-200 hover:border-[var(--gris-neon)] hover:bg-[var(--gris-neon)]/10`,
+                                            {
+                                                'border-[var(--gris-neon)] bg-[var(--gris-neon)]/10 shadow-[0_0_8px_var(--gris-neon)/20]':
+                                                    currentPath === item.href,
+                                            },
+                                        )}
+                                    >
+                                        <Link href={item.href} prefetch className="flex items-center gap-3">
+                                            <span className="text-[var(--gris-neon)]">{item.icon}</span>
+                                            <span>{item.title}</span>
+                                        </Link>
+                                    </Button>
+                                ))}
+                            </nav>
+                        </aside>
+                        <Separator className="my-6 bg-[var(--naranja-neon)] lg:hidden" />
+                        <div className="max-w-3xl flex-1">
+                            <section className="space-y-12">{children}</section>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
