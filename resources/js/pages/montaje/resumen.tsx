@@ -222,6 +222,7 @@ export default function ResumenMontaje() {
                                 className="col-span-3"
                                 value={data.nombre ?? ''}
                                 placeholder='"La bestia"'
+                                maxLength={12}
                             />
                         </div>
                     </div>
@@ -231,6 +232,7 @@ export default function ResumenMontaje() {
                                 construirJsonMontaje();
                                 setDialogoNombreAbierto(false);
                             }}
+                            disabled={data.nombre.length === 0}
                         >
                             Guardar montaje
                         </Button>

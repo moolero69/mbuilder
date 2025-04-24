@@ -5,6 +5,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import React from 'react';
 import { Button } from './ui/button';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
+import { NavUser } from './nav-user';
+import UsuarioHeader from './usuario-header';
+
 
 const Header: React.FC = () => {
     const page = usePage<DatosCompartidos>();
@@ -35,13 +38,7 @@ const Header: React.FC = () => {
                     <ul className="flex space-x-10">
                         {auth.user ? (
                             <div className="flex items-center justify-center gap-7 p-3 align-middle">
-                                <div className="flex flex-col items-center justify-center gap-2">
-                                    <Avatar>
-                                        <AvatarImage src="/img/avatar.png" className="h-[32px] w-[32px]" />
-                                        <AvatarFallback>MB</AvatarFallback>
-                                    </Avatar>
-                                    <h2 className="text-green-300">{auth.user.name}</h2>
-                                </div>
+                                <UsuarioHeader/>
                                 <Button variant={'link'} asChild>
                                     <Link href={route('usuario.montajes')}>Mis montajes</Link>
                                 </Button>

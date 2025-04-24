@@ -54,7 +54,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
 
     const [dialogoEditarAbierto, setDialogoEditarAbierto] = useState(false);
     const nombreMontajeEditar: any = sessionStorage.getItem('nombreMontajeEditar');
-    const [nuevoNombre, setNuevoNombre] = useState(nombreMontajeEditar);
+    const [nuevoNombre, setNuevoNombre] = useState<string>(nombreMontajeEditar);
     const [nombreAntiguo, setNombreAntiguo] = useState(nombreMontajeEditar);
 
     const [torreSeleccionada, setTorreSeleccionada] = useState<Torre | null>(editarMontaje ? torreGuardada! : null);
@@ -920,13 +920,13 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                 onInput={(e) => setNombreAntiguo(e.currentTarget.value)}
                                 className="col-span-3"
                                 value={nombreAntiguo}
+                                maxLength={12}
                             />
                         </div>
                     </div>
                     <DialogFooter>
                         <Button
                             onClick={() => {
-                                // construirJsonMontaje();
                                 setDialogoEditarAbierto(false);
                             }}
                             asChild
