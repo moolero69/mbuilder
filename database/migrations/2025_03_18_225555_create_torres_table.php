@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('marca');
             $table->string('factor_forma',10);
             $table->string('soporte_RGB');
+            $table->integer('longitud_maxima_gpu');
             $table->decimal('precio', 8, 2);
             $table->timestamps();
         });

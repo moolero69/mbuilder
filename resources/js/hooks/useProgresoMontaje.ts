@@ -19,5 +19,7 @@ export const useProgresoMontaje = create<EstadoMontaje>((set) => ({
     editarMontaje: null,
     guardarEditarMontaje: (editar) => set({ editarMontaje: editar }),
     montajeAnterior: null,
-    guardarMontajeAnterior: (montaje) => set({montajeAnterior: montaje})
+    guardarMontajeAnterior: (montaje) => set({montajeAnterior: montaje}),
+    componenteSaltado:false,
+    guardarComponenteSaltado: (saltado) => set({componenteSaltado: saltado})
 }));

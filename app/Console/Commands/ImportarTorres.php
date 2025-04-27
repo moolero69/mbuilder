@@ -30,7 +30,8 @@ class ImportarTorres extends Command
                 'nombre' => $fila['Nombre'],
                 'marca' => $fila['Marca'],
                 'factor_forma' => $fila['Factor Forma'],
-                'soporte_rgb' => $fila['Soporte RGB'],
+                'soporte_RGB' => $fila['Soporte RGB'],
+                'longitud_maxima_gpu' => $fila['Longitud GPU'],
                 'precio' => $fila['Precio'],
             ]);
         }

@@ -17,6 +17,9 @@ class PlacaBase extends Model
         "marca",
         "socket",
         "factor_forma",
+        "zocalos_ram",
+        "puertos_m2",
+        "puertos_sata",
         "consumo",
         "precio"
     ];

@@ -1591,6 +1591,9 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property float $precio
      * @property int $consumo
+     * @property int $puertos_sata
+     * @property int $puertos_m2
+     * @property int $zocalos_ram
      * @property string $factor_forma
      * @property string $socket
      * @property string $marca
@@ -1601,6 +1604,9 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase whereMarca($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase whereSocket($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase whereFactorForma($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase whereZocalosRam($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase wherePuertosM2($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase wherePuertosSata($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase whereConsumo($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase wherePrecio($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase whereCreatedAt($value)
@@ -1907,6 +1913,7 @@ namespace App\Models {
      * @property float $precio
      * @property int $consumo
      * @property int $passmark
+     * @property string $disipador_incluido
      * @property int $cache
      * @property int $hilos
      * @property int $nucleos
@@ -1925,6 +1932,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereNucleos($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereHilos($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereCache($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereDisipadorIncluido($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador wherePassmark($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereConsumo($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador wherePrecio($value)
@@ -2232,6 +2240,7 @@ namespace App\Models {
      * @property float $precio
      * @property int $consumo
      * @property int $passmark
+     * @property int $longitud
      * @property int $memoria
      * @property string $tipo_memoria
      * @property string $serie
@@ -2246,6 +2255,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica whereSerie($value)
      * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica whereTipoMemoria($value)
      * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica whereMemoria($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica whereLongitud($value)
      * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica wherePassmark($value)
      * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica whereConsumo($value)
      * @method static \Illuminate\Database\Eloquent\Builder<TarjetaGrafica>|TarjetaGrafica wherePrecio($value)
@@ -2551,7 +2561,8 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property float $precio
-     * @property string $soporte_RGB
+     * @property int $longitud_maxima_gpu
+     * @property string|null $soporte_RGB
      * @property string $factor_forma
      * @property string $marca
      * @property string $nombre
@@ -2561,6 +2572,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre whereMarca($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre whereFactorForma($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre whereSoporteRgb($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre whereLongitudMaximaGpu($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre wherePrecio($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre whereUpdatedAt($value)

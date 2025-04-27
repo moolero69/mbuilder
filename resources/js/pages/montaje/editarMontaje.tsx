@@ -1,10 +1,9 @@
 import Header from '@/components/header-principal';
 import { Button } from '@/components/ui/button';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
 import { useEffect } from 'react';
-import { toast } from 'sonner';
 
 type MontajeForm = {
     id?: number;
@@ -29,21 +28,20 @@ export default function editarMontajes() {
     } = useProgresoMontaje((state) => state);
 
     const nuevoPrecio =
-        Number(procesadorGuardado!.precio) +
-        Number(placaBaseGuardada!.precio) +
-        Number(memoriaRamGuardada!.precio) +
-        Number(discoDuroGuardado!.precio) +
-        Number(tarjetaGraficaGuardada!.precio) +
-        Number(fuenteAlimentacionGuardada!.precio) +
-        Number(torreGuardada!.precio);
+        (Number(procesadorGuardado?.precio) || 0) +
+        (Number(placaBaseGuardada?.precio) || 0) +
+        (Number(memoriaRamGuardada?.precio) || 0) +
+        (Number(discoDuroGuardado?.precio) || 0) +
+        (Number(tarjetaGraficaGuardada?.precio) || 0) +
+        (Number(fuenteAlimentacionGuardada?.precio) || 0) +
+        (Number(torreGuardada?.precio) || 0);
 
     const nuevoConsumo =
-        procesadorGuardado!.consumo +
-        placaBaseGuardada!.consumo +
-        memoriaRamGuardada!.consumo +
-        discoDuroGuardado!.consumo +
-        tarjetaGraficaGuardada!.consumo;
-
+        (procesadorGuardado?.consumo ?? 0) +
+        (placaBaseGuardada?.consumo ?? 0) +
+        (memoriaRamGuardada?.consumo ?? 0) +
+        (discoDuroGuardado?.consumo ?? 0) +
+        (tarjetaGraficaGuardada?.consumo ?? 0);
 
     const { data, setData, post } = useForm<MontajeForm>({
         id: undefined,
@@ -103,28 +101,66 @@ export default function editarMontajes() {
 
                             <ul className="space-y-1 text-sm">
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Procesador:</strong> {montajeAnterior?.procesador.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Procesador:</strong>{' '}
+                                    {montajeAnterior?.procesador ? (
+                                        montajeAnterior.procesador.nombre
+                                    ) : (
+                                        <span className="text-red-500">Sin procesador</span>
+                                    )}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Placa Base:</strong> {montajeAnterior?.placa_base.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Placa Base:</strong>{' '}
+                                    {montajeAnterior?.placa_base ? (
+                                        montajeAnterior.placa_base.nombre
+                                    ) : (
+                                        <span className="text-red-500">Sin placa base</span>
+                                    )}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Memoria RAM:</strong> {montajeAnterior?.memoria_ram.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Memoria RAM:</strong>{' '}
+                                    {montajeAnterior?.memoria_ram ? (
+                                        montajeAnterior.memoria_ram.nombre
+                                    ) : (
+                                        <span className="text-red-500">Sin memoria RAM</span>
+                                    )}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Disco Duro:</strong> {montajeAnterior?.disco_duro.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Disco Duro:</strong>{' '}
+                                    {montajeAnterior?.disco_duro ? (
+                                        montajeAnterior.disco_duro.nombre
+                                    ) : (
+                                        <span className="text-red-500">Sin disco duro</span>
+                                    )}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Gráfica:</strong> {montajeAnterior?.tarjeta_grafica.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Gráfica:</strong>{' '}
+                                    {montajeAnterior?.tarjeta_grafica ? (
+                                        montajeAnterior.tarjeta_grafica.nombre
+                                    ) : (
+                                        <span className="text-red-500">Sin gráfica</span>
+                                    )}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Fuente:</strong> {montajeAnterior?.fuente_alimentacion.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Fuente:</strong>{' '}
+                                    {montajeAnterior?.fuente_alimentacion ? (
+                                        montajeAnterior.fuente_alimentacion.nombre
+                                    ) : (
+                                        <span className="text-red-500">Sin fuente</span>
+                                    )}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Torre:</strong> {montajeAnterior?.torre.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Torre:</strong>{' '}
+                                    {montajeAnterior?.torre ? montajeAnterior.torre.nombre : <span className="text-red-500">Sin torre</span>}
                                 </li>
                                 <li>
-                                    <strong className="text-xl text-[var(--verde-neon)]">Precio: {montajeAnterior?.otros!.precio}€</strong>
+                                    <strong className="text-xl text-[var(--verde-neon)]">
+                                        Precio:{' '}
+                                        {montajeAnterior?.otros?.precio !== undefined ? (
+                                            `${montajeAnterior.otros.precio}€`
+                                        ) : (
+                                            <span className="text-red-500">0€</span>
+                                        )}
+                                    </strong>
                                 </li>
                             </ul>
                         </div>
@@ -141,28 +177,41 @@ export default function editarMontajes() {
 
                             <ul className="space-y-1 text-sm">
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Procesador:</strong> {procesadorGuardado?.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Procesador:</strong>{' '}
+                                    {procesadorGuardado ? procesadorGuardado.nombre : <span className="text-red-500">Sin procesador</span>}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Placa Base:</strong> {placaBaseGuardada?.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Placa Base:</strong>{' '}
+                                    {placaBaseGuardada ? placaBaseGuardada.nombre : <span className="text-red-500">Sin placa base</span>}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Memoria RAM:</strong> {memoriaRamGuardada?.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Memoria RAM:</strong>{' '}
+                                    {memoriaRamGuardada ? memoriaRamGuardada.nombre : <span className="text-red-500">Sin memoria RAM</span>}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Disco Duro:</strong> {discoDuroGuardado?.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Disco Duro:</strong>{' '}
+                                    {discoDuroGuardado ? discoDuroGuardado.nombre : <span className="text-red-500">Sin disco duro</span>}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Gráfica:</strong> {tarjetaGraficaGuardada?.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Gráfica:</strong>{' '}
+                                    {tarjetaGraficaGuardada ? tarjetaGraficaGuardada.nombre : <span className="text-red-500">Sin gráfica</span>}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Fuente:</strong> {fuenteAlimentacionGuardada?.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Fuente:</strong>{' '}
+                                    {fuenteAlimentacionGuardada ? (
+                                        fuenteAlimentacionGuardada.nombre
+                                    ) : (
+                                        <span className="text-red-500">Sin fuente</span>
+                                    )}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Torre:</strong> {torreGuardada?.nombre}
+                                    <strong className="text-[var(--azul-neon)]">Torre:</strong>{' '}
+                                    {torreGuardada ? torreGuardada.nombre : <span className="text-red-500">Sin torre</span>}
                                 </li>
                                 <li>
-                                    <strong className="text-xl text-[var(--verde-neon)]">Precio: {nuevoPrecio}€</strong>
+                                    <strong className="text-xl text-[var(--verde-neon)]">
+                                        Precio: {nuevoPrecio !== undefined ? `${nuevoPrecio}€` : <span className="text-red-500">0€</span>}
+                                    </strong>
                                 </li>
                             </ul>
                         </div>
@@ -170,7 +219,7 @@ export default function editarMontajes() {
                 </div>
                 <div className="flex w-full items-center justify-center">
                     <Button
-                        className="m-10 text-center hover:cursor-pointer fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)]"
+                        className="fade-in m-10 rounded-lg border-[var(--naranja-neon)] px-8 py-4 text-center font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:cursor-pointer hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)]"
                         variant={'outline'}
                         onClick={() => {
                             editarMontaje();

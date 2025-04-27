@@ -1,4 +1,6 @@
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
+import { Link } from '@inertiajs/react';
+
 
 export default function ProgresoMontaje({ componentes }: { componentes: string[] }) {
     const {
@@ -29,43 +31,43 @@ export default function ProgresoMontaje({ componentes }: { componentes: string[]
             <div className="flex flex-col gap-8">
                 {componentes.includes('procesador') && procesadorGuardado && (
                     <div className="flex justify-between">
-                        <span>{procesadorGuardado.nombre}</span>
+                        <Link href={route('montaje.procesador')} className='hover:border-b-2 border-[var(--azul-neon)]'>{procesadorGuardado.nombre}</Link>
                         <span className="text-[var(--verde-neon)]">{procesadorGuardado.precio}€</span>
                     </div>
                 )}
                 {componentes.includes('placaBase') && placaBaseGuardada && (
                     <div className="flex justify-between">
-                        <span>{placaBaseGuardada.nombre}</span>
+                        <Link href={route('montaje.placaBase')} className='hover:border-b-2 border-[var(--azul-neon)]'>{placaBaseGuardada.nombre}</Link>
                         <span className="text-[var(--verde-neon)]">{placaBaseGuardada.precio}€</span>
                     </div>
                 )}
                 {componentes.includes('memoriaRam') && memoriaRamGuardada && (
                     <div className="flex justify-between">
-                        <span>{memoriaRamGuardada.nombre}</span>
+                        <Link href={route('montaje.memoriaRam')} className='hover:border-b-2 border-[var(--azul-neon)]'>{memoriaRamGuardada.nombre}</Link>
                         <span className="text-[var(--verde-neon)]">{memoriaRamGuardada.precio}€</span>
                     </div>
                 )}
                 {componentes.includes('discoDuro') && discoDuroGuardado && (
                     <div className="flex justify-between">
-                        <span>{discoDuroGuardado.nombre}</span>
+                        <Link href={route('montaje.discoDuro')} className='hover:border-b-2 border-[var(--azul-neon)]'>{discoDuroGuardado.nombre}</Link>
                         <span className="text-[var(--verde-neon)]">{discoDuroGuardado.precio}€</span>
                     </div>
                 )}
                 {componentes.includes('tarjetaGrafica') && tarjetaGraficaGuardada && (
                     <div className="flex justify-between">
-                        <span>{tarjetaGraficaGuardada.nombre}</span>
+                        <Link href={route('montaje.tarjetaGrafica')} className='hover:border-b-2 border-[var(--azul-neon)]'>{tarjetaGraficaGuardada.nombre}</Link>
                         <span className="text-[var(--verde-neon)]">{tarjetaGraficaGuardada.precio}€</span>
                     </div>
                 )}
                 {componentes.includes('fuenteAlimentacion') && fuenteAlimentacionGuardada && (
                     <div className="flex justify-between">
-                        <span>{fuenteAlimentacionGuardada.nombre}</span>
+                        <Link href={route('montaje.fuenteAlimentacion')} className='hover:border-b-2 border-[var(--azul-neon)]'>{fuenteAlimentacionGuardada.nombre}</Link>
                         <span className="text-[var(--verde-neon)]">{fuenteAlimentacionGuardada.precio}€</span>
                     </div>
                 )}
                 {componentes.includes('torre') && torreGuardada && (
                     <div className="flex justify-between">
-                        <span>{torreGuardada.nombre}</span>
+                        <Link href={route('montaje.torre')} className='hover:border-b-2 border-[var(--azul-neon)]'>{torreGuardada.nombre}</Link>
                         <span className="text-[var(--verde-neon)]">{torreGuardada.precio}€</span>
                     </div>
                 )}

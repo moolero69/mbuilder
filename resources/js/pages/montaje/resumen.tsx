@@ -50,20 +50,20 @@ export default function ResumenMontaje() {
     }, []);
 
     const precioTotal =
-        Number(procesadorGuardado!.precio) +
-        Number(placaBaseGuardada!.precio) +
-        Number(memoriaRamGuardada!.precio) +
-        Number(discoDuroGuardado!.precio) +
-        Number(tarjetaGraficaGuardada!.precio) +
-        Number(fuenteAlimentacionGuardada!.precio) +
-        Number(torreGuardada!.precio);
+    Number(procesadorGuardado?.precio ?? 0) +
+    Number(placaBaseGuardada?.precio ?? 0) +
+    Number(memoriaRamGuardada?.precio ?? 0) +
+    Number(discoDuroGuardado?.precio ?? 0) +
+    Number(tarjetaGraficaGuardada?.precio ?? 0) +
+    Number(fuenteAlimentacionGuardada?.precio ?? 0) +
+    Number(torreGuardada?.precio ?? 0);
 
-    const consumoTotal =
-        procesadorGuardado!.consumo +
-        placaBaseGuardada!.consumo +
-        memoriaRamGuardada!.consumo +
-        discoDuroGuardado!.consumo +
-        tarjetaGraficaGuardada!.consumo;
+const consumoTotal =
+    (procesadorGuardado?.consumo ?? 0) +
+    (placaBaseGuardada?.consumo ?? 0) +
+    (memoriaRamGuardada?.consumo ?? 0) +
+    (discoDuroGuardado?.consumo ?? 0) +
+    (tarjetaGraficaGuardada?.consumo ?? 0);
 
     const otros = {
         precio: precioTotal,

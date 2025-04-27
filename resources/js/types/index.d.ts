@@ -1,4 +1,3 @@
-import { LucideIcon } from 'lucide-react';
 import { ReactNode } from 'react';
 import type { Config } from 'ziggy-js';
 
@@ -65,6 +64,7 @@ export interface TarjetaGrafica {
     serie: string;
     tipo_memoria: string;
     memoria: number;
+    longitud: number;
     passmark: number;
     consumo: number;
     precio: number;
@@ -82,6 +82,7 @@ export interface Procesador {
     nucleos: number;
     hilos: number;
     cache: number;
+    disipador_incluido: string;
     passmark: number;
     consumo: number;
     precio: number;
@@ -107,11 +108,13 @@ export interface PlacaBase {
     marca: string;
     socket: string;
     factor_forma: string;
+    zocalos_ram: number;
+    puertos_m2: number;
+    puertos_sata: number;
     consumo: number;
     precio: number;
     created_at: Date;
     updated_at: Date;
-    compatible?: boolean;
 }
 
 export interface Torre {
@@ -120,6 +123,7 @@ export interface Torre {
     marca: string;
     factor_forma: string;
     soporte_RGB: string;
+    longitud_maxima_gpu: number;
     precio: number;
     created_at: Date;
     updated_at: Date;
@@ -147,6 +151,7 @@ export interface ItemArrastrableProps {
     textoSecundario?: string;
     precio?: number;
 }
+
 export interface MontajeLayoutProps {
     sidebar: ReactNode;
     main: ReactNode;
@@ -170,7 +175,7 @@ export interface ComponentesMontaje {
     tarjeta_grafica: TarjetaGrafica;
     fuente_alimentacion: FuenteAlimentacion;
     torre: Torre;
-    otros?: {precio: number, potencia: number, nombre: string};
+    otros?: { precio: number; potencia: number; nombre: string };
 }
 
 export interface EstadoMontaje {
@@ -192,4 +197,6 @@ export interface EstadoMontaje {
     guardarEditarMontaje?: (editarMontaje: boolean | null) => void;
     montajeAnterior?: ComponentesMontaje | null;
     guardarMontajeAnterior?: (montajeAnterior: ComponentesMontaje | null) => void;
+    componenteSaltado?: boolean | null;
+    guardarComponenteSaltado?: (componenteSaltado: boolean | null) => void;
 }

@@ -33,6 +33,7 @@ class ImportarTarjetasGraficas extends Command
                 'serie' => $fila['Serie'],
                 'tipo_memoria' => $fila['Tipo de Memoria'],
                 'memoria' => $fila['Memoria'],
+                'longitud' => $fila['Longitud'],
                 'passmark' => $fila['Passmark'],
                 'consumo' => $fila['Consumo'],
                 'precio' => $fila['Precio'],

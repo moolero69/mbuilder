@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('nucleos');
             $table->integer('hilos');
             $table->integer('cache');
+            $table->string('disipador_incluido');
             $table->integer('passmark');
             $table->integer('consumo');
             $table->decimal('precio', 8, 2);

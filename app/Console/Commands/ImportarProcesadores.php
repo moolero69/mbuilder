@@ -35,6 +35,8 @@ class ImportarProcesadores extends Command
                 'nucleos' => $fila['Nucleos'],
                 'hilos' => $fila['Hilos'],
                 'cache' => $fila['Cache'],
+                'cache' => $fila['Cache'],
+                'disipador_incluido' => $fila['Disipador Incluido'],
                 'passmark' => $fila['PassMark'],
                 'consumo' => $fila['Consumo'],
                 'precio' => $fila['Precio'],

@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 export default function Pruebas() {
     const [intelDesplegado, setIntelDesplegado] = useState(false);
-    const { procesadorGuardado, editarMontaje, placaBaseGuardada, memoriaRamGuardada, torreGuardada, montajeAnterior } = useProgresoMontaje((state) => state);
+    const { procesadorGuardado, editarMontaje, placaBaseGuardada, memoriaRamGuardada, torreGuardada, montajeAnterior, componenteSaltado } = useProgresoMontaje((state) => state);
     return (
         <>
             <Head title="pruebas"></Head>
@@ -36,12 +36,13 @@ export default function Pruebas() {
                         <div className="rounded-md border px-4 py-2 font-mono text-sm shadow-sm">Procesador 7</div>
                     </CollapsibleContent>
                 </Collapsible>
-                <h1>{procesadorGuardado!.nombre}</h1>
-                <h1>{placaBaseGuardada!.nombre}</h1>
+                {/* <h1>{procesadorGuardado!.nombre}</h1> */}
+                {/* <h1>{placaBaseGuardada!.nombre}</h1> */}
                 {/* <h1>{memoriaRamGuardada!.nombre}</h1> */}
-                <h1>{torreGuardada?.nombre}</h1>
+                {/* <h1>{torreGuardada?.nombre}</h1> */}
                 {/* <h1>{montajeAnterior?.otros.precio}</h1> */}
-                <h1>{editarMontaje!.toString()}</h1>
+                {/* <h1>{editarMontaje!.toString()}</h1> */}
+                <h1>{componenteSaltado!.toString()}</h1>
             </div>
         </>
     );

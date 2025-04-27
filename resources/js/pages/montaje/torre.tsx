@@ -46,10 +46,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const progresoMontaje = ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion'];
 
 export default function MontajeTorre({ torres }: { torres: Torre[] }) {
-    const { placaBaseGuardada, guardarTorre, editarMontaje, torreGuardada } = useProgresoMontaje((state) => state);
+    const { placaBaseGuardada, guardarTorre, editarMontaje, torreGuardada, componenteSaltado, guardarComponenteSaltado } = useProgresoMontaje((state) => state);
+    const progresoMontaje = ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion'];
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
     const [dialogoEditarAbierto, setDialogoEditarAbierto] = useState(false);
@@ -79,7 +79,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
 
     const [busquedaGeneral, setBusquedaGeneral] = useState('');
 
-    const [torresFiltradas, setTorresFiltradas] = useState<Torre[]>();
+    const [mostrarDialogoSaltarComponente, setMostrarDialogoSaltarComponente] = useState(false);
+
+    const [torresFiltradas, setTorresFiltradas] = useState<Torre[]>(torres);
 
     const torresAeroCool = (() => {
         const filtrados = torresFiltradas?.filter((t) => t.marca === 'Aerocool' && t.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
@@ -174,7 +176,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
             setTorresFiltradas(torresCompatibles);
         };
 
-        comprobarCompatibilidad(torreSeleccionada!);
+        !componenteSaltado && comprobarCompatibilidad(torreSeleccionada!);
     }, []);
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -238,7 +240,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
             {dialogoEditarAbierto && <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs"></div>}
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
-                {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
+                {(isDragging || mostrarDialogoSaltarComponente) && (<div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>)}
                 <MontajeLayout
                     breadcrums={breadcrumbs}
                     progresoMontaje={progresoMontaje}
@@ -815,7 +817,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${torreActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem>
+                                <AreaSoltarItem botonEliminar={() => setTorreSeleccionada(null)} mostrarBoton={Boolean(torreSeleccionada)}>
                                     {!torreActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {torreSeleccionada?.nombre}
@@ -824,7 +826,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                 </AreaSoltarItem>
                             </div>
 
-                            {/* Info del procesador con borde neón */}
+                            {/* Info del componente con borde neón */}
                             {torreSeleccionada && (
                                 <>
                                     <div className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3" key={torreSeleccionada.id}>

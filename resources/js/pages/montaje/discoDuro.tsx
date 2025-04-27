@@ -1,4 +1,5 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
+import DialogoSaltarComponente from '@/components/DialogoSaltarComponente';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -31,12 +32,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const progresoMontaje = ['procesador', 'placaBase', 'memoriaRam'];
-
 export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDuro[] }) {
-    const { procesadorGuardado, guardarDiscoDuro, editarMontaje, discoDuroGuardado } = useProgresoMontaje((state) => state);
-    const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
+    const { procesadorGuardado, guardarDiscoDuro, editarMontaje, discoDuroGuardado, componenteSaltado, guardarComponenteSaltado } =
+        useProgresoMontaje((state) => state);
+    const progresoMontaje = !editarMontaje
+        ? ['procesador', 'placaBase', 'memoriaRam']
+        : ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
     const [discoSeleccionado, setDiscoSeleccionado] = useState<DiscoDuro | null>(editarMontaje ? discoDuroGuardado! : null);
 
@@ -53,7 +56,9 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
 
     const [busquedaGeneral, setBusquedaGeneral] = useState('');
 
-    const [discosFiltrados, setDiscosFiltrados] = useState<DiscoDuro[]>();
+    const [mostrarDialogoSaltarComponente, setMostrarDialogoSaltarComponente] = useState(false);
+
+    const [discosFiltrados, setDiscosFiltrados] = useState<DiscoDuro[]>(discosDuros);
 
     const discosKingston = (() => {
         const filtrados = discosFiltrados?.filter((d) => d.marca === 'Kingston' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
@@ -119,7 +124,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
             setDiscosFiltrados(discosCompatibles);
         };
 
-        comprobarCompatibilidad(discoDuroGuardado!);
+        !componenteSaltado && comprobarCompatibilidad(discoDuroGuardado!);
     }, []);
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -164,7 +169,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
             <Head title="montaje - disco duro" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
-                {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
+                {(isDragging || mostrarDialogoSaltarComponente) && (<div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>)}
                 <MontajeLayout
                     breadcrums={breadcrumbs}
                     progresoMontaje={progresoMontaje}
@@ -556,7 +561,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${discoActivo && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem>
+                                <AreaSoltarItem botonEliminar={() => setDiscoSeleccionado(null)} mostrarBoton={Boolean(discoSeleccionado)}>
                                     {!discoActivo && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {discoSeleccionado?.nombre}
@@ -565,7 +570,33 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                 </AreaSoltarItem>
                             </div>
 
-                            {/* Info del procesador con borde neón */}
+                            {/*Boton saltar componente*/}
+                            {!discoSeleccionado && (
+                                <div className='absolute bottom-2 left-2 border-2 border-[var(--rojo-neon)]/60 p-2 font-["exo_2"]'>
+                                    <Button
+                                        variant={'link'}
+                                        className="text-lg"
+                                        onClick={() => {
+                                            setMostrarDialogoSaltarComponente(true);
+                                        }}
+                                    >
+                                        No quiero seleccionar disco duro
+                                    </Button>
+                                </div>
+                            )}
+                            {mostrarDialogoSaltarComponente && (
+                                <DialogoSaltarComponente
+                                    componente="disco duro"
+                                    ruta="montaje.tarjetaGrafica"
+                                    cerrarDialogo={() => setMostrarDialogoSaltarComponente(false)}
+                                    onConfirmar={() => {
+                                        guardarComponenteSaltado!(true);
+                                        guardarDiscoDuro!(null);
+                                    }}
+                                />
+                            )}
+
+                            {/* Info del componente con borde neón */}
                             {discoSeleccionado && (
                                 <>
                                     <div className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3" key={discoSeleccionado.id}>

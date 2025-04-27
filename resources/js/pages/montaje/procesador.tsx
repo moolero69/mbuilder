@@ -1,4 +1,5 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
+import DialogoSaltarComponente from '@/components/DialogoSaltarComponente';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -20,7 +21,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function MontajeProcesador({ procesadores }: { procesadores: Procesador[] }) {
-    const { guardarProcesador, editarMontaje, procesadorGuardado } = useProgresoMontaje((state) => state);
+    const { guardarProcesador, editarMontaje, procesadorGuardado, guardarComponenteSaltado } = useProgresoMontaje((state) => state);
+    const progresoMontaje = editarMontaje && ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
     const [procesadorSeleccionado, setProcesadorSeleccionado] = useState<Procesador | null>(editarMontaje ? procesadorGuardado! : null);
     const [procesadorActivo, setProcesadorActivo] = useState<Procesador | null>(null);
@@ -28,6 +30,8 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
     const [intelDesplegado, setIntelDesplegado] = useState(false);
     const [amdDesplegado, setAmdDesplegado] = useState(false);
     const [busquedaGeneral, setBusquedaGeneral] = useState('');
+
+    const [mostrarDialogoSaltarComponente, setMostrarDialogoSaltarComponente] = useState(false);
 
     const procesadoresAmd = (() => {
         const p = procesadores.filter((p) => p.marca === 'AMD' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
@@ -91,9 +95,12 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
             <Head title="montaje - procesador" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
-                {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
+                {(isDragging || mostrarDialogoSaltarComponente) && (
+                    <div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>
+                )}
                 <MontajeLayout
                     breadcrums={breadcrumbs}
+                    progresoMontaje={progresoMontaje}
                     sidebar={
                         <div className="w-full space-y-4">
                             {/* 🔍 Barra de búsqueda general */}
@@ -263,7 +270,7 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${procesadorActivo && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem>
+                                <AreaSoltarItem botonEliminar={() => setProcesadorSeleccionado(null)} mostrarBoton={Boolean(procesadorSeleccionado)}>
                                     {!procesadorActivo && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {procesadorSeleccionado?.nombre}
@@ -272,11 +279,37 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
                                 </AreaSoltarItem>
                             </div>
 
+                            {/*Boton saltar componente*/}
+                            {!procesadorSeleccionado && (
+                                <div className='absolute bottom-2 left-2 border-2 border-[var(--rojo-neon)]/60 p-2 font-["exo_2"]'>
+                                    <Button
+                                        variant={'link'}
+                                        className="text-lg"
+                                        onClick={() => {
+                                            setMostrarDialogoSaltarComponente(true);
+                                        }}
+                                    >
+                                        No quiero seleccionar procesador
+                                    </Button>
+                                </div>
+                            )}
+                            {mostrarDialogoSaltarComponente && (
+                                <DialogoSaltarComponente
+                                    componente="procesador"
+                                    ruta="montaje.placaBase"
+                                    cerrarDialogo={() => setMostrarDialogoSaltarComponente(false)}
+                                    onConfirmar={() => {
+                                        guardarComponenteSaltado!(true);
+                                        guardarProcesador!(null);
+                                    }}
+                                />
+                            )}
+
                             {/* Info del procesador con borde neón */}
                             {procesadorSeleccionado && (
                                 <>
                                     <div
-                                        className="fade-left grid w-[68%] grid-cols-1 justify-center gap-8 p-8 sm:grid-cols-2 md:grid-cols-3"
+                                        className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3"
                                         key={procesadorSeleccionado.id}
                                     >
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
@@ -343,6 +376,7 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
                                         className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${procesadorActivo && 'hidden'}`}
                                         onClick={() => {
                                             guardarProcesador!(procesadorSeleccionado);
+                                            guardarComponenteSaltado!(false);
                                         }}
                                         asChild
                                     >

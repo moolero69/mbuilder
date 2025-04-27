@@ -19,6 +19,7 @@ class TarjetaGrafica extends Model
         "serie",
         "tipo_memoria",
         "memoria",
+        "longitud",
         "passmark",
         "consumo",
         "precio"

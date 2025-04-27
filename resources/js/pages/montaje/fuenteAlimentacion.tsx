@@ -1,4 +1,5 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
+import DialogoSaltarComponente from '@/components/DialogoSaltarComponente';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -39,8 +40,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const progresoMontaje = ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica'];
-
 export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fuentesAlimentacion: FuenteAlimentacion[] }) {
     const {
         procesadorGuardado,
@@ -51,11 +50,15 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
         guardarFuenteAlimentacion,
         editarMontaje,
         fuenteAlimentacionGuardada,
+        componenteSaltado,
+        guardarComponenteSaltado,
     } = useProgresoMontaje((state) => state);
+    const progresoMontaje = !editarMontaje
+        ? ['procesador', 'placaBase', 'memoriaRam', 'discoDuro','tarjetaGrafica']
+        : ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
     const [fuenteSeleccionada, setFuenteSeleccionada] = useState<FuenteAlimentacion | null>(editarMontaje ? fuenteAlimentacionGuardada! : null);
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
-
 
     const [fuenteActiva, setFuenteActiva] = useState<FuenteAlimentacion | null>(null);
 
@@ -68,7 +71,9 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
 
     const [busquedaGeneral, setBusquedaGeneral] = useState('');
 
-    const [fuentesFiltradas, setFuentesFiltradas] = useState<FuenteAlimentacion[]>();
+    const [mostrarDialogoSaltarComponente, setMostrarDialogoSaltarComponente] = useState(false);
+
+    const [fuentesFiltradas, setFuentesFiltradas] = useState<FuenteAlimentacion[]>(fuentesAlimentacion);
 
     const fuentesCorsair = (() => {
         const f = fuentesFiltradas?.filter((f) => f.marca === 'Corsair' && f.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
@@ -90,7 +95,6 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
         return f?.length ? f : null;
     })();
 
-
     useEffect(() => {
         !editarMontaje &&
             toast.custom(
@@ -109,11 +113,11 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
 
         const comprobarCompatibilidad = (fuente: FuenteAlimentacion) => {
             const sumaTotalConsumo =
-                procesadorGuardado!.consumo +
-                placaBaseGuardada!.consumo +
-                memoriaRamGuardada!.consumo +
-                discoDuroGuardado!.consumo +
-                tarjetaGraficaGuardada!.consumo;
+                (procesadorGuardado?.consumo ?? 0) +
+                (placaBaseGuardada?.consumo ?? 0) +
+                (memoriaRamGuardada?.consumo ?? 0) +
+                (discoDuroGuardado?.consumo ?? 0) +
+                (tarjetaGraficaGuardada?.consumo ?? 0);
 
             const fuentesCompatibles = fuentesAlimentacion.filter((fuente) => fuente.potencia > sumaTotalConsumo);
 
@@ -153,7 +157,7 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
             <Head title="montaje - fuente alimentacion" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
-                {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
+                {(isDragging || mostrarDialogoSaltarComponente) && (<div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>)}
                 <MontajeLayout
                     breadcrums={breadcrumbs}
                     progresoMontaje={progresoMontaje}
@@ -397,7 +401,7 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${fuenteActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem>
+                                <AreaSoltarItem botonEliminar={() => setFuenteSeleccionada(null)} mostrarBoton={Boolean(fuenteSeleccionada)}>
                                     {!fuenteActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {fuenteSeleccionada?.nombre}
@@ -406,7 +410,33 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                 </AreaSoltarItem>
                             </div>
 
-                            {/* Info del procesador con borde neón */}
+                            {/*Boton saltar componente*/}
+                            {!fuenteSeleccionada && (
+                                <div className='absolute bottom-2 left-2 border-2 border-[var(--rojo-neon)]/60 p-2 font-["exo_2"]'>
+                                    <Button
+                                        variant={'link'}
+                                        className="text-lg"
+                                        onClick={() => {
+                                            setMostrarDialogoSaltarComponente(true);
+                                        }}
+                                    >
+                                        No quiero seleccionar fuente
+                                    </Button>
+                                </div>
+                            )}
+                            {mostrarDialogoSaltarComponente && (
+                                <DialogoSaltarComponente
+                                    componente="fuente de alimentación"
+                                    ruta="montaje.torre"
+                                    cerrarDialogo={() => setMostrarDialogoSaltarComponente(false)}
+                                    onConfirmar={() => {
+                                        guardarComponenteSaltado!(true);
+                                        guardarFuenteAlimentacion!(null);
+                                    }}
+                                />
+                            )}
+
+                            {/* Info del componente con borde neón */}
                             {fuenteSeleccionada && (
                                 <>
                                     <div className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3" key={fuenteSeleccionada.id}>

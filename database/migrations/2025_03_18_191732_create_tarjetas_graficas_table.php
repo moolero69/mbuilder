@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('serie');
             $table->string('tipo_memoria');
             $table->integer('memoria');
+            $table->integer('longitud');
             $table->integer('passmark');
             $table->integer('consumo');
             $table->decimal('precio', 8, 2);

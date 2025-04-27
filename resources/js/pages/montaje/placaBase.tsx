@@ -1,4 +1,5 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
+import DialogoSaltarComponente from '@/components/DialogoSaltarComponente';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -23,10 +24,13 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const progresoMontaje = ['procesador'];
-
 export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase[] }) {
-    const { procesadorGuardado, guardarPlacaBase, editarMontaje, placaBaseGuardada } = useProgresoMontaje((state) => state);
+    const { procesadorGuardado, guardarPlacaBase, editarMontaje, placaBaseGuardada, componenteSaltado, guardarComponenteSaltado } =
+        useProgresoMontaje((state) => state);
+
+    const progresoMontaje = !editarMontaje
+        ? ['procesador']
+        : ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
     const [placaBaseSeleccionada, setPlacaBaseSeleccionada] = useState<PlacaBase | null>(editarMontaje ? placaBaseGuardada! : null);
@@ -41,7 +45,9 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
 
     const [busquedaGeneral, setBusquedaGeneral] = useState('');
 
-    const [placasFiltradas, setPlacasFiltradas] = useState<PlacaBase[]>();
+    const [mostrarDialogoSaltarComponente, setMostrarDialogoSaltarComponente] = useState(false);
+
+    const [placasFiltradas, setPlacasFiltradas] = useState<PlacaBase[]>(placasBase);
 
     const placasBaseAsrock = (() => {
         const p = placasFiltradas?.filter((p) => p.marca === 'ASRock' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
@@ -87,7 +93,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
             setPlacasFiltradas(placasCompatibles);
         };
 
-        comprobarCompatibilidad(placaBaseGuardada!);
+        !componenteSaltado && comprobarCompatibilidad(placaBaseGuardada!);
     }, []);
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -129,7 +135,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
             <Head title="montaje - placa base" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
-                {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
+                {(isDragging || mostrarDialogoSaltarComponente) && (<div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>)}
                 <MontajeLayout
                     breadcrums={breadcrumbs}
                     progresoMontaje={progresoMontaje}
@@ -432,7 +438,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${placaBaseActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem>
+                                <AreaSoltarItem botonEliminar={() => setPlacaBaseSeleccionada(null)} mostrarBoton={Boolean(placaBaseSeleccionada)}>
                                     {!placaBaseActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {placaBaseSeleccionada?.nombre}
@@ -441,7 +447,33 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                 </AreaSoltarItem>
                             </div>
 
-                            {/* Info del procesador con borde neón */}
+                            {/*Boton saltar componente*/}
+                            {!placaBaseSeleccionada && (
+                                <div className='absolute bottom-2 left-2 border-2 border-[var(--rojo-neon)]/60 p-2 font-["exo_2"]'>
+                                    <Button
+                                        variant={'link'}
+                                        className="text-lg"
+                                        onClick={() => {
+                                            setMostrarDialogoSaltarComponente(true);
+                                        }}
+                                    >
+                                        No quiero seleccionar placa base
+                                    </Button>
+                                </div>
+                            )}
+                            {mostrarDialogoSaltarComponente && (
+                                <DialogoSaltarComponente
+                                    componente="placa base"
+                                    ruta="montaje.memoriaRam"
+                                    cerrarDialogo={() => setMostrarDialogoSaltarComponente(false)}
+                                    onConfirmar={() => {
+                                        guardarComponenteSaltado!(true);
+                                        guardarPlacaBase!(null);
+                                    }}
+                                />
+                            )}
+
+                            {/* Info del componente con borde neón */}
                             {placaBaseSeleccionada && (
                                 <>
                                     <div

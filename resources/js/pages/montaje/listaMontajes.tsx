@@ -1,4 +1,5 @@
 import Header from '@/components/header-principal';
+import TooltipIncopatibilidad from '@/components/TooltipIncopatibilidad';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
@@ -93,42 +94,70 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                             {montajes.map((montaje) => {
                                 const datos = JSON.parse(montaje.datos);
 
+                                const componenteFaltante =
+                                    !datos.procesador ||
+                                    !datos.placa_base ||
+                                    !datos.memoria_ram ||
+                                    !datos.disco_duro ||
+                                    !datos.tarjeta_grafica ||
+                                    !datos.fuente_alimentacion ||
+                                    !datos.torre;
+
                                 return (
                                     <div
                                         key={montaje.id}
                                         className="colores-borde-glow rounded-xl bg-gradient-to-b from-black to-[#0d0d0d] p-5 transition-all duration-300 hover:scale-[1.02]"
                                     >
-                                        <h2 className="mb-3 font-['Orbitron'] text-2xl font-bold text-[var(--naranja-neon)] drop-shadow-[0_0_5px_var(--naranja-neon)]">
-                                            {montaje.nombre}
-                                        </h2>
+                                        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-between">
+                                            <h2 className="mb-3 font-['Orbitron'] text-2xl font-bold text-[var(--naranja-neon)] drop-shadow-[0_0_5px_var(--naranja-neon)]">
+                                                {montaje.nombre}
+                                            </h2>
+                                            {componenteFaltante && <TooltipIncopatibilidad mensaje='Posible incopatibilidad entre componentes'/>}
+                                        </div>
+
                                         <p className="mb-4 text-sm text-gray-400">Creado el: {new Date(montaje.created_at).toLocaleDateString()}</p>
 
                                         <ul className="space-y-1 text-sm">
                                             <li>
-                                                <strong className="text-[var(--azul-neon)]">Procesador:</strong> {datos.procesador?.nombre}
+                                                <strong className="text-[var(--azul-neon)]">Procesador:</strong>{' '}
+                                                {datos.procesador?.nombre || <span className="text-red-500">Sin procesador</span>}
                                             </li>
                                             <li>
-                                                <strong className="text-[var(--azul-neon)]">Placa Base:</strong> {datos.placa_base?.nombre}
+                                                <strong className="text-[var(--azul-neon)]">Placa Base:</strong>{' '}
+                                                {datos.placa_base?.nombre || <span className="text-red-500">Sin placa base</span>}
                                             </li>
                                             <li>
-                                                <strong className="text-[var(--azul-neon)]">Memoria RAM:</strong> {datos.memoria_ram?.nombre}
+                                                <strong className="text-[var(--azul-neon)]">Memoria RAM:</strong>{' '}
+                                                {datos.memoria_ram?.nombre || <span className="text-red-500">Sin memoria RAM</span>}
                                             </li>
                                             <li>
-                                                <strong className="text-[var(--azul-neon)]">Disco Duro:</strong> {datos.disco_duro?.nombre}
+                                                <strong className="text-[var(--azul-neon)]">Disco Duro:</strong>{' '}
+                                                {datos.disco_duro?.nombre || <span className="text-red-500">Sin disco duro</span>}
                                             </li>
                                             <li>
-                                                <strong className="text-[var(--azul-neon)]">Gráfica:</strong> {datos.tarjeta_grafica?.nombre}
+                                                <strong className="text-[var(--azul-neon)]">Gráfica:</strong>{' '}
+                                                {datos.tarjeta_grafica?.nombre || <span className="text-red-500">Sin gráfica</span>}
                                             </li>
                                             <li>
-                                                <strong className="text-[var(--azul-neon)]">Fuente:</strong> {datos.fuente_alimentacion?.nombre}
+                                                <strong className="text-[var(--azul-neon)]">Fuente:</strong>{' '}
+                                                {datos.fuente_alimentacion?.nombre || <span className="text-red-500">Sin fuente</span>}
                                             </li>
                                             <li>
-                                                <strong className="text-[var(--azul-neon)]">Torre:</strong> {datos.torre?.nombre}
+                                                <strong className="text-[var(--azul-neon)]">Torre:</strong>{' '}
+                                                {datos.torre?.nombre || <span className="text-red-500">Sin torre</span>}
                                             </li>
                                             <li>
-                                                <strong className="text-xl text-[var(--verde-neon)]">Precio: {datos.otros?.precio || '???'}€</strong>
+                                                <strong className="text-xl text-[var(--verde-neon)]">
+                                                    Precio: {datos.otros?.precio.toFixed(2) || '???'}€
+                                                </strong>{' '}
+                                            </li>
+                                            <li>
+                                                <strong className="text-xl text-[var(--rosa-neon)]">
+                                                    Consumo: {datos.otros?.consumo || '???'}W
+                                                </strong>{' '}
                                             </li>
                                         </ul>
+
                                         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-between">
                                             <Button
                                                 variant="outline"
@@ -146,7 +175,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
 
                                             <Button
                                                 variant="outline"
-                                                className="w-auto border-[var(--rojo-neon)] font-['Orbitron'] text-[var(--rojo-neon)] shadow-[0_0_8px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_16px_var(--rojo-neon)] hover:cursor-pointer"
+                                                className="w-auto border-[var(--rojo-neon)] font-['Orbitron'] text-[var(--rojo-neon)] shadow-[0_0_8px_var(--rojo-neon)] transition-all duration-500 hover:cursor-pointer hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_16px_var(--rojo-neon)]"
                                                 onClick={() => {
                                                     setDialogoEliminar(true);
                                                     setNombreMontaje(montaje.nombre);
@@ -178,7 +207,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                         <Button
                             variant="ghost"
                             onClick={() => setDialogoEliminar(false)}
-                            className="border border-gray-600 text-white hover:bg-gray-800 hover:cursor-pointer"
+                            className="border border-gray-600 text-white hover:cursor-pointer hover:bg-gray-800"
                         >
                             Cancelar
                         </Button>
@@ -187,7 +216,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                 eliminarMontaje();
                                 setDialogoEliminar(false);
                             }}
-                            className="bg-[var(--rojo-neon)] text-black hover:bg-red-600 hover:cursor-pointer"
+                            className="bg-[var(--rojo-neon)] text-black hover:cursor-pointer hover:bg-red-600"
                         >
                             Eliminar
                         </Button>

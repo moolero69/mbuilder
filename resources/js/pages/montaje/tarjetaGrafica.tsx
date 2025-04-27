@@ -1,4 +1,5 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
+import DialogoSaltarComponente from '@/components/DialogoSaltarComponente';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -8,7 +9,22 @@ import { BreadcrumbItem, TarjetaGrafica } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, CircuitBoard, Euro, Factory, Gamepad2, MemoryStick, Microchip, Minus, Move, Plus, Search, ShieldAlert, Wrench, Zap } from 'lucide-react';
+import {
+    ArrowBigDown,
+    CircuitBoard,
+    Euro,
+    Factory,
+    Gamepad2,
+    MemoryStick,
+    Microchip,
+    Minus,
+    Move,
+    Plus,
+    Search,
+    ShieldAlert,
+    Wrench,
+    Zap,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -35,10 +51,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const progresoMontaje = ['procesador', 'placaBase', 'memoriaRam', 'discoDuro'];
-
 export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGraficas: TarjetaGrafica[] }) {
-    const { procesadorGuardado, guardarTarjetaGrafica, editarMontaje, tarjetaGraficaGuardada } = useProgresoMontaje((state) => state);
+    const { procesadorGuardado, guardarTarjetaGrafica, editarMontaje, tarjetaGraficaGuardada, componenteSaltado, guardarComponenteSaltado } =
+        useProgresoMontaje((state) => state);
+    const progresoMontaje = !editarMontaje
+        ? ['procesador', 'placaBase', 'memoriaRam', 'discoDuro']
+        : ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
     const [graficaSeleccionada, setGraficaSeleccionada] = useState<TarjetaGrafica | null>(editarMontaje ? tarjetaGraficaGuardada! : null);
@@ -53,7 +71,9 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
 
     const [busquedaGeneral, setBusquedaGeneral] = useState('');
 
-    const [graficasFiltradas, setGraficasFiltradas] = useState<TarjetaGrafica[]>();
+    const [mostrarDialogoSaltarComponente, setMostrarDialogoSaltarComponente] = useState(false);
+
+    const [graficasFiltradas, setGraficasFiltradas] = useState<TarjetaGrafica[]>(tarjetasGraficas);
 
     const graficasNvidia = (() => {
         const g = graficasFiltradas?.filter((g) => g.marca === 'NVIDIA' && g.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
@@ -97,8 +117,7 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                 LGA1200: (tarjeta) => tarjeta.precio < 600,
             };
 
-            const socket = procesadorGuardado?.socket;
-            const validaciones = conexionesPorSocket[socket!];
+            const validaciones = conexionesPorSocket[procesadorGuardado!.socket];
             const graficasCompatibles = tarjetasGraficas.filter(validaciones);
 
             // Calcular cuello de botella
@@ -111,12 +130,12 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                 const ratio = (passmarkCPU / passmarkGPU) * 100;
                 cuelloDeBotella = Math.max(0, 100 - ratio);
             }
-            
+
             setEsCompatible(cuelloDeBotella <= 10);
             setGraficasFiltradas(graficasCompatibles);
         };
 
-        comprobarCompatibilidad(tarjetaGraficaGuardada!);
+        !componenteSaltado && comprobarCompatibilidad(tarjetaGraficaGuardada!);
     }, []);
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -155,7 +174,7 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
             <Head title="montaje - tarjeta grafica" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
-                {isDragging && <div className="fixed inset-0 z-10 bg-black/50 backdrop-blur-md"></div>}
+                {(isDragging || mostrarDialogoSaltarComponente) && (<div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>)}
                 <MontajeLayout
                     breadcrums={breadcrumbs}
                     progresoMontaje={progresoMontaje}
@@ -382,16 +401,42 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${graficaActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem>
+                                <AreaSoltarItem botonEliminar={() => setGraficaSeleccionada(null)} mostrarBoton={Boolean(graficaSeleccionada)}>
                                     {!graficaActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                            {graficaSeleccionada?.nombre}
+                                            {graficaSeleccionada && `${graficaSeleccionada?.marca} ${graficaSeleccionada?.nombre}`}
                                         </h1>
                                     )}
                                 </AreaSoltarItem>
                             </div>
 
-                            {/* Info del procesador con borde neón */}
+                            {/*Boton saltar componente*/}
+                            {!graficaSeleccionada && (
+                                <div className='absolute bottom-2 left-2 border-2 border-[var(--rojo-neon)]/60 p-2 font-["exo_2"]'>
+                                    <Button
+                                        variant={'link'}
+                                        className="text-lg"
+                                        onClick={() => {
+                                            setMostrarDialogoSaltarComponente(true);
+                                        }}
+                                    >
+                                        No quiero seleccionar gráfica
+                                    </Button>
+                                </div>
+                            )}
+                            {mostrarDialogoSaltarComponente && (
+                                <DialogoSaltarComponente
+                                    componente="tarjeta gráfica"
+                                    ruta="montaje.fuenteAlimentacion"
+                                    cerrarDialogo={() => setMostrarDialogoSaltarComponente(false)}
+                                    onConfirmar={() => {
+                                        guardarComponenteSaltado!(true);
+                                        guardarTarjetaGrafica!(null);
+                                    }}
+                                />
+                            )}
+
+                            {/* Info del componente con borde neón */}
                             {graficaSeleccionada && (
                                 <>
                                     <div className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3" key={graficaSeleccionada.id}>
@@ -450,22 +495,22 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                                             </div>
                                         </div>
                                     </div>
-                                    {!esCompatible &&
-                                    <div className='flex gap-2 mb-3 border-2 border-[var(--amarillo-neon)] p-3'>
-                                        <ShieldAlert color='red'/>
-                                        <p className='font-["exo_2"] font-bold'>Cuello de botella detectado</p>
-                                    </div>
-                                    }
-                                        <Button
-                                            variant={'outline'}
-                                            className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${graficaActiva && 'hidden'}`}
-                                            onClick={() => {
-                                                guardarTarjetaGrafica!(graficaSeleccionada);
-                                            }}
-                                            asChild
-                                        >
-                                            <Link href={route('montaje.fuenteAlimentacion')}>Siguiente</Link>
-                                        </Button>
+                                    {!esCompatible && (
+                                        <div className="mb-3 flex gap-2 border-2 border-[var(--amarillo-neon)] p-3">
+                                            <ShieldAlert color="red" />
+                                            <p className='font-["exo_2"] font-bold'>Cuello de botella detectado</p>
+                                        </div>
+                                    )}
+                                    <Button
+                                        variant={'outline'}
+                                        className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${graficaActiva && 'hidden'}`}
+                                        onClick={() => {
+                                            guardarTarjetaGrafica!(graficaSeleccionada);
+                                        }}
+                                        asChild
+                                    >
+                                        <Link href={route('montaje.fuenteAlimentacion')}>Siguiente</Link>
+                                    </Button>
                                 </>
                             )}
                         </div>

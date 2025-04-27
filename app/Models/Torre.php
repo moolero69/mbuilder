@@ -17,6 +17,7 @@ class Torre extends Model
         "marca",
         "factor_forma",
         "soporte_RGB",
+        "longitud_maxima_gpu",
         "precio"
     ];
 

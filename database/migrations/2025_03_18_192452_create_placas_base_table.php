@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('marca');
             $table->string('socket');
             $table->string('factor_forma',10);
+            $table->integer('zocalos_ram');
+            $table->integer('puertos_m2');
+            $table->integer('puertos_sata');
             $table->integer('consumo');
             $table->decimal('precio', 8, 2);
             $table->timestamps();

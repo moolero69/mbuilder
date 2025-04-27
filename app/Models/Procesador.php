@@ -21,6 +21,7 @@ class Procesador extends Model
         "nucleos",
         "hilos",
         "cache",
+        "disipador_incluido",
         "passmark",
         "consumo",
         "precio"

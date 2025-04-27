@@ -31,6 +31,9 @@ class ImportarPlacasBase extends Command
                 'marca' => $fila['Marca'],
                 'socket' => $fila['Socket'],
                 'factor_forma' => $fila['Factor de Forma'],
+                'zocalos_ram' => $fila['Zocalos RAM'],
+                'puertos_m2' => $fila['Puertos M2'],
+                'puertos_sata' => $fila['Puertos SATA'],
                 'consumo' => $fila['Consumo'],
                 'precio' => $fila['Precio'],
             ]);

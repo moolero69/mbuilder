@@ -37,9 +37,6 @@ export default function UsuarioHeader() {
                     <DropdownMenuItem>
                         Billing <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Ajustes <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                    </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-[var(--rojo-neon)]">
@@ -47,7 +44,7 @@ export default function UsuarioHeader() {
                     <Link
                         href={route('logout')}
                         method="post"
-                        className="text-[var(--rojo-neon)] font-['exo_2'] text-sm hover:cursor-pointer hover:bg-red-500/10"
+                        className="text-[var(--rojo-neon)] font-['exo_2'] text-sm hover:cursor-pointer"
                     >
                         Cerrar Sesión
                     </Link>
