@@ -30,7 +30,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
 
     const progresoMontaje = !editarMontaje
         ? ['procesador']
-        : ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
     const [placaBaseSeleccionada, setPlacaBaseSeleccionada] = useState<PlacaBase | null>(editarMontaje ? placaBaseGuardada! : null);
@@ -135,7 +135,9 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
             <Head title="montaje - placa base" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
-                {(isDragging || mostrarDialogoSaltarComponente) && (<div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>)}
+                {(isDragging || mostrarDialogoSaltarComponente) && (
+                    <div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>
+                )}
                 <MontajeLayout
                     breadcrums={breadcrumbs}
                     progresoMontaje={progresoMontaje}

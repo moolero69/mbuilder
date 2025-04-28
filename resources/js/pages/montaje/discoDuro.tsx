@@ -36,8 +36,8 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
     const { procesadorGuardado, guardarDiscoDuro, editarMontaje, discoDuroGuardado, componenteSaltado, guardarComponenteSaltado } =
         useProgresoMontaje((state) => state);
     const progresoMontaje = !editarMontaje
-        ? ['procesador', 'placaBase', 'memoriaRam']
-        : ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+        ? ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria']
+        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
@@ -169,7 +169,9 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
             <Head title="montaje - disco duro" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
-                {(isDragging || mostrarDialogoSaltarComponente) && (<div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>)}
+                {(isDragging || mostrarDialogoSaltarComponente) && (
+                    <div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>
+                )}
                 <MontajeLayout
                     breadcrums={breadcrumbs}
                     progresoMontaje={progresoMontaje}

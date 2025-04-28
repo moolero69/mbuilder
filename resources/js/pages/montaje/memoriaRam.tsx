@@ -9,7 +9,8 @@ import { BreadcrumbItem, MemoriaRam } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { ArrowBigDown, Box, Euro, Factory, MemoryStick, Microchip, Minus, Move, Plus, Search, Wrench, Zap } from 'lucide-react';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { ArrowBigDown, Box, Euro, Factory, Gauge, MemoryStick, Microchip, Minus, Move, Plus, Search, Wrench } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -29,15 +30,24 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: MemoriaRam[] }) {
-    const { procesadorGuardado, guardarMemoriaRam, editarMontaje, memoriaRamGuardada, componenteSaltado, guardarComponenteSaltado } =
-        useProgresoMontaje((state) => state);
+    const {
+        procesadorGuardado,
+        guardarMemoriaRam,
+        guardarMemoriaRamSecundaria,
+        editarMontaje,
+        memoriaRamGuardada,
+        componenteSaltado,
+        guardarComponenteSaltado,
+    } = useProgresoMontaje((state) => state);
     const progresoMontaje = !editarMontaje
         ? ['procesador', 'placaBase']
-        : ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
     const [memoriaSeleccionada, setMemoriaSeleccionada] = useState<MemoriaRam | null>(editarMontaje ? memoriaRamGuardada! : null);
+    const [modoSeleccionarIgual, setModoSeleccionarIgual] = useState<boolean>(false);
+    const [modoSeleccionarOtra, setModoSeleccionarOtra] = useState(false);
 
     const [memoriaActiva, setMemoriaActiva] = useState<MemoriaRam | null>(null);
 
@@ -157,7 +167,9 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
             <Head title="montaje - memoria RAM" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
-                {(isDragging || mostrarDialogoSaltarComponente) && (<div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>)}
+                {(isDragging || mostrarDialogoSaltarComponente) && (
+                    <div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>
+                )}
                 <MontajeLayout
                     breadcrums={breadcrumbs}
                     progresoMontaje={progresoMontaje}
@@ -587,12 +599,12 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
-                                            <Zap size={48} className="text-[var(--rojo-neon)]" />
+                                            <Gauge size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    Consumo
+                                                    Frecuencia
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.consumo}W</p>
+                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.frecuencia} MHz</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
@@ -601,7 +613,9 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                                     Pack
                                                 </h2>
-                                                <p className="text-lg text-gray-300">{memoriaSeleccionada.pack} ud/s</p>
+                                                <p className="text-lg text-gray-300">
+                                                    {memoriaSeleccionada.pack} x {memoriaSeleccionada.almacenamiento}GB
+                                                </p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
@@ -614,28 +628,79 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                             </div>
                                         </div>
                                     </div>
-                                    {esCompatible ? (
-                                        <Button
-                                            variant={'outline'}
-                                            className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${memoriaActiva && 'hidden'}`}
-                                            onClick={() => {
-                                                guardarMemoriaRam!(memoriaSeleccionada);
-                                            }}
-                                            asChild
-                                        >
-                                            <Link href={route('montaje.discoDuro')}>Siguiente</Link>
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            variant={'outline'}
-                                            className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${memoriaActiva && 'hidden'} disabled hover:cursor-no-drop`}
-                                            onClick={() => {
-                                                guardarMemoriaRam!(memoriaSeleccionada);
-                                            }}
-                                        >
-                                            <h1>Incompatible</h1>
-                                        </Button>
-                                    )}
+                                    <div className="flex items-center gap-4">
+                                        {/* BOTÓN AÑADIR MEMORIA */}
+                                        {!modoSeleccionarIgual && !modoSeleccionarOtra && (
+                                            <DropdownMenu.Root>
+                                                <DropdownMenu.Trigger asChild>
+                                                    <Button
+                                                        variant={'outline'}
+                                                        className="fade-in relative rounded-lg border-[var(--azul-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--azul-neon)] shadow-[0_0_10px_var(--azul-neon)] transition-all duration-500 hover:bg-[var(--azul-neon)] hover:text-black hover:shadow-[0_0_20px_var(--azul-neon)]"
+                                                    >
+                                                        Añadir memoria extra
+                                                    </Button>
+                                                </DropdownMenu.Trigger>
+
+                                                <DropdownMenu.Portal>
+                                                    <DropdownMenu.Content
+                                                        side="bottom"
+                                                        align="center"
+                                                        className="z-50 mt-1 rounded-md border border-[var(--azul-neon)] bg-[#111] p-2 shadow-lg"
+                                                    >
+                                                        <DropdownMenu.Item
+                                                            className="cursor-pointer rounded-md px-4 py-2 text-sm text-white hover:bg-[var(--azul-neon)] hover:text-black"
+                                                            onClick={() => {
+                                                                setModoSeleccionarIgual(true);
+                                                                guardarMemoriaRamSecundaria!(memoriaSeleccionada);
+                                                            }}
+                                                        >
+                                                            Memoria igual
+                                                        </DropdownMenu.Item>
+                                                        <DropdownMenu.Item
+                                                            className="cursor-pointer rounded-md px-4 py-2 text-sm text-white hover:bg-[var(--azul-neon)] hover:text-black"
+                                                            onClick={() => {
+                                                                setModoSeleccionarOtra(true);
+                                                                guardarMemoriaRam!(memoriaSeleccionada);
+                                                                setMemoriaSeleccionada(null);
+                                                            }}
+                                                        >
+                                                            Seleccionar otra
+                                                        </DropdownMenu.Item>
+                                                    </DropdownMenu.Content>
+                                                </DropdownMenu.Portal>
+                                            </DropdownMenu.Root>
+                                        )}
+                                        {/* BOTÓN SIGUIENTE O INCOMPATIBLE */}
+                                        {esCompatible ? (
+                                            <Button
+                                                variant={'outline'}
+                                                className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${memoriaActiva && 'hidden'}`}
+                                                onClick={() => {
+                                                    !modoSeleccionarIgual && !modoSeleccionarOtra && guardarMemoriaRam!(memoriaSeleccionada);
+
+                                                    if (modoSeleccionarIgual) {
+                                                        guardarMemoriaRam!(memoriaSeleccionada);
+                                                        guardarMemoriaRamSecundaria!(memoriaSeleccionada);
+                                                    }
+
+                                                    modoSeleccionarOtra && guardarMemoriaRamSecundaria!(memoriaSeleccionada);
+                                                }}
+                                                asChild
+                                            >
+                                                <Link href={route('montaje.discoDuro')}>Siguiente</Link>
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                variant={'outline'}
+                                                className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${memoriaActiva && 'hidden'} disabled hover:cursor-no-drop`}
+                                                onClick={() => {
+                                                    guardarMemoriaRam!(memoriaSeleccionada);
+                                                }}
+                                            >
+                                                <h1>Incompatible</h1>
+                                            </Button>
+                                        )}
+                                    </div>
                                 </>
                             )}
                         </div>

@@ -8,6 +8,8 @@ export const useProgresoMontaje = create<EstadoMontaje>((set) => ({
     guardarPlacaBase: (placaBase) => set({ placaBaseGuardada: placaBase }),
     memoriaRamGuardada: null,
     guardarMemoriaRam: (memoriaRam) => set({ memoriaRamGuardada: memoriaRam }),
+    memoriaRamSecundariaGuardada: null,
+    guardarMemoriaRamSecundaria: (memoriaRamS) => set({ memoriaRamSecundariaGuardada: memoriaRamS }),
     discoDuroGuardado: null,
     guardarDiscoDuro: (discoDuro) => set({ discoDuroGuardado:discoDuro  }),
     tarjetaGraficaGuardada:null,

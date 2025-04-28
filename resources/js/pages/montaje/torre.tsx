@@ -46,10 +46,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-
 export default function MontajeTorre({ torres }: { torres: Torre[] }) {
-    const { placaBaseGuardada, guardarTorre, editarMontaje, torreGuardada, componenteSaltado, guardarComponenteSaltado } = useProgresoMontaje((state) => state);
-    const progresoMontaje = ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion'];
+    const { placaBaseGuardada, guardarTorre, editarMontaje, torreGuardada, componenteSaltado, guardarComponenteSaltado } = useProgresoMontaje(
+        (state) => state,
+    );
+    const progresoMontaje = ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion'];
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
     const [dialogoEditarAbierto, setDialogoEditarAbierto] = useState(false);
@@ -240,7 +241,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
             {dialogoEditarAbierto && <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs"></div>}
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
-                {(isDragging || mostrarDialogoSaltarComponente) && (<div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>)}
+                {(isDragging || mostrarDialogoSaltarComponente) && (
+                    <div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>
+                )}
                 <MontajeLayout
                     breadcrums={breadcrumbs}
                     progresoMontaje={progresoMontaje}

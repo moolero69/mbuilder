@@ -171,6 +171,7 @@ export interface ComponentesMontaje {
     procesador: Procesador;
     placa_base: PlacaBase;
     memoria_ram: MemoriaRam;
+    memoria_ram_secundaria: MemoriaRam;
     disco_duro: DiscoDuro;
     tarjeta_grafica: TarjetaGrafica;
     fuente_alimentacion: FuenteAlimentacion;
@@ -185,6 +186,8 @@ export interface EstadoMontaje {
     guardarPlacaBase?: (placaBase: PlacaBase | null) => void;
     memoriaRamGuardada?: MemoriaRam | null;
     guardarMemoriaRam?: (memoriaRam: MemoriaRam | null) => void;
+    memoriaRamSecundariaGuardada?: MemoriaRam | null;
+    guardarMemoriaRamSecundaria?: (memoriaRam: MemoriaRam | null) => void;
     discoDuroGuardado?: DiscoDuro | null;
     guardarDiscoDuro?: (discoDuro: DiscoDuro | null) => void;
     tarjetaGraficaGuardada?: TarjetaGrafica | null;

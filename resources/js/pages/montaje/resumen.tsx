@@ -22,6 +22,7 @@ export default function ResumenMontaje() {
         procesadorGuardado,
         placaBaseGuardada,
         memoriaRamGuardada,
+        memoriaRamSecundariaGuardada,
         discoDuroGuardado,
         tarjetaGraficaGuardada,
         fuenteAlimentacionGuardada,
@@ -40,6 +41,7 @@ export default function ResumenMontaje() {
                 procesador: procesadorGuardado || null,
                 placa_base: placaBaseGuardada || null,
                 memoria_ram: memoriaRamGuardada || null,
+                memoria_ram_secundaria: memoriaRamSecundariaGuardada || null,
                 disco_duro: discoDuroGuardado || null,
                 tarjeta_grafica: tarjetaGraficaGuardada || null,
                 fuente_alimentacion: fuenteAlimentacionGuardada || null,
@@ -50,20 +52,22 @@ export default function ResumenMontaje() {
     }, []);
 
     const precioTotal =
-    Number(procesadorGuardado?.precio ?? 0) +
-    Number(placaBaseGuardada?.precio ?? 0) +
-    Number(memoriaRamGuardada?.precio ?? 0) +
-    Number(discoDuroGuardado?.precio ?? 0) +
-    Number(tarjetaGraficaGuardada?.precio ?? 0) +
-    Number(fuenteAlimentacionGuardada?.precio ?? 0) +
-    Number(torreGuardada?.precio ?? 0);
+        Number(procesadorGuardado?.precio ?? 0) +
+        Number(placaBaseGuardada?.precio ?? 0) +
+        Number(memoriaRamGuardada?.precio ?? 0) +
+        Number(memoriaRamSecundariaGuardada?.precio ?? 0) +
+        Number(discoDuroGuardado?.precio ?? 0) +
+        Number(tarjetaGraficaGuardada?.precio ?? 0) +
+        Number(fuenteAlimentacionGuardada?.precio ?? 0) +
+        Number(torreGuardada?.precio ?? 0);
 
-const consumoTotal =
-    (procesadorGuardado?.consumo ?? 0) +
-    (placaBaseGuardada?.consumo ?? 0) +
-    (memoriaRamGuardada?.consumo ?? 0) +
-    (discoDuroGuardado?.consumo ?? 0) +
-    (tarjetaGraficaGuardada?.consumo ?? 0);
+    const consumoTotal =
+        (procesadorGuardado?.consumo ?? 0) +
+        (placaBaseGuardada?.consumo ?? 0) +
+        (memoriaRamGuardada?.consumo ?? 0) +
+        (memoriaRamSecundariaGuardada?.consumo ?? 0) +
+        (discoDuroGuardado?.consumo ?? 0) +
+        (tarjetaGraficaGuardada?.consumo ?? 0);
 
     const otros = {
         precio: precioTotal,
@@ -125,6 +129,13 @@ const consumoTotal =
                             <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--violeta-neon)]">Memoria RAM</h3>
                             <p>{memoriaRamGuardada.nombre}</p>
                             <p>Consumo: {memoriaRamGuardada.consumo}W</p>
+                        </div>
+                    )}
+                    {memoriaRamSecundariaGuardada && (
+                        <div className="rounded border border-[var(--violeta-neon)] bg-gradient-to-br from-black via-[var(--violeta-neon)]/10 to-black p-4">
+                            <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--violeta-neon)]">Memoria RAM secundaria</h3>
+                            <p>{memoriaRamSecundariaGuardada.nombre}</p>
+                            <p>Consumo: {memoriaRamSecundariaGuardada.consumo}W</p>
                         </div>
                     )}
                     {discoDuroGuardado && (

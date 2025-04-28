@@ -20,6 +20,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         guardarProcesador,
         guardarPlacaBase,
         guardarMemoriaRam,
+        guardarMemoriaRamSecundaria,
         guardarDiscoDuro,
         guardarTarjetaGrafica,
         guardarFuenteAlimentacion,
@@ -32,6 +33,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         const procesador = componenteSeleccionado!.procesador;
         const placaBase = componenteSeleccionado!.placa_base;
         const memoriaRam = componenteSeleccionado!.memoria_ram;
+        const memoriaRamSecundaria = componenteSeleccionado!.memoria_ram_secundaria;
         const discoDuro = componenteSeleccionado!.disco_duro;
         const tarjetaGrafica = componenteSeleccionado!.tarjeta_grafica;
         const fuenteAlimentacion = componenteSeleccionado!.fuente_alimentacion;
@@ -40,6 +42,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         guardarProcesador!(procesador);
         guardarPlacaBase!(placaBase);
         guardarMemoriaRam!(memoriaRam);
+        guardarMemoriaRamSecundaria!(memoriaRamSecundaria);
         guardarDiscoDuro!(discoDuro);
         guardarTarjetaGrafica!(tarjetaGrafica);
         guardarFuenteAlimentacion!(fuenteAlimentacion);
@@ -98,6 +101,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                     !datos.procesador ||
                                     !datos.placa_base ||
                                     !datos.memoria_ram ||
+                                    !datos.memoria_ram_secundaria ||
                                     !datos.disco_duro ||
                                     !datos.tarjeta_grafica ||
                                     !datos.fuente_alimentacion ||
@@ -112,7 +116,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                             <h2 className="mb-3 font-['Orbitron'] text-2xl font-bold text-[var(--naranja-neon)] drop-shadow-[0_0_5px_var(--naranja-neon)]">
                                                 {montaje.nombre}
                                             </h2>
-                                            {componenteFaltante && <TooltipIncopatibilidad mensaje='Posible incopatibilidad entre componentes'/>}
+                                            {componenteFaltante && <TooltipIncopatibilidad mensaje="Posible incopatibilidad entre componentes" />}
                                         </div>
 
                                         <p className="mb-4 text-sm text-gray-400">Creado el: {new Date(montaje.created_at).toLocaleDateString()}</p>
@@ -130,6 +134,12 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                                 <strong className="text-[var(--azul-neon)]">Memoria RAM:</strong>{' '}
                                                 {datos.memoria_ram?.nombre || <span className="text-red-500">Sin memoria RAM</span>}
                                             </li>
+                                            {datos.memoria_ram_secundaria && (
+                                                <li>
+                                                    <strong className="text-[var(--azul-neon)]">Memoria RAM secundaria:</strong>{' '}
+                                                    {datos.memoria_ram_secundaria?.nombre || <span className="text-red-500">Sin memoria RAM secundaria</span>}
+                                                </li>
+                                            )}
                                             <li>
                                                 <strong className="text-[var(--azul-neon)]">Disco Duro:</strong>{' '}
                                                 {datos.disco_duro?.nombre || <span className="text-red-500">Sin disco duro</span>}

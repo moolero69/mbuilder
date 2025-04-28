@@ -55,8 +55,8 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
     const { procesadorGuardado, guardarTarjetaGrafica, editarMontaje, tarjetaGraficaGuardada, componenteSaltado, guardarComponenteSaltado } =
         useProgresoMontaje((state) => state);
     const progresoMontaje = !editarMontaje
-        ? ['procesador', 'placaBase', 'memoriaRam', 'discoDuro']
-        : ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+        ? ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro']
+        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
     const [graficaSeleccionada, setGraficaSeleccionada] = useState<TarjetaGrafica | null>(editarMontaje ? tarjetaGraficaGuardada! : null);
@@ -174,7 +174,9 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
             <Head title="montaje - tarjeta grafica" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
-                {(isDragging || mostrarDialogoSaltarComponente) && (<div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>)}
+                {(isDragging || mostrarDialogoSaltarComponente) && (
+                    <div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>
+                )}
                 <MontajeLayout
                     breadcrums={breadcrumbs}
                     progresoMontaje={progresoMontaje}

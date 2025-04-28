@@ -1,0 +1,5 @@
+- cambiar tipo componentesMontaje
+- barra progreso lateral (poner ram secundaria en todos los componentes y condicional en componente)
+- resumen
+- listamontajes
+- editar montaje

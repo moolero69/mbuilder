@@ -21,6 +21,7 @@ export default function editarMontajes() {
         procesadorGuardado,
         placaBaseGuardada,
         memoriaRamGuardada,
+        memoriaRamSecundariaGuardada,
         discoDuroGuardado,
         tarjetaGraficaGuardada,
         fuenteAlimentacionGuardada,
@@ -31,6 +32,7 @@ export default function editarMontajes() {
         (Number(procesadorGuardado?.precio) || 0) +
         (Number(placaBaseGuardada?.precio) || 0) +
         (Number(memoriaRamGuardada?.precio) || 0) +
+        (Number(memoriaRamSecundariaGuardada?.precio) || 0) +
         (Number(discoDuroGuardado?.precio) || 0) +
         (Number(tarjetaGraficaGuardada?.precio) || 0) +
         (Number(fuenteAlimentacionGuardada?.precio) || 0) +
@@ -40,6 +42,7 @@ export default function editarMontajes() {
         (procesadorGuardado?.consumo ?? 0) +
         (placaBaseGuardada?.consumo ?? 0) +
         (memoriaRamGuardada?.consumo ?? 0) +
+        (memoriaRamSecundariaGuardada?.consumo ?? 0) +
         (discoDuroGuardado?.consumo ?? 0) +
         (tarjetaGraficaGuardada?.consumo ?? 0);
 
@@ -65,6 +68,7 @@ export default function editarMontajes() {
                 procesador: procesadorGuardado || null,
                 placa_base: placaBaseGuardada || null,
                 memoria_ram: memoriaRamGuardada || null,
+                memoria_ram_secundaria: memoriaRamSecundariaGuardada || null,
                 disco_duro: discoDuroGuardado || null,
                 tarjeta_grafica: tarjetaGraficaGuardada || null,
                 fuente_alimentacion: fuenteAlimentacionGuardada || null,
@@ -124,6 +128,16 @@ export default function editarMontajes() {
                                         <span className="text-red-500">Sin memoria RAM</span>
                                     )}
                                 </li>
+                                {montajeAnterior?.memoria_ram_secundaria && (
+                                    <li>
+                                        <strong className="text-[var(--azul-neon)]">Memoria RAM secundaria:</strong>{' '}
+                                        {montajeAnterior?.memoria_ram_secundaria ? (
+                                            montajeAnterior.memoria_ram_secundaria.nombre
+                                        ) : (
+                                            <span className="text-red-500">Sin memoria RAM</span>
+                                        )}
+                                    </li>
+                                )}
                                 <li>
                                     <strong className="text-[var(--azul-neon)]">Disco Duro:</strong>{' '}
                                     {montajeAnterior?.disco_duro ? (
@@ -188,6 +202,12 @@ export default function editarMontajes() {
                                     <strong className="text-[var(--azul-neon)]">Memoria RAM:</strong>{' '}
                                     {memoriaRamGuardada ? memoriaRamGuardada.nombre : <span className="text-red-500">Sin memoria RAM</span>}
                                 </li>
+                                {memoriaRamSecundariaGuardada && (
+                                    <li>
+                                        <strong className="text-[var(--azul-neon)]">Memoria RAM secundaria:</strong>{' '}
+                                        {memoriaRamSecundariaGuardada ? memoriaRamSecundariaGuardada.nombre : <span className="text-red-500">Sin memoria RAM</span>}
+                                    </li>
+                                )}
                                 <li>
                                     <strong className="text-[var(--azul-neon)]">Disco Duro:</strong>{' '}
                                     {discoDuroGuardado ? discoDuroGuardado.nombre : <span className="text-red-500">Sin disco duro</span>}

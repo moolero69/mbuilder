@@ -22,7 +22,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function MontajeProcesador({ procesadores }: { procesadores: Procesador[] }) {
     const { guardarProcesador, editarMontaje, procesadorGuardado, guardarComponenteSaltado } = useProgresoMontaje((state) => state);
-    const progresoMontaje = editarMontaje && ['procesador', 'placaBase', 'memoriaRam', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+    const progresoMontaje = editarMontaje && ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
     const [procesadorSeleccionado, setProcesadorSeleccionado] = useState<Procesador | null>(editarMontaje ? procesadorGuardado! : null);
     const [procesadorActivo, setProcesadorActivo] = useState<Procesador | null>(null);
