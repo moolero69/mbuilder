@@ -20,6 +20,8 @@ export const useProgresoMontaje = create<EstadoMontaje>((set) => ({
     guardarFuenteAlimentacion: (fuenteAlimentacion) => set({ fuenteAlimentacionGuardada: fuenteAlimentacion }),
     torreGuardada: null,
     guardarTorre: (torre) => set({ torreGuardada: torre }),
+    disipadorGuardado: null,
+    guardarDisipador: (disipador) => set({disipadorGuardado: disipador}),
     editarMontaje: null,
     guardarEditarMontaje: (editar) => set({ editarMontaje: editar }),
     montajeAnterior: null,

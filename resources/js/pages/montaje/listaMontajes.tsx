@@ -28,10 +28,12 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         guardarTorre,
         guardarEditarMontaje,
         guardarMontajeAnterior,
+        guardarDisipador,
     } = useProgresoMontaje((state) => state);
 
     function editarMontaje() {
         const procesador = componenteSeleccionado!.procesador;
+        const disipador = componenteSeleccionado!.disipador;
         const placaBase = componenteSeleccionado!.placa_base;
         const memoriaRam = componenteSeleccionado!.memoria_ram;
         const memoriaRamSecundaria = componenteSeleccionado!.memoria_ram_secundaria;
@@ -42,6 +44,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         const torre = componenteSeleccionado!.torre;
 
         guardarProcesador!(procesador);
+        guardarDisipador!(disipador);
         guardarPlacaBase!(placaBase);
         guardarMemoriaRam!(memoriaRam);
         guardarMemoriaRamSecundaria!(memoriaRamSecundaria);
@@ -121,13 +124,24 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                             {componenteFaltante && <TooltipIncopatibilidad mensaje="Posible incopatibilidad entre componentes" />}
                                         </div>
 
-                                        <p className="mb-4 text-sm text-gray-400">Creado el: {new Date(montaje.created_at).toLocaleDateString()}</p>
+                                        <p className="mb-4 text-sm text-gray-400">Creado el {new Date(montaje.created_at).toLocaleDateString()}</p>
 
                                         <ul className="space-y-1 text-sm">
                                             <li>
                                                 <strong className="text-[var(--azul-neon)]">Procesador:</strong>{' '}
                                                 {datos.procesador?.nombre || <span className="text-red-500">Sin procesador</span>}
                                             </li>
+                                            <li>
+                                                <strong className="text-[var(--azul-neon)]">Disipador:</strong>{' '}
+                                                {datos.disipador?.nombre ? (
+                                                    datos.disipador.nombre
+                                                ) : datos.procesador?.disipador_incluido === 'Si' ? (
+                                                    <span className="text-yellow-400">Incluido con el procesador</span>
+                                                ) : (
+                                                    <span className="text-red-500">Sin disipador</span>
+                                                )}
+                                            </li>
+
                                             <li>
                                                 <strong className="text-[var(--azul-neon)]">Placa Base:</strong>{' '}
                                                 {datos.placa_base?.nombre || <span className="text-red-500">Sin placa base</span>}
@@ -139,17 +153,23 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                             {datos.memoria_ram_secundaria && (
                                                 <li>
                                                     <strong className="text-[var(--azul-neon)]">Memoria RAM secundaria:</strong>{' '}
-                                                    {datos.memoria_ram_secundaria?.nombre || <span className="text-red-500">Sin memoria RAM secundaria</span>}
+                                                    {datos.memoria_ram_secundaria?.nombre || (
+                                                        <span className="text-red-500">Sin memoria RAM secundaria</span>
+                                                    )}
                                                 </li>
                                             )}
                                             <li>
                                                 <strong className="text-[var(--azul-neon)]">Disco Duro Principal:</strong>{' '}
                                                 {datos.disco_duro?.nombre || <span className="text-red-500">Sin disco duro principal</span>}
                                             </li>
-                                            <li>
-                                                <strong className="text-[var(--azul-neon)]">Disco Duro Secundario:</strong>{' '}
-                                                {datos.disco_duro_secundario?.nombre || <span className="text-red-500">Sin disco duro secundario</span>}
-                                            </li>
+                                            {datos.disco_duro_secundario && (
+                                                <li>
+                                                    <strong className="text-[var(--azul-neon)]">Disco Duro Secundario:</strong>{' '}
+                                                    {datos.disco_duro_secundario?.nombre || (
+                                                        <span className="text-red-500">Sin disco duro secundario</span>
+                                                    )}
+                                                </li>
+                                            )}
                                             <li>
                                                 <strong className="text-[var(--azul-neon)]">Gráfica:</strong>{' '}
                                                 {datos.tarjeta_grafica?.nombre || <span className="text-red-500">Sin gráfica</span>}

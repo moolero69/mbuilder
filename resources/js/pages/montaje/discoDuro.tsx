@@ -20,6 +20,10 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/montaje/procesador',
     },
     {
+        titulo: 'Disipador',
+        href: '/montaje/disipador',
+    },
+    {
         titulo: 'Placa base',
         href: '/montaje/placaBase',
     },
@@ -37,8 +41,8 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
     const { procesadorGuardado, guardarDiscoDuro, guardarDiscoDuroSecundario, editarMontaje, discoDuroGuardado, componenteSaltado, guardarComponenteSaltado } =
         useProgresoMontaje((state) => state);
     const progresoMontaje = !editarMontaje
-        ? ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria']
-        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+        ? ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria']
+        : ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 

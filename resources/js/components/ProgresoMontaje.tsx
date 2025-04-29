@@ -12,6 +12,7 @@ export default function ProgresoMontaje({ componentes }: { componentes: string[]
         tarjetaGraficaGuardada,
         fuenteAlimentacionGuardada,
         torreGuardada,
+        disipadorGuardado,
     } = useProgresoMontaje((state) => state);
 
     let total: number = 0;
@@ -26,45 +27,40 @@ export default function ProgresoMontaje({ componentes }: { componentes: string[]
     if (componentes.includes('tarjetaGrafica')) total += Number(tarjetaGraficaGuardada?.precio) || 0;
     if (componentes.includes('fuenteAlimentacion')) total += Number(fuenteAlimentacionGuardada?.precio) || 0;
     if (componentes.includes('torre')) total += Number(torreGuardada?.precio) || 0;
+    if (componentes.includes('disipador')) total += Number(disipadorGuardado?.precio) || 0;
 
     return (
-        <div className="mt-auto w-full border-t border-gray-700 bg-black/80 p-6 font-['Exo_2'] text-white">
+        <div className="mt-auto w-full border-t border-gray-700 bg-black/80 p-4 font-['Exo_2'] text-white">
             <h3 className="mb-4 text-center font-['Orbitron'] text-lg font-bold text-[var(--verde-neon)]">Progreso del montaje</h3>
 
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-7">
                 {componentes.includes('procesador') && (
-                    <div className="flex justify-between items-center">
-                        <Link href={route('montaje.procesador')} className="border-[var(--azul-neon)] hover:border-b-2">
-                            {procesadorGuardado ? procesadorGuardado.nombre : 'Procesador'}
-                        </Link>
-                        <span className="text-[var(--verde-neon)]">
-                            {procesadorGuardado ? `${procesadorGuardado.precio}€` : '-'}
-                        </span>
+                    <div className="flex items-center justify-between hover:bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text duration-200 hover:text-transparent">
+                        <Link href={route('montaje.procesador')}>{procesadorGuardado ? procesadorGuardado.nombre : 'Procesador'}</Link>
+                        <span className="text-[var(--verde-neon)]">{procesadorGuardado ? `${procesadorGuardado.precio}€` : '-'}</span>
+                    </div>
+                )}
+                {componentes.includes('disipador') && (
+                    <div className="flex items-center justify-between hover:bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text duration-200 hover:text-transparent">
+                        <Link href={route('montaje.disipador')}>{disipadorGuardado ? disipadorGuardado.nombre : 'Disipador'}</Link>
+                        <span className="text-[var(--verde-neon)]">{disipadorGuardado ? `${disipadorGuardado.precio}€` : '-'}</span>
                     </div>
                 )}
                 {componentes.includes('placaBase') && (
-                    <div className="flex justify-between items-center">
-                        <Link href={route('montaje.placaBase')} className="border-[var(--azul-neon)] hover:border-b-2">
-                            {placaBaseGuardada ? placaBaseGuardada.nombre : 'Placa Base'}
-                        </Link>
-                        <span className="text-[var(--verde-neon)]">
-                            {placaBaseGuardada ? `${placaBaseGuardada.precio}€` : '-'}
-                        </span>
+                    <div className="flex items-center justify-between hover:bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text duration-200 hover:text-transparent">
+                        <Link href={route('montaje.placaBase')}>{placaBaseGuardada ? placaBaseGuardada.nombre : 'Placa Base'}</Link>
+                        <span className="text-[var(--verde-neon)]">{placaBaseGuardada ? `${placaBaseGuardada.precio}€` : '-'}</span>
                     </div>
                 )}
                 {componentes.includes('memoriaRam') && (
-                    <div className="flex justify-between items-center">
-                        <Link href={route('montaje.memoriaRam')} className="border-[var(--azul-neon)] hover:border-b-2">
-                            {memoriaRamGuardada ? memoriaRamGuardada.nombre : 'Memoria RAM Principal'}
-                        </Link>
-                        <span className="text-[var(--verde-neon)]">
-                            {memoriaRamGuardada ? `${memoriaRamGuardada.precio}€` : '-'}
-                        </span>
+                    <div className="flex items-center justify-between hover:bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text duration-200 hover:text-transparent">
+                        <Link href={route('montaje.memoriaRam')}>{memoriaRamGuardada ? memoriaRamGuardada.nombre : 'Memoria RAM Principal'}</Link>
+                        <span className="text-[var(--verde-neon)]">{memoriaRamGuardada ? `${memoriaRamGuardada.precio}€` : '-'}</span>
                     </div>
                 )}
                 {componentes.includes('memoriaRamSecundaria') && (
-                    <div className="flex justify-between items-center">
-                        <Link href={route('montaje.memoriaRam')} className="border-[var(--azul-neon)] hover:border-b-2">
+                    <div className="flex items-center justify-between hover:bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text duration-200 hover:text-transparent">
+                        <Link href={route('montaje.memoriaRam')}>
                             {memoriaRamSecundariaGuardada ? memoriaRamSecundariaGuardada.nombre : 'Memoria RAM Secundaria'}
                         </Link>
                         <span className="text-[var(--verde-neon)]">
@@ -73,18 +69,14 @@ export default function ProgresoMontaje({ componentes }: { componentes: string[]
                     </div>
                 )}
                 {componentes.includes('discoDuro') && (
-                    <div className="flex justify-between items-center">
-                        <Link href={route('montaje.discoDuro')} className="border-[var(--azul-neon)] hover:border-b-2">
-                            {discoDuroGuardado ? discoDuroGuardado.nombre : 'Disco Duro Principal'}
-                        </Link>
-                        <span className="text-[var(--verde-neon)]">
-                            {discoDuroGuardado ? `${discoDuroGuardado.precio}€` : '-'}
-                        </span>
+                    <div className="flex items-center justify-between hover:bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text duration-200 hover:text-transparent">
+                        <Link href={route('montaje.discoDuro')}>{discoDuroGuardado ? discoDuroGuardado.nombre : 'Disco Duro Principal'}</Link>
+                        <span className="text-[var(--verde-neon)]">{discoDuroGuardado ? `${discoDuroGuardado.precio}€` : '-'}</span>
                     </div>
                 )}
                 {componentes.includes('discoDuroSecundario') && (
-                    <div className="flex justify-between items-center">
-                        <Link href={route('montaje.discoDuro')} className="border-[var(--azul-neon)] hover:border-b-2">
+                    <div className="flex items-center justify-between hover:bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text duration-200 hover:text-transparent">
+                        <Link href={route('montaje.discoDuro')}>
                             {discoDuroSecundarioGuardado ? discoDuroSecundarioGuardado.nombre : 'Disco Duro Secundario'}
                         </Link>
                         <span className="text-[var(--verde-neon)]">
@@ -93,33 +85,25 @@ export default function ProgresoMontaje({ componentes }: { componentes: string[]
                     </div>
                 )}
                 {componentes.includes('tarjetaGrafica') && (
-                    <div className="flex justify-between items-center">
-                        <Link href={route('montaje.tarjetaGrafica')} className="border-[var(--azul-neon)] hover:border-b-2">
+                    <div className="flex items-center justify-between hover:bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text duration-200 hover:text-transparent">
+                        <Link href={route('montaje.tarjetaGrafica')}>
                             {tarjetaGraficaGuardada ? tarjetaGraficaGuardada.nombre : 'Tarjeta Gráfica'}
                         </Link>
-                        <span className="text-[var(--verde-neon)]">
-                            {tarjetaGraficaGuardada ? `${tarjetaGraficaGuardada.precio}€` : '-'}
-                        </span>
+                        <span className="text-[var(--verde-neon)]">{tarjetaGraficaGuardada ? `${tarjetaGraficaGuardada.precio}€` : '-'}</span>
                     </div>
                 )}
                 {componentes.includes('fuenteAlimentacion') && (
-                    <div className="flex justify-between items-center">
-                        <Link href={route('montaje.fuenteAlimentacion')} className="border-[var(--azul-neon)] hover:border-b-2">
+                    <div className="flex items-center justify-between hover:bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text duration-200 hover:text-transparent">
+                        <Link href={route('montaje.fuenteAlimentacion')}>
                             {fuenteAlimentacionGuardada ? fuenteAlimentacionGuardada.nombre : 'Fuente de Alimentación'}
                         </Link>
-                        <span className="text-[var(--verde-neon)]">
-                            {fuenteAlimentacionGuardada ? `${fuenteAlimentacionGuardada.precio}€` : '-'}
-                        </span>
+                        <span className="text-[var(--verde-neon)]">{fuenteAlimentacionGuardada ? `${fuenteAlimentacionGuardada.precio}€` : '-'}</span>
                     </div>
                 )}
                 {componentes.includes('torre') && (
-                    <div className="flex justify-between items-center">
-                        <Link href={route('montaje.torre')} className="border-[var(--azul-neon)] hover:border-b-2">
-                            {torreGuardada ? torreGuardada.nombre : 'Torre'}
-                        </Link>
-                        <span className="text-[var(--verde-neon)]">
-                            {torreGuardada ? `${torreGuardada.precio}€` : '-'}
-                        </span>
+                    <div className="flex items-center justify-between hover:bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text duration-200 hover:text-transparent">
+                        <Link href={route('montaje.torre')}>{torreGuardada ? torreGuardada.nombre : 'Torre'}</Link>
+                        <span className="text-[var(--verde-neon)]">{torreGuardada ? `${torreGuardada.precio}€` : '-'}</span>
                     </div>
                 )}
             </div>

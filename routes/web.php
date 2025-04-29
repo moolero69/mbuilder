@@ -5,6 +5,7 @@ use App\Http\Controllers\Montaje\MontajeDiscoDuroController;
 use App\Http\Controllers\Montaje\MontajeFuenteAlimentacionController;
 use App\Http\Controllers\Montaje\MontajePlacaBaseController;
 use App\Http\Controllers\Montaje\MontajeProcesadorController;
+use App\Http\Controllers\Montaje\MontajeDisipadorController;
 use App\Http\Controllers\Montaje\MontajeRamController;
 use App\Http\Controllers\Montaje\MontajeTarjetaGraficaController;
 use App\Http\Controllers\Montaje\MontajeTorreController;
@@ -22,6 +23,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('montaje/procesador', MontajeProcesadorController::class)->name('montaje.procesador');
+    Route::get('montaje/disipador', MontajeDisipadorController::class)->name('montaje.disipador');
     Route::get('montaje/placaBase', MontajePlacaBaseController::class)->name('montaje.placaBase');
     Route::get('montaje/memoriaRam', MontajeRamController::class)->name('montaje.memoriaRam');
     Route::get('montaje/discoDuro', MontajeDiscoDuroController::class)->name('montaje.discoDuro');

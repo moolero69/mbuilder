@@ -34,6 +34,10 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/montaje/procesador',
     },
     {
+        titulo: 'Disipador',
+        href: '/montaje/disipador',
+    },
+    {
         titulo: 'Placa base',
         href: '/montaje/placaBase',
     },
@@ -55,8 +59,8 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
     const { procesadorGuardado, guardarTarjetaGrafica, editarMontaje, tarjetaGraficaGuardada, componenteSaltado, guardarComponenteSaltado } =
         useProgresoMontaje((state) => state);
     const progresoMontaje = !editarMontaje
-        ? ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario',]
-        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+        ? ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario',]
+        : ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
     const [graficaSeleccionada, setGraficaSeleccionada] = useState<TarjetaGrafica | null>(tarjetaGraficaGuardada!);

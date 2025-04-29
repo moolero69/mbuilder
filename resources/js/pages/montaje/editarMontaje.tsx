@@ -19,6 +19,7 @@ export default function editarMontajes() {
     const {
         montajeAnterior,
         procesadorGuardado,
+        disipadorGuardado,
         placaBaseGuardada,
         memoriaRamGuardada,
         memoriaRamSecundariaGuardada,
@@ -31,6 +32,7 @@ export default function editarMontajes() {
 
     const nuevoPrecio =
         (Number(procesadorGuardado?.precio) || 0) +
+        (Number(disipadorGuardado?.precio) || 0) +
         (Number(placaBaseGuardada?.precio) || 0) +
         (Number(memoriaRamGuardada?.precio) || 0) +
         (Number(memoriaRamSecundariaGuardada?.precio) || 0) +
@@ -42,6 +44,7 @@ export default function editarMontajes() {
 
     const nuevoConsumo =
         (procesadorGuardado?.consumo ?? 0) +
+        (disipadorGuardado?.consumo ?? 0) +
         (placaBaseGuardada?.consumo ?? 0) +
         (memoriaRamGuardada?.consumo ?? 0) +
         (memoriaRamSecundariaGuardada?.consumo ?? 0) +
@@ -69,6 +72,7 @@ export default function editarMontajes() {
             nombre: nombreMontajeNuevo,
             datos: {
                 procesador: procesadorGuardado || null,
+                disipador: discoDuroGuardado || null,
                 placa_base: placaBaseGuardada || null,
                 memoria_ram: memoriaRamGuardada || null,
                 memoria_ram_secundaria: memoriaRamSecundariaGuardada || null,
@@ -114,6 +118,14 @@ export default function editarMontajes() {
                                         montajeAnterior.procesador.nombre
                                     ) : (
                                         <span className="text-red-500">Sin procesador</span>
+                                    )}
+                                </li>
+                                <li>
+                                    <strong className="text-[var(--azul-neon)]">Disipador:</strong>{' '}
+                                    {montajeAnterior?.disipador ? (
+                                        montajeAnterior.disipador.nombre
+                                    ) : (
+                                        <span className="text-red-500">Sin disipador</span>
                                     )}
                                 </li>
                                 <li>
@@ -205,6 +217,10 @@ export default function editarMontajes() {
                                 <li>
                                     <strong className="text-[var(--azul-neon)]">Procesador:</strong>{' '}
                                     {procesadorGuardado ? procesadorGuardado.nombre : <span className="text-red-500">Sin procesador</span>}
+                                </li>
+                                <li>
+                                    <strong className="text-[var(--azul-neon)]">Disipador:</strong>{' '}
+                                    {disipadorGuardado ? disipadorGuardado.nombre : <span className="text-red-500">Sin disipador</span>}
                                 </li>
                                 <li>
                                     <strong className="text-[var(--azul-neon)]">Placa Base:</strong>{' '}

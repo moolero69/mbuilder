@@ -19,6 +19,10 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/montaje/procesador',
     },
     {
+        titulo: 'Disipador',
+        href: '/montaje/disipador',
+    },
+    {
         titulo: 'Placa base',
         href: '/montaje/placaBase',
     },
@@ -29,8 +33,8 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
         useProgresoMontaje((state) => state);
 
     const progresoMontaje = !editarMontaje
-        ? ['procesador']
-        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+        ? ['procesador', 'disipador']
+        : ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
     const [placaBaseSeleccionada, setPlacaBaseSeleccionada] = useState<PlacaBase | null>(placaBaseGuardada!);

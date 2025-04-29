@@ -25,7 +25,7 @@ const Header: React.FC = () => {
                             limpiarComponentes();
                         }}
                     >
-                        <h1 className="font-['Orbitron'] text-5xl font-extrabold tracking-widest text-white drop-shadow-[5px_5px_6px_var(--azul-neon)] transition duration-500 hover:text-[var(--azul-neon)]">
+                        <h1 className="font-['Orbitron'] text-5xl font-extrabold tracking-widest text-white drop-shadow-[5px_5px_6px_var(--azul-neon)] transition duration-500 hover:drop-shadow-[5px_5px_6px_var(--rojo-neon)]">
                             MBUILDER
                         </h1>
                     </Link>

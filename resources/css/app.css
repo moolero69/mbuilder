@@ -119,7 +119,14 @@
     --naranja-neon: #ff8800;
     --rosa-neon: #ff00ff;
     --cian-neon: #00e5ff;
-    --gris-neon: #cfcfcf; 
+    --gris-neon: #cfcfcf;
+    --blanco-neon: #f8faff;
+    --turquesa-neon: #00ffc8;
+    --lima-neon: #ccff00;
+    --azul-electrico: #0077ff;
+    --fucsia-neon: #ff1493;
+    --oro-neon: #ffd700;
+    --menta-neon: #98ff98;
 }
 
 .dark {

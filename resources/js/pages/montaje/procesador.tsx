@@ -23,7 +23,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function MontajeProcesador({ procesadores }: { procesadores: Procesador[] }) {
     const { guardarProcesador, editarMontaje, procesadorGuardado, guardarComponenteSaltado } = useProgresoMontaje((state) => state);
-    const progresoMontaje = editarMontaje && ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+    const progresoMontaje = editarMontaje && ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
     const [procesadorSeleccionado, setProcesadorSeleccionado] = useState<Procesador | null>(procesadorGuardado!);
     const [procesadorActivo, setProcesadorActivo] = useState<Procesador | null>(null);
@@ -297,7 +297,7 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
                             {mostrarDialogoSaltarComponente && (
                                 <DialogoSaltarComponente
                                     componente="procesador"
-                                    ruta="montaje.placaBase"
+                                    ruta="montaje.disipador"
                                     cerrarDialogo={() => setMostrarDialogoSaltarComponente(false)}
                                     onConfirmar={() => {
                                         guardarComponenteSaltado!(true);
@@ -381,7 +381,7 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
                                         }}
                                         asChild
                                     >
-                                        <Link href={route('montaje.placaBase')}>Siguiente</Link>
+                                        <Link href={route('montaje.disipador')}>Siguiente</Link>
                                     </Button>
                                 </>
                             )}

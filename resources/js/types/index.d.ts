@@ -143,6 +143,18 @@ export interface MemoriaRam {
     updated_at: Date;
 }
 
+export interface Disipador {
+    id: string;
+    nombre: string;
+    marca: string;
+    socket: [];
+    refrigeracion_liquida: string;
+    consumo: number;
+    precio: number;
+    created_at: Date;
+    updated_at: Date;
+}
+
 export interface ItemArrastrableProps {
     id: string;
     nombre: string;
@@ -176,6 +188,7 @@ export interface ComponentesMontaje {
     disco_duro_secundario: DiscoDuro;
     tarjeta_grafica: TarjetaGrafica;
     fuente_alimentacion: FuenteAlimentacion;
+    disipador: Disipador;
     torre: Torre;
     otros?: { precio: number; potencia: number; nombre: string };
 }
@@ -199,6 +212,8 @@ export interface EstadoMontaje {
     guardarFuenteAlimentacion?: (fuenteAlimentacion: FuenteAlimentacion | null) => void;
     torreGuardada?: Torre | null;
     guardarTorre?: (torre: Torre | null) => void;
+    disipadorGuardado?: Disipador | null;
+    guardarDisipador?: (disipador: Disipador | null) => void;
     editarMontaje?: boolean | null;
     guardarEditarMontaje?: (editarMontaje: boolean | null) => void;
     montajeAnterior?: ComponentesMontaje | null;

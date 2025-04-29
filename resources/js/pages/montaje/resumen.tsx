@@ -29,6 +29,7 @@ export default function ResumenMontaje() {
         tarjetaGraficaGuardada,
         fuenteAlimentacionGuardada,
         torreGuardada,
+        disipadorGuardado,
     } = useProgresoMontaje((state) => state);
 
     const { data, setData, post } = useForm<MontajeForm>({
@@ -41,6 +42,7 @@ export default function ResumenMontaje() {
             nombre: data.nombre,
             datos: {
                 procesador: procesadorGuardado || null,
+                disipador: disipadorGuardado || null,
                 placa_base: placaBaseGuardada || null,
                 memoria_ram: memoriaRamGuardada || null,
                 memoria_ram_secundaria: memoriaRamSecundariaGuardada || null,
@@ -56,6 +58,7 @@ export default function ResumenMontaje() {
 
     const precioTotal =
         Number(procesadorGuardado?.precio ?? 0) +
+        Number(disipadorGuardado?.precio ?? 0) +
         Number(placaBaseGuardada?.precio ?? 0) +
         Number(memoriaRamGuardada?.precio ?? 0) +
         Number(memoriaRamSecundariaGuardada?.precio ?? 0) +
@@ -67,6 +70,7 @@ export default function ResumenMontaje() {
 
     const consumoTotal =
         (procesadorGuardado?.consumo ?? 0) +
+        (disipadorGuardado?.consumo ?? 0) +
         (placaBaseGuardada?.consumo ?? 0) +
         (memoriaRamGuardada?.consumo ?? 0) +
         (memoriaRamSecundariaGuardada?.consumo ?? 0) +
@@ -119,14 +123,48 @@ export default function ResumenMontaje() {
                         <div className="rounded border border-[var(--azul-neon)] bg-gradient-to-br from-black via-[var(--azul-neon)]/10 to-black p-4 text-center">
                             <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--azul-neon)]">Procesador</h3>
                             <p className="text-lg font-semibold">{procesadorGuardado.nombre}</p>
-                            <div className="flex gap-4 w-full justify-center flex-wrap">
-                                <div><p className='underline'>Frecuencia Base</p><p>{procesadorGuardado.frecuencia_base} GHz</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--azul-neon)] rounded-4xl" />
-                                <div><p className='underline'>Turbo</p><p>{procesadorGuardado.frecuencia_turbo} GHz</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--azul-neon)] rounded-4xl" />
-                                <div><p className='underline'>Núcleos</p><p>{procesadorGuardado.nucleos}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--azul-neon)] rounded-4xl" />
-                                <div><p className='underline'>Consumo</p><p>{procesadorGuardado.consumo}W</p></div>
+                            <div className="flex w-full flex-wrap justify-center gap-4">
+                                <div>
+                                    <p className="underline">Frecuencia Base</p>
+                                    <p>{procesadorGuardado.frecuencia_base} GHz</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--azul-neon)]" />
+                                <div>
+                                    <p className="underline">Turbo</p>
+                                    <p>{procesadorGuardado.frecuencia_turbo} GHz</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--azul-neon)]" />
+                                <div>
+                                    <p className="underline">Núcleos</p>
+                                    <p>{procesadorGuardado.nucleos}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--azul-neon)]" />
+                                <div>
+                                    <p className="underline">Consumo</p>
+                                    <p>{procesadorGuardado.consumo}W</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    {disipadorGuardado && (
+                        <div className="rounded border border-[var(--menta-neon)] bg-gradient-to-br from-black via-[var(--menta-neon)]/10 to-black p-4 text-center">
+                            <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--menta-neon)]">Disipador</h3>
+                            <p className="text-lg font-semibold">{disipadorGuardado.nombre}</p>
+                            <div className="flex w-full flex-wrap justify-center gap-4">
+                                <div>
+                                    <p className="underline">Marca</p>
+                                    <p>{disipadorGuardado.marca}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--menta-neon)]" />
+                                <div>
+                                    <p className="underline">Liquida</p>
+                                    <p>{disipadorGuardado.refrigeracion_liquida}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--menta-neon)]" />
+                                <div>
+                                    <p className="underline">Consumo</p>
+                                    <p>{disipadorGuardado.consumo}W</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -134,14 +172,26 @@ export default function ResumenMontaje() {
                         <div className="rounded border border-[var(--verde-neon)] bg-gradient-to-br from-black via-[var(--verde-neon)]/10 to-black p-4 text-center">
                             <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--verde-neon)]">Placa Base</h3>
                             <p className="text-lg font-semibold">{placaBaseGuardada.nombre}</p>
-                            <div className="flex gap-4 w-full justify-center flex-wrap">
-                                <div><p className='underline'>Socket</p><p>{placaBaseGuardada.socket}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--verde-neon)] rounded-4xl" />
-                                <div><p className='underline'>Formato</p><p>{placaBaseGuardada.factor_forma}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--verde-neon)] rounded-4xl" />
-                                <div><p className='underline'>Puertos SATA</p><p>{placaBaseGuardada.puertos_sata}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--verde-neon)] rounded-4xl" />
-                                <div><p className='underline'>Consumo</p><p>{placaBaseGuardada.consumo}W</p></div>
+                            <div className="flex w-full flex-wrap justify-center gap-4">
+                                <div>
+                                    <p className="underline">Socket</p>
+                                    <p>{placaBaseGuardada.socket}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--verde-neon)]" />
+                                <div>
+                                    <p className="underline">Formato</p>
+                                    <p>{placaBaseGuardada.factor_forma}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--verde-neon)]" />
+                                <div>
+                                    <p className="underline">Puertos SATA</p>
+                                    <p>{placaBaseGuardada.puertos_sata}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--verde-neon)]" />
+                                <div>
+                                    <p className="underline">Consumo</p>
+                                    <p>{placaBaseGuardada.consumo}W</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -149,14 +199,26 @@ export default function ResumenMontaje() {
                         <div className="rounded border border-[var(--violeta-neon)] bg-gradient-to-br from-black via-[var(--violeta-neon)]/10 to-black p-4 text-center">
                             <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--violeta-neon)]">Memoria RAM</h3>
                             <p className="text-lg font-semibold">{memoriaRamGuardada.nombre}</p>
-                            <div className="flex gap-4 w-full justify-center flex-wrap">
-                                <div><p className='underline'>Capacidad</p><p>{memoriaRamGuardada.almacenamiento} GB</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--violeta-neon)] rounded-4xl" />
-                                <div><p className='underline'>Frecuencia</p><p>{memoriaRamGuardada.frecuencia} MHz</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--violeta-neon)] rounded-4xl" />
-                                <div><p className='underline'>Tipo</p><p>{memoriaRamGuardada.tipo}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--violeta-neon)] rounded-4xl" />
-                                <div><p className='underline'>Consumo</p><p>{memoriaRamGuardada.consumo}W</p></div>
+                            <div className="flex w-full flex-wrap justify-center gap-4">
+                                <div>
+                                    <p className="underline">Capacidad</p>
+                                    <p>{memoriaRamGuardada.almacenamiento} GB</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--violeta-neon)]" />
+                                <div>
+                                    <p className="underline">Frecuencia</p>
+                                    <p>{memoriaRamGuardada.frecuencia} MHz</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--violeta-neon)]" />
+                                <div>
+                                    <p className="underline">Tipo</p>
+                                    <p>{memoriaRamGuardada.tipo}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--violeta-neon)]" />
+                                <div>
+                                    <p className="underline">Consumo</p>
+                                    <p>{memoriaRamGuardada.consumo}W</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -164,14 +226,26 @@ export default function ResumenMontaje() {
                         <div className="rounded border border-[var(--violeta-neon)] bg-gradient-to-br from-black via-[var(--violeta-neon)]/10 to-black p-4 text-center">
                             <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--violeta-neon)]">Memoria RAM</h3>
                             <p className="text-lg font-semibold">{memoriaRamSecundariaGuardada.nombre}</p>
-                            <div className="flex gap-4 w-full justify-center flex-wrap">
-                                <div><p className='underline'>Capacidad</p><p>{memoriaRamSecundariaGuardada.almacenamiento} GB</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--violeta-neon)] rounded-4xl" />
-                                <div><p className='underline'>Frecuencia</p><p>{memoriaRamSecundariaGuardada.frecuencia} MHz</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--violeta-neon)] rounded-4xl" />
-                                <div><p className='underline'>Tipo</p><p>{memoriaRamSecundariaGuardada.tipo}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--violeta-neon)] rounded-4xl" />
-                                <div><p className='underline'>Consumo</p><p>{memoriaRamSecundariaGuardada.consumo}W</p></div>
+                            <div className="flex w-full flex-wrap justify-center gap-4">
+                                <div>
+                                    <p className="underline">Capacidad</p>
+                                    <p>{memoriaRamSecundariaGuardada.almacenamiento} GB</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--violeta-neon)]" />
+                                <div>
+                                    <p className="underline">Frecuencia</p>
+                                    <p>{memoriaRamSecundariaGuardada.frecuencia} MHz</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--violeta-neon)]" />
+                                <div>
+                                    <p className="underline">Tipo</p>
+                                    <p>{memoriaRamSecundariaGuardada.tipo}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--violeta-neon)]" />
+                                <div>
+                                    <p className="underline">Consumo</p>
+                                    <p>{memoriaRamSecundariaGuardada.consumo}W</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -179,14 +253,26 @@ export default function ResumenMontaje() {
                         <div className="rounded border border-[var(--amarillo-neon)] bg-gradient-to-br from-black via-[var(--amarillo-neon)]/10 to-black p-4 text-center">
                             <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--amarillo-neon)]">Disco Duro</h3>
                             <p className="text-lg font-semibold">{discoDuroGuardado.nombre}</p>
-                            <div className="flex gap-4 w-full justify-center flex-wrap">
-                                <div><p className='underline'>Tecnología</p><p>{discoDuroGuardado.tecnologia}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--amarillo-neon)] rounded-4xl" />
-                                <div><p className='underline'>Almacenamiento</p><p>{discoDuroGuardado.almacenamiento}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--amarillo-neon)] rounded-4xl" />
-                                <div><p className='underline'>Velocidad</p><p>{discoDuroGuardado.velocidad} RPM</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--amarillo-neon)] rounded-4xl" />
-                                <div><p className='underline'>Consumo</p><p>{discoDuroGuardado.consumo}W</p></div>
+                            <div className="flex w-full flex-wrap justify-center gap-4">
+                                <div>
+                                    <p className="underline">Tecnología</p>
+                                    <p>{discoDuroGuardado.tecnologia}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--amarillo-neon)]" />
+                                <div>
+                                    <p className="underline">Almacenamiento</p>
+                                    <p>{discoDuroGuardado.almacenamiento}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--amarillo-neon)]" />
+                                <div>
+                                    <p className="underline">Velocidad</p>
+                                    <p>{discoDuroGuardado.velocidad} RPM</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--amarillo-neon)]" />
+                                <div>
+                                    <p className="underline">Consumo</p>
+                                    <p>{discoDuroGuardado.consumo}W</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -194,14 +280,26 @@ export default function ResumenMontaje() {
                         <div className="rounded border border-[var(--amarillo-neon)] bg-gradient-to-br from-black via-[var(--amarillo-neon)]/10 to-black p-4 text-center">
                             <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--amarillo-neon)]">Disco Duro</h3>
                             <p className="text-lg font-semibold">{discoDuroSecundarioGuardado.nombre}</p>
-                            <div className="flex gap-4 w-full justify-center flex-wrap">
-                                <div><p className='underline'>Tecnología</p><p>{discoDuroSecundarioGuardado.tecnologia}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--amarillo-neon)] rounded-4xl" />
-                                <div><p className='underline'>Almacenamiento</p><p>{discoDuroSecundarioGuardado.almacenamiento}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--amarillo-neon)] rounded-4xl" />
-                                <div><p className='underline'>Velocidad</p><p>{discoDuroSecundarioGuardado.velocidad} RPM</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--amarillo-neon)] rounded-4xl" />
-                                <div><p className='underline'>Consumo</p><p>{discoDuroSecundarioGuardado.consumo}W</p></div>
+                            <div className="flex w-full flex-wrap justify-center gap-4">
+                                <div>
+                                    <p className="underline">Tecnología</p>
+                                    <p>{discoDuroSecundarioGuardado.tecnologia}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--amarillo-neon)]" />
+                                <div>
+                                    <p className="underline">Almacenamiento</p>
+                                    <p>{discoDuroSecundarioGuardado.almacenamiento}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--amarillo-neon)]" />
+                                <div>
+                                    <p className="underline">Velocidad</p>
+                                    <p>{discoDuroSecundarioGuardado.velocidad} RPM</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--amarillo-neon)]" />
+                                <div>
+                                    <p className="underline">Consumo</p>
+                                    <p>{discoDuroSecundarioGuardado.consumo}W</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -210,14 +308,26 @@ export default function ResumenMontaje() {
                         <div className="rounded border border-[var(--rojo-neon)] bg-gradient-to-br from-black via-[var(--rojo-neon)]/10 to-black p-4 text-center">
                             <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--rojo-neon)]">Tarjeta Gráfica</h3>
                             <p className="text-lg font-semibold">{tarjetaGraficaGuardada.nombre}</p>
-                            <div className="flex gap-4 w-full justify-center flex-wrap">
-                                <div><p className='underline'>Tipo Memoria</p><p>{tarjetaGraficaGuardada.tipo_memoria}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--rojo-neon)] rounded-4xl" />
-                                <div><p className='underline'>Memoria</p><p>{tarjetaGraficaGuardada.memoria} GB</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--rojo-neon)] rounded-4xl" />
-                                <div><p className='underline'>Longitud</p><p>{tarjetaGraficaGuardada.longitud} mm</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--rojo-neon)] rounded-4xl" />
-                                <div><p className='underline'>Consumo</p><p>{tarjetaGraficaGuardada.consumo}W</p></div>
+                            <div className="flex w-full flex-wrap justify-center gap-4">
+                                <div>
+                                    <p className="underline">Tipo Memoria</p>
+                                    <p>{tarjetaGraficaGuardada.tipo_memoria}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--rojo-neon)]" />
+                                <div>
+                                    <p className="underline">Memoria</p>
+                                    <p>{tarjetaGraficaGuardada.memoria} GB</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--rojo-neon)]" />
+                                <div>
+                                    <p className="underline">Longitud</p>
+                                    <p>{tarjetaGraficaGuardada.longitud} mm</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--rojo-neon)]" />
+                                <div>
+                                    <p className="underline">Consumo</p>
+                                    <p>{tarjetaGraficaGuardada.consumo}W</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -225,12 +335,21 @@ export default function ResumenMontaje() {
                         <div className="rounded border border-[var(--rosa-neon)] bg-gradient-to-br from-black via-[var(--rosa-neon)]/10 to-black p-4 text-center">
                             <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--rosa-neon)]">Fuente de Alimentación</h3>
                             <p className="text-lg font-semibold">{fuenteAlimentacionGuardada.nombre}</p>
-                            <div className="flex gap-4 w-full justify-center flex-wrap">
-                                <div><p className='underline'>Potencia</p><p>{fuenteAlimentacionGuardada.potencia}W</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--rosa-neon)] rounded-4xl" />
-                                <div><p className='underline'>Modular</p><p>{fuenteAlimentacionGuardada.modular}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--rosa-neon)] rounded-4xl" />
-                                <div><p className='underline'>Certificación</p><p>{fuenteAlimentacionGuardada.certificacion}</p></div>
+                            <div className="flex w-full flex-wrap justify-center gap-4">
+                                <div>
+                                    <p className="underline">Potencia</p>
+                                    <p>{fuenteAlimentacionGuardada.potencia}W</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--rosa-neon)]" />
+                                <div>
+                                    <p className="underline">Modular</p>
+                                    <p>{fuenteAlimentacionGuardada.modular}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--rosa-neon)]" />
+                                <div>
+                                    <p className="underline">Certificación</p>
+                                    <p>{fuenteAlimentacionGuardada.certificacion}</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -238,12 +357,21 @@ export default function ResumenMontaje() {
                         <div className="rounded border border-[var(--naranja-neon)] bg-gradient-to-br from-black via-[var(--naranja-neon)]/10 to-black p-4 text-center">
                             <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--naranja-neon)]">Torre</h3>
                             <p className="text-lg font-semibold">{torreGuardada.nombre}</p>
-                            <div className="flex gap-4 w-full justify-center flex-wrap">
-                                <div><p className='underline'>Formato</p><p>{torreGuardada.factor_forma}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--naranja-neon)] rounded-4xl" />
-                                <div><p className='underline'>Soporte RGB</p><p>{torreGuardada.soporte_RGB}</p></div>
-                                <Separator orientation='vertical' className="w-1 my-2 bg-[var(--naranja-neon)] rounded-4xl" />
-                                <div><p className='underline'>Longitud GPU</p><p>{torreGuardada.longitud_maxima_gpu} mm</p></div>
+                            <div className="flex w-full flex-wrap justify-center gap-4">
+                                <div>
+                                    <p className="underline">Formato</p>
+                                    <p>{torreGuardada.factor_forma}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--naranja-neon)]" />
+                                <div>
+                                    <p className="underline">Soporte RGB</p>
+                                    <p>{torreGuardada.soporte_RGB}</p>
+                                </div>
+                                <Separator orientation="vertical" className="my-2 w-1 rounded-4xl bg-[var(--naranja-neon)]" />
+                                <div>
+                                    <p className="underline">Longitud GPU</p>
+                                    <p>{torreGuardada.longitud_maxima_gpu} mm</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -277,14 +405,14 @@ export default function ResumenMontaje() {
 
                     <button
                         className="rounded-lg border border-[var(--azul-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--azul-neon)] transition-colors duration-1000 hover:bg-[var(--azul-neon)] hover:text-black"
-                    // onClick={handleCompartirMontaje}
+                        // onClick={handleCompartirMontaje}
                     >
                         Compartir montaje
                     </button>
 
                     <button
                         className="rounded-lg border border-[var(--rosa-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--rosa-neon)] duration-1000 hover:bg-[var(--rosa-neon)] hover:text-black"
-                    // onClick={handleExportarPDF}
+                        // onClick={handleExportarPDF}
                     >
                         Exportar a PDF
                     </button>
