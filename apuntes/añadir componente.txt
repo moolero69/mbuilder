@@ -1,5 +1,6 @@
-- cambiar tipo componentesMontaje
-- barra progreso lateral (poner ram secundaria en todos los componentes y condicional en componente)
+- cambiar tipo componentesMontaje y estadoMontaje
+- cambiar useprogresomontaje
+- barra progreso lateral (poner componente nuevo en todos los componentes y condicional en componente(progresomontaje.tsx))
 - resumen
 - listamontajes
 - editar montaje

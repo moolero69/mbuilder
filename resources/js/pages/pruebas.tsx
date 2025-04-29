@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 export default function Pruebas() {
     const [intelDesplegado, setIntelDesplegado] = useState(false);
-    const { procesadorGuardado, editarMontaje, placaBaseGuardada, memoriaRamGuardada, torreGuardada, montajeAnterior, componenteSaltado, memoriaRamSecundariaGuardada } = useProgresoMontaje((state) => state);
+    const { procesadorGuardado, editarMontaje, placaBaseGuardada, memoriaRamGuardada, torreGuardada, montajeAnterior, componenteSaltado, memoriaRamSecundariaGuardada, discoDuroGuardado, discoDuroSecundarioGuardado } = useProgresoMontaje((state) => state);
     return (
         <>
             <Head title="pruebas"></Head>
@@ -38,12 +38,12 @@ export default function Pruebas() {
                 </Collapsible>
                 {/* <h1>{procesadorGuardado!.nombre}</h1> */}
                 {/* <h1>{placaBaseGuardada!.nombre}</h1> */}
-                <h1>{memoriaRamGuardada?.nombre || 'Sin memoria principal'}</h1>
                 {/* <h1>{torreGuardada?.nombre}</h1> */}
                 {/* <h1>{montajeAnterior?.otros.precio}</h1> */}
                 {/* <h1>{editarMontaje!.toString()}</h1> */}
                 {/* <h1>{componenteSaltado!.toString()}</h1> */}
-                <h1>{memoriaRamSecundariaGuardada?.nombre || 'Sin memoria secundaria'}</h1>
+                <h1>{discoDuroGuardado?.nombre || 'Sin disco principal'}</h1>
+                <h1>{discoDuroSecundarioGuardado?.nombre || 'Sin disco secundario'}</h1>
             </div>
         </>
     );

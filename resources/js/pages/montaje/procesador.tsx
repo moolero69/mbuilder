@@ -20,11 +20,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+
 export default function MontajeProcesador({ procesadores }: { procesadores: Procesador[] }) {
     const { guardarProcesador, editarMontaje, procesadorGuardado, guardarComponenteSaltado } = useProgresoMontaje((state) => state);
-    const progresoMontaje = editarMontaje && ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+    const progresoMontaje = editarMontaje && ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
-    const [procesadorSeleccionado, setProcesadorSeleccionado] = useState<Procesador | null>(editarMontaje ? procesadorGuardado! : null);
+    const [procesadorSeleccionado, setProcesadorSeleccionado] = useState<Procesador | null>(procesadorGuardado!);
     const [procesadorActivo, setProcesadorActivo] = useState<Procesador | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [intelDesplegado, setIntelDesplegado] = useState(false);
@@ -44,21 +45,20 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
     })();
 
     useEffect(() => {
-        !editarMontaje &&
-            toast.custom(
-                (t) => (
-                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
-                        <span>
-                            <Wrench size={30} className="text-[var(--rojo-neon)]" />
-                            {}
-                        </span>
-                        <div className="flex w-full justify-center text-center text-xl">
-                            <p className="font-['exo_2']">Arrastra tu procesador</p>
-                        </div>
+        !editarMontaje && (toast.custom(
+            (t) => (
+                <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
+                    <span>
+                        <Wrench size={30} className="text-[var(--rojo-neon)]" />
+                        { }
+                    </span>
+                    <div className="flex w-full justify-center text-center text-xl">
+                        <p className="font-['exo_2']">Arrastra tu procesador</p>
                     </div>
-                ),
-                { duration: 3500 },
-            );
+                </div>
+            ),
+            { duration: 3500 },
+        ))
     }, []);
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -68,6 +68,7 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
             const item = procesadores.find((p) => p.id === active.id);
             if (item) {
                 setProcesadorSeleccionado(item);
+                guardarProcesador!(item);
             }
         }
         setProcesadorActivo(null);

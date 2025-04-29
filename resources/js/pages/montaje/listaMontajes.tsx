@@ -22,6 +22,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         guardarMemoriaRam,
         guardarMemoriaRamSecundaria,
         guardarDiscoDuro,
+        guardarDiscoDuroSecundario,
         guardarTarjetaGrafica,
         guardarFuenteAlimentacion,
         guardarTorre,
@@ -35,6 +36,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         const memoriaRam = componenteSeleccionado!.memoria_ram;
         const memoriaRamSecundaria = componenteSeleccionado!.memoria_ram_secundaria;
         const discoDuro = componenteSeleccionado!.disco_duro;
+        const discoDuroSecundario = componenteSeleccionado!.disco_duro_secundario;
         const tarjetaGrafica = componenteSeleccionado!.tarjeta_grafica;
         const fuenteAlimentacion = componenteSeleccionado!.fuente_alimentacion;
         const torre = componenteSeleccionado!.torre;
@@ -44,6 +46,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         guardarMemoriaRam!(memoriaRam);
         guardarMemoriaRamSecundaria!(memoriaRamSecundaria);
         guardarDiscoDuro!(discoDuro);
+        guardarDiscoDuroSecundario!(discoDuroSecundario);
         guardarTarjetaGrafica!(tarjetaGrafica);
         guardarFuenteAlimentacion!(fuenteAlimentacion);
         guardarTorre!(torre);
@@ -101,7 +104,6 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                     !datos.procesador ||
                                     !datos.placa_base ||
                                     !datos.memoria_ram ||
-                                    !datos.memoria_ram_secundaria ||
                                     !datos.disco_duro ||
                                     !datos.tarjeta_grafica ||
                                     !datos.fuente_alimentacion ||
@@ -131,8 +133,8 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                                 {datos.placa_base?.nombre || <span className="text-red-500">Sin placa base</span>}
                                             </li>
                                             <li>
-                                                <strong className="text-[var(--azul-neon)]">Memoria RAM:</strong>{' '}
-                                                {datos.memoria_ram?.nombre || <span className="text-red-500">Sin memoria RAM</span>}
+                                                <strong className="text-[var(--azul-neon)]">Memoria RAM Principal:</strong>{' '}
+                                                {datos.memoria_ram?.nombre || <span className="text-red-500">Sin memoria RAM principal</span>}
                                             </li>
                                             {datos.memoria_ram_secundaria && (
                                                 <li>
@@ -141,8 +143,12 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                                 </li>
                                             )}
                                             <li>
-                                                <strong className="text-[var(--azul-neon)]">Disco Duro:</strong>{' '}
-                                                {datos.disco_duro?.nombre || <span className="text-red-500">Sin disco duro</span>}
+                                                <strong className="text-[var(--azul-neon)]">Disco Duro Principal:</strong>{' '}
+                                                {datos.disco_duro?.nombre || <span className="text-red-500">Sin disco duro principal</span>}
+                                            </li>
+                                            <li>
+                                                <strong className="text-[var(--azul-neon)]">Disco Duro Secundario:</strong>{' '}
+                                                {datos.disco_duro_secundario?.nombre || <span className="text-red-500">Sin disco duro secundario</span>}
                                             </li>
                                             <li>
                                                 <strong className="text-[var(--azul-neon)]">Gráfica:</strong>{' '}

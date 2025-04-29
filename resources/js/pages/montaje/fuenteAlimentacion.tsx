@@ -54,10 +54,10 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
         guardarComponenteSaltado,
     } = useProgresoMontaje((state) => state);
     const progresoMontaje = !editarMontaje
-        ? ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica']
-        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+        ? ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica']
+        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
-    const [fuenteSeleccionada, setFuenteSeleccionada] = useState<FuenteAlimentacion | null>(editarMontaje ? fuenteAlimentacionGuardada! : null);
+    const [fuenteSeleccionada, setFuenteSeleccionada] = useState<FuenteAlimentacion | null>(fuenteAlimentacionGuardada!);
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
     const [fuenteActiva, setFuenteActiva] = useState<FuenteAlimentacion | null>(null);
@@ -136,6 +136,7 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
             const item = fuentesAlimentacion.find((f) => f.id === active.id);
             if (item) {
                 setFuenteSeleccionada(item);
+                guardarFuenteAlimentacion!(item);
             }
         }
         setFuenteActiva(null);
@@ -149,9 +150,9 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
         setIsDragging(true);
     };
 
-    const desplegar = () => {};
+    const desplegar = () => { };
 
-    const replegar = () => {};
+    const replegar = () => { };
     return (
         <>
             <Head title="montaje - fuente alimentacion" />

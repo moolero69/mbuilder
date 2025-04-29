@@ -50,7 +50,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
     const { placaBaseGuardada, guardarTorre, editarMontaje, torreGuardada, componenteSaltado, guardarComponenteSaltado } = useProgresoMontaje(
         (state) => state,
     );
-    const progresoMontaje = ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion'];
+    const progresoMontaje = ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion'];
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
     const [dialogoEditarAbierto, setDialogoEditarAbierto] = useState(false);
@@ -58,7 +58,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
     const [nuevoNombre, setNuevoNombre] = useState<string>(nombreMontajeEditar);
     const [nombreAntiguo, setNombreAntiguo] = useState(nombreMontajeEditar);
 
-    const [torreSeleccionada, setTorreSeleccionada] = useState<Torre | null>(editarMontaje ? torreGuardada! : null);
+    const [torreSeleccionada, setTorreSeleccionada] = useState<Torre | null>(torreGuardada!);
 
     const [torreActiva, setTorreActiva] = useState<Torre | null>(null);
 
@@ -187,6 +187,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
             const item = torres.find((t) => t.id === active.id);
             if (item) {
                 setTorreSeleccionada(item);
+                guardarTorre!(item);
             }
         }
         setTorreActiva(null);

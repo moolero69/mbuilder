@@ -5,6 +5,7 @@ import { Link, usePage } from '@inertiajs/react';
 import React from 'react';
 import { Button } from './ui/button';
 import UsuarioHeader from './usuario-header';
+import { limpiarComponentes } from './funciones/funciones';
 
 const Header: React.FC = () => {
     const page = usePage<DatosCompartidos>();
@@ -21,6 +22,7 @@ const Header: React.FC = () => {
                         onClick={() => {
                             guardarEditarMontaje!(false);
                             sessionStorage.clear();
+                            limpiarComponentes();
                         }}
                     >
                         <h1 className="font-['Orbitron'] text-5xl font-extrabold tracking-widest text-white drop-shadow-[5px_5px_6px_var(--azul-neon)] transition duration-500 hover:text-[var(--azul-neon)]">

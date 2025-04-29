@@ -30,10 +30,10 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
 
     const progresoMontaje = !editarMontaje
         ? ['procesador']
-        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
-    const [placaBaseSeleccionada, setPlacaBaseSeleccionada] = useState<PlacaBase | null>(editarMontaje ? placaBaseGuardada! : null);
+    const [placaBaseSeleccionada, setPlacaBaseSeleccionada] = useState<PlacaBase | null>(placaBaseGuardada!);
     const [placaBaseActiva, setPlacaBaseActiva] = useState<PlacaBase | null>(null);
 
     const [isDragging, setIsDragging] = useState(false);
@@ -103,6 +103,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
             const item = placasBase.find((p) => p.id === active.id);
             if (item) {
                 setPlacaBaseSeleccionada(item);
+                guardarPlacaBase!(item);
             }
         }
         setPlacaBaseActiva(null);

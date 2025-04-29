@@ -1,4 +1,5 @@
 import Footer from '@/components/footer-principal';
+import { limpiarComponentes } from '@/components/funciones/funciones';
 import Header from '@/components/header-principal';
 import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
@@ -25,7 +26,7 @@ export default function Welcome() {
                     <p className="max-w-2xl text-lg text-gray-400">
                         Descubre la mejor combinación de componentes para optimizar rendimiento, compatibilidad y eficiencia.
                     </p>
-                    <Button className="mt-6 rounded-3xl bg-[var(--verde-neon)] p-8 py-3 font-bold text-black" asChild>
+                    <Button className="mt-6 rounded-3xl bg-[var(--verde-neon)] p-8 py-3 font-bold text-black" asChild onClick={() => limpiarComponentes()}>
                         <Link href={route('montaje.procesador')}>Vamos</Link>
                     </Button>
 

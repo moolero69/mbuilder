@@ -8,6 +8,7 @@ import MontajeLayout from '@/layouts/app/montaje-layout';
 import { BreadcrumbItem, DiscoDuro } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
 import { ArrowBigDown, Box, CircuitBoard, Euro, Factory, Gauge, Microchip, Minus, Move, Plus, Search, Wrench } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -33,15 +34,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDuro[] }) {
-    const { procesadorGuardado, guardarDiscoDuro, editarMontaje, discoDuroGuardado, componenteSaltado, guardarComponenteSaltado } =
+    const { procesadorGuardado, guardarDiscoDuro, guardarDiscoDuroSecundario, editarMontaje, discoDuroGuardado, componenteSaltado, guardarComponenteSaltado } =
         useProgresoMontaje((state) => state);
     const progresoMontaje = !editarMontaje
         ? ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria']
-        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
-    const [discoSeleccionado, setDiscoSeleccionado] = useState<DiscoDuro | null>(editarMontaje ? discoDuroGuardado! : null);
+    const [discoSeleccionado, setDiscoSeleccionado] = useState<DiscoDuro | null>(discoDuroGuardado!);
+    const [modoSeleccionarIgual, setModoSeleccionarIgual] = useState<boolean>(false);
+    const [modoSeleccionarOtro, setModoSeleccionarOtra] = useState(false);
 
     const [discoActivo, setDiscoActivo] = useState<DiscoDuro | null>(null);
 
@@ -134,6 +137,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
             const item = discosDuros.find((p) => p.id === active.id);
             if (item) {
                 setDiscoSeleccionado(item);
+                // guardarDiscoDuro!(item);
             }
         }
         setDiscoActivo(null);
@@ -416,7 +420,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                                         id={disco.id}
                                                         nombre={disco.nombre}
                                                         icono={<Box />}
-                                                        iconoSecundario={disco.almacenamiento}
+                                                        textoSecundario={disco.almacenamiento}
                                                         precio={disco.precio}
                                                     />
                                                 </div>
@@ -657,28 +661,79 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                             </div>
                                         </div>
                                     </div>
-                                    {esCompatible ? (
-                                        <Button
-                                            variant={'outline'}
-                                            className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${discoActivo && 'hidden'}`}
-                                            onClick={() => {
-                                                guardarDiscoDuro!(discoSeleccionado);
-                                            }}
-                                            asChild
-                                        >
-                                            <Link href={route('montaje.tarjetaGrafica')}>Siguiente</Link>
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            variant={'outline'}
-                                            className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${discoActivo && 'hidden'} disabled hover:cursor-no-drop`}
-                                            onClick={() => {
-                                                guardarDiscoDuro!(discoSeleccionado);
-                                            }}
-                                        >
-                                            <h1>Incompatible</h1>
-                                        </Button>
-                                    )}
+                                    <div className="flex items-center gap-4">
+                                        {/* BOTÓN AÑADIR MEMORIA */}
+                                        {!modoSeleccionarIgual && !modoSeleccionarOtro && (
+                                            <DropdownMenu.Root>
+                                                <DropdownMenu.Trigger asChild>
+                                                    <Button
+                                                        variant={'outline'}
+                                                        className="fade-in relative rounded-lg border-[var(--azul-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--azul-neon)] shadow-[0_0_10px_var(--azul-neon)] transition-all duration-500 hover:bg-[var(--azul-neon)] hover:text-black hover:shadow-[0_0_20px_var(--azul-neon)]"
+                                                    >
+                                                        Añadir disco extra
+                                                    </Button>
+                                                </DropdownMenu.Trigger>
+
+                                                <DropdownMenu.Portal>
+                                                    <DropdownMenu.Content
+                                                        side="bottom"
+                                                        align="center"
+                                                        className="z-50 mt-1 rounded-md border border-[var(--azul-neon)] bg-[#111] p-2 shadow-lg"
+                                                    >
+                                                        <DropdownMenu.Item
+                                                            className="cursor-pointer rounded-md px-4 py-2 text-sm text-white hover:bg-[var(--azul-neon)] hover:text-black"
+                                                            onClick={() => {
+                                                                setModoSeleccionarIgual(true);
+                                                                guardarDiscoDuroSecundario!(discoSeleccionado);
+                                                            }}
+                                                        >
+                                                            Disco igual
+                                                        </DropdownMenu.Item>
+                                                        <DropdownMenu.Item
+                                                            className="cursor-pointer rounded-md px-4 py-2 text-sm text-white hover:bg-[var(--azul-neon)] hover:text-black"
+                                                            onClick={() => {
+                                                                setModoSeleccionarOtra(true);
+                                                                guardarDiscoDuro!(discoSeleccionado);
+                                                                setDiscoSeleccionado(null);
+                                                            }}
+                                                        >
+                                                            Seleccionar otro
+                                                        </DropdownMenu.Item>
+                                                    </DropdownMenu.Content>
+                                                </DropdownMenu.Portal>
+                                            </DropdownMenu.Root>
+                                        )}
+                                        {/* BOTÓN SIGUIENTE O INCOMPATIBLE */}
+                                        {esCompatible ? (
+                                            <Button
+                                                variant={'outline'}
+                                                className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${discoActivo && 'hidden'}`}
+                                                onClick={() => {
+                                                    !modoSeleccionarIgual && !modoSeleccionarOtro && guardarDiscoDuro!(discoSeleccionado);
+
+                                                    if (modoSeleccionarIgual) {
+                                                        guardarDiscoDuro!(discoSeleccionado);
+                                                        guardarDiscoDuroSecundario!(discoSeleccionado);
+                                                    }
+
+                                                    modoSeleccionarOtro && guardarDiscoDuroSecundario!(discoSeleccionado);
+                                                }}
+                                                asChild
+                                            >
+                                                <Link href={route('montaje.tarjetaGrafica')}>Siguiente</Link>
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                variant={'outline'}
+                                                className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${discoActivo && 'hidden'} disabled hover:cursor-no-drop`}
+                                                onClick={() => {
+                                                    guardarDiscoDuro!(discoSeleccionado);
+                                                }}
+                                            >
+                                                <h1>Incompatible</h1>
+                                            </Button>
+                                        )}
+                                    </div>
                                 </>
                             )}
                         </div>

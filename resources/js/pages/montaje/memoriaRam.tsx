@@ -41,11 +41,11 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
     } = useProgresoMontaje((state) => state);
     const progresoMontaje = !editarMontaje
         ? ['procesador', 'placaBase']
-        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+        : ['procesador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
     const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
 
-    const [memoriaSeleccionada, setMemoriaSeleccionada] = useState<MemoriaRam | null>(editarMontaje ? memoriaRamGuardada! : null);
+    const [memoriaSeleccionada, setMemoriaSeleccionada] = useState<MemoriaRam | null>(memoriaRamGuardada!);
     const [modoSeleccionarIgual, setModoSeleccionarIgual] = useState<boolean>(false);
     const [modoSeleccionarOtra, setModoSeleccionarOtra] = useState(false);
 
@@ -133,6 +133,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
             const item = memoriasRam.find((p) => p.id === active.id);
             if (item) {
                 setMemoriaSeleccionada(item);
+                // guardarMemoriaRam!(item);
             }
         }
         setMemoriaActiva(null);
@@ -683,7 +684,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         guardarMemoriaRamSecundaria!(memoriaSeleccionada);
                                                     }
 
-                                                    modoSeleccionarOtra && guardarMemoriaRamSecundaria!(memoriaSeleccionada);
+                                                    modoSeleccionarOtra && guardarMemoriaRamSecundaria!(memoriaSeleccionada)
                                                 }}
                                                 asChild
                                             >
