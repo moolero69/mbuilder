@@ -10,22 +10,26 @@ interface AuthLayoutProps {
 
 export default function AuthSimpleLayout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
     return (
-        <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10 ">
-            <div className="w-full max-w-sm">
+        <div className="bg-black min-h-svh flex flex-col items-center justify-center gap-6 p-6 md:p-10">
+            <div className="w-full max-w-md bg-black/80 p-6 md:p-8">
                 <div className="flex flex-col gap-8">
                     <div className="flex flex-col items-center gap-4">
-                        <Link href={route('home')} className="flex flex-col items-center gap-2 font-medium h-[64px] w-[64px]">
-                                <AppLogoIcon />
+                        <Link
+                            href={route('home')}
+                            className="flex flex-col items-center gap-2 font-medium h-[64px] w-[64px] transition-transform duration-300"
+                        >
+                            <AppLogoIcon className="text-[var(--azul-neon)] drop-shadow-[0_0_6px_var(--azul-neon)]" />
                             <span className="sr-only">{title}</span>
                         </Link>
                         <div className="space-y-2 text-center">
-                            <h1 className="text-xl font-medium">{title}</h1>
-                            <p className="text-muted-foreground text-center text-sm">{description}</p>
+                            <h1 className="text-xl font-bold text-[var(--azul-neon)] font-['Orbitron'] drop-shadow-[0_0_5px_var(--azul-neon)]">{title}</h1>
+                            <p className="text-sm text-gray-300">{description}</p>
                         </div>
                     </div>
                     {children}
                 </div>
             </div>
         </div>
+
     );
 }

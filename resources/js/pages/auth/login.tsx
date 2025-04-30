@@ -39,10 +39,10 @@ export default function Login({ status, canResetPassword }: LoginProps) {
         <AuthLayout title="Accede a tu cuenta de mbuilder" description="Introduce tu email y contraseña para acceder">
             <Head title="Log in" />
 
-            <form className="flex flex-col gap-6" onSubmit={submit}>
+            <form className="flex flex-col gap-6 bg-black/70 p-6 rounded-xl shadow-[0_0_20px_var(--verde-neon)] border border-[var(--verde-neon)]" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Direccion de email</Label>
+                        <Label htmlFor="email" className="text-[var(--verde-neon)]">Dirección de email</Label>
                         <Input
                             id="email"
                             type="email"
@@ -53,16 +53,17 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             placeholder="email@ejemplo.com"
+                            className="bg-black/90 border border-[var(--gris-neon)] text-white placeholder-gray-400 focus:border-[var(--verde-neon)] focus:ring-[var(--verde-neon)]"
                         />
                         <InputError message={errors.email} />
                     </div>
 
                     <div className="grid gap-2">
                         <div className="flex items-center">
-                            <Label htmlFor="password">Contraseña</Label>
+                            <Label htmlFor="password" className="text-[var(--verde-neon)]">Contraseña</Label>
                             {canResetPassword && (
-                                <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
-                                    Contraseña olvidada?
+                                <TextLink href={route('password.request')} className="ml-auto text-sm text-[var(--cian-neon)] hover:underline" tabIndex={5}>
+                                    ¿Contraseña olvidada?
                                 </TextLink>
                             )}
                         </div>
@@ -75,6 +76,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             placeholder="Contraseña"
+                            className="bg-black/90 border border-[var(--gris-neon)] text-white placeholder-gray-400 focus:border-[var(--verde-neon)] focus:ring-[var(--verde-neon)]"
                         />
                         <InputError message={errors.password} />
                     </div>
@@ -87,22 +89,23 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             onClick={() => setData('remember', !data.remember)}
                             tabIndex={3}
                         />
-                        <Label htmlFor="remember">Recuérdame</Label>
+                        <Label htmlFor="remember" className="text-gray-300">Recuérdame</Label>
                     </div>
 
-                    <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                    <Button type="submit" className="mt-4 w-full bg-[var(--verde-neon)] text-black hover:bg-[var(--morado-neon)] transition-all" tabIndex={4} disabled={processing}>
+                        {processing && <LoaderCircle className="h-4 w-4 animate-spin mr-2" />}
                         Acceder
                     </Button>
                 </div>
 
-                <div className="text-muted-foreground text-center text-sm">
-                    No tienes cuenta?{' '}
-                    <TextLink href={route('register')} tabIndex={5}>
-                        Registrate aquí
+                <div className="text-center text-sm text-gray-400">
+                    ¿No tienes cuenta?{' '}
+                    <TextLink href={route('register')} className="text-[var(--rosa-neon)] hover:underline" tabIndex={5}>
+                        Regístrate aquí
                     </TextLink>
                 </div>
             </form>
+
 
             {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
         </AuthLayout>

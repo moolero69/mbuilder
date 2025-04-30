@@ -16,6 +16,6 @@ Route::middleware('auth')->group(function () {
     Route::put('ajustes/contraseña', [PasswordController::class, 'update'])->name('contraseña.actualizar');
 
     Route::get('ajustes/apariencia', function () {
-        return Inertia::render('settings/appearance');
+        return Inertia::render('settings/apariencia');
     })->name('appearance');
 });

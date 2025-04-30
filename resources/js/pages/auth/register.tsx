@@ -32,12 +32,12 @@ export default function Register() {
     };
 
     return (
-        <AuthLayout title="Crea una cuenta" description="Introduce los detalles debajo">
-            <Head title="Register" />
+        <AuthLayout title="Crea tu cuenta de mbuilder" description="Introduce los detalles debajo">
+            <Head title="Registro" />
             <form className="flex flex-col gap-6" onSubmit={submit}>
-                <div className="grid gap-6">
+                <div className="grid gap-6 bg-black/80 border border-[var(--azul-neon)] rounded-xl p-6 shadow-[0_0_30px_var(--azul-neon)]">
                     <div className="grid gap-2">
-                        <Label htmlFor="name">Nombre</Label>
+                        <Label htmlFor="name" className="text-[var(--azul-neon)]">Nombre</Label>
                         <Input
                             id="name"
                             type="text"
@@ -49,12 +49,13 @@ export default function Register() {
                             onChange={(e) => setData('name', e.target.value)}
                             disabled={processing}
                             placeholder="Nombre completo"
+                            className="bg-black text-white border border-[var(--azul-neon)] placeholder-gray-500 focus:border-[var(--morado-neon)] focus:ring-[var(--morado-neon)]"
                         />
-                        <InputError message={errors.name} className="mt-2" />
+                        <InputError message={errors.name} className="text-[var(--rojo-neon)] mt-2" />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Direccion email</Label>
+                        <Label htmlFor="email" className="text-[var(--azul-neon)]">Dirección email</Label>
                         <Input
                             id="email"
                             type="email"
@@ -65,12 +66,13 @@ export default function Register() {
                             onChange={(e) => setData('email', e.target.value)}
                             disabled={processing}
                             placeholder="email@ejemplo.com"
+                            className="bg-black text-white border border-[var(--azul-neon)] placeholder-gray-500 focus:border-[var(--morado-neon)] focus:ring-[var(--morado-neon)]"
                         />
-                        <InputError message={errors.email} />
+                        <InputError message={errors.email} className="text-[var(--rojo-neon)]" />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password">Contraseña</Label>
+                        <Label htmlFor="password" className="text-[var(--azul-neon)]">Contraseña</Label>
                         <Input
                             id="password"
                             type="password"
@@ -81,12 +83,13 @@ export default function Register() {
                             onChange={(e) => setData('password', e.target.value)}
                             disabled={processing}
                             placeholder="Contraseña"
+                            className="bg-black text-white border border-[var(--azul-neon)] placeholder-gray-500 focus:border-[var(--morado-neon)] focus:ring-[var(--morado-neon)]"
                         />
-                        <InputError message={errors.password} />
+                        <InputError message={errors.password} className="text-[var(--rojo-neon)]" />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">Confirmar contraseña</Label>
+                        <Label htmlFor="password_confirmation" className="text-[var(--azul-neon)]">Confirmar contraseña</Label>
                         <Input
                             id="password_confirmation"
                             type="password"
@@ -97,23 +100,30 @@ export default function Register() {
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             disabled={processing}
                             placeholder="Confirmar contraseña"
+                            className="bg-black text-white border border-[var(--azul-neon)] placeholder-gray-500 focus:border-[var(--morado-neon)] focus:ring-[var(--morado-neon)]"
                         />
-                        <InputError message={errors.password_confirmation} />
+                        <InputError message={errors.password_confirmation} className="text-[var(--rojo-neon)]" />
                     </div>
 
-                    <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                    <Button
+                        type="submit"
+                        className="mt-2 w-full bg-[var(--azul-neon)]/80 hover:bg-[var(--morado-neon)] hover:text-white transition-all duration-300"
+                        tabIndex={5}
+                        disabled={processing}
+                    >
+                        {processing && <LoaderCircle className="h-4 w-4 animate-spin mr-2" />}
                         Crear cuenta
                     </Button>
                 </div>
 
-                <div className="text-muted-foreground text-center text-sm">
-                    Ya tienes cuenta?{' '}
-                    <TextLink href={route('login')} tabIndex={6}>
-                        Inicia sesion
+                <div className="text-center text-sm text-gray-400">
+                    ¿Ya tienes cuenta?{' '}
+                    <TextLink href={route('login')} tabIndex={6} className="text-[var(--azul-neon)] hover:underline">
+                        Inicia sesión
                     </TextLink>
                 </div>
             </form>
         </AuthLayout>
+
     );
 }

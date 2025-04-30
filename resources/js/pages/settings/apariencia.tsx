@@ -1,10 +1,11 @@
 import { Head } from '@inertiajs/react';
 
-import AppearanceTabs from '@/components/appearance-tabs';
 import HeadingSmall from '@/components/heading-small';
 import { type BreadcrumbItem } from '@/types';
 
-import SettingsLayout from '@/layouts/settings/layout';
+
+import AjustesLayout from '@/layouts/settings/ajustes-layout';
+import OpcionesApariencia from '@/components/appearance-tabs';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -16,14 +17,14 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Appearance() {
     return (
         <>
-            <Head title="Appearance settings" />
+            <Head title="Ajustes de apariencia" />
 
-            <SettingsLayout>
+            <AjustesLayout>
                 <div className="space-y-6">
-                    <HeadingSmall title="Appearance settings" description="Update your account's appearance settings" />
-                    <AppearanceTabs />
+                    <HeadingSmall title="Ajustes de apariencia" description="Actualiza los ajustes de apariencia de tu cuenta" />
+                    <OpcionesApariencia />
                 </div>
-            </SettingsLayout>
+            </AjustesLayout>
         </>
     );
 }
