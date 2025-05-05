@@ -1,6 +1,7 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
 import DialogoSaltarComponente from '@/components/DialogoSaltarComponente';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
+import { TooltipIncopatibilidadComponente } from '@/components/TooltipIncopatibilidad';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
@@ -13,56 +14,83 @@ import { ArrowBigDown, Euro, Factory, Minus, Move, Plus, Power, Puzzle, ScrollTe
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        titulo: 'Procesador',
-        href: '/montaje/procesador',
-    },
-    {
-        titulo: 'Disipador',
-        href: '/montaje/disipador',
-    },
-    {
-        titulo: 'Placa base',
-        href: '/montaje/placaBase',
-    },
-    {
-        titulo: 'Memoria Ram',
-        href: '/montaje/memoriaRam',
-    },
-    {
-        titulo: 'Disco Duro',
-        href: '/montaje/discoDuro',
-    },
-    {
-        titulo: 'Tarjeta Gráfica',
-        href: '/montaje/tarjetaGrafica',
-    },
-    {
-        titulo: 'Fuente de Alimentacion',
-        href: '/montaje/fuenteAlimentacion',
-    },
-];
-
 export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fuentesAlimentacion: FuenteAlimentacion[] }) {
     const {
-        procesadorGuardado,
-        placaBaseGuardada,
-        memoriaRamGuardada,
-        discoDuroGuardado,
-        tarjetaGraficaGuardada,
         guardarFuenteAlimentacion,
         editarMontaje,
-        fuenteAlimentacionGuardada,
         componenteSaltado,
+        procesadorGuardado,
+        placaBaseGuardada,
+        disipadorGuardado,
+        memoriaRamGuardada,
+        memoriaRamSecundariaGuardada,
+        discoDuroGuardado,
+        discoDuroSecundarioGuardado,
+        tarjetaGraficaGuardada,
+        fuenteAlimentacionGuardada,
+        torreGuardada,
         guardarComponenteSaltado,
     } = useProgresoMontaje((state) => state);
-    const progresoMontaje = !editarMontaje
-        ? ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica']
-        : ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            titulo: 'Procesador',
+            href: '/montaje/procesador',
+            componente: procesadorGuardado,
+        },
+        {
+            titulo: 'Disipador',
+            href: '/montaje/disipador',
+            componente: disipadorGuardado,
+        },
+        {
+            titulo: 'Placa base',
+            href: '/montaje/placaBase',
+            componente: placaBaseGuardada,
+        },
+        {
+            titulo: 'Memoria RAM',
+            href: '/montaje/memoriaRam',
+            componente: memoriaRamGuardada,
+        },
+        {
+            titulo: 'Disco Duro',
+            href: '/montaje/discoDuro',
+            componente: discoDuroGuardado,
+        },
+        {
+            titulo: 'Tarjeta Gráfica',
+            href: '/montaje/tarjetaGrafica',
+            componente: tarjetaGraficaGuardada,
+        },
+        {
+            titulo: 'Fuente de Alimentacion',
+            href: '/montaje/fuenteAlimentacion',
+            componente: fuenteAlimentacionGuardada,
+            activo: true,
+        },
+        {
+            titulo: 'Torre',
+            href: '/montaje/torre',
+            componente: torreGuardada,
+        },
+    ];
+
+    const progresoMontaje = [
+        'procesador',
+        'disipador',
+        'placaBase',
+        'memoriaRam',
+        'memoriaRamSecundaria',
+        'discoDuro',
+        'discoDuroSecundario',
+        'tarjetaGrafica',
+        'fuenteAlimentacion',
+        'torre',
+    ];
 
     const [fuenteSeleccionada, setFuenteSeleccionada] = useState<FuenteAlimentacion | null>(fuenteAlimentacionGuardada!);
-    const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(true);
 
     const [fuenteActiva, setFuenteActiva] = useState<FuenteAlimentacion | null>(null);
 
@@ -112,26 +140,49 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                         </div>
                     </div>
                 ),
-                { duration: 3500 },
+                { duration: 2750 },
             );
 
-        const comprobarCompatibilidad = (fuente: FuenteAlimentacion) => {
+        function filtrarFuentes() {
             const sumaTotalConsumo =
                 (procesadorGuardado?.consumo ?? 0) +
+                (disipadorGuardado?.consumo ?? 0) +
                 (placaBaseGuardada?.consumo ?? 0) +
                 (memoriaRamGuardada?.consumo ?? 0) +
+                (memoriaRamSecundariaGuardada?.consumo ?? 0) +
                 (discoDuroGuardado?.consumo ?? 0) +
+                (discoDuroSecundarioGuardado?.consumo ?? 0) +
                 (tarjetaGraficaGuardada?.consumo ?? 0);
 
             const fuentesCompatibles = fuentesAlimentacion.filter((fuente) => fuente.potencia > sumaTotalConsumo);
 
-            const compatible = fuente?.potencia > sumaTotalConsumo;
-            setEsCompatible(compatible);
             setFuentesFiltradas(fuentesCompatibles);
-        };
+        }
 
-        comprobarCompatibilidad(fuenteAlimentacionGuardada!);
+        !componenteSaltado && filtrarFuentes();
     }, []);
+
+    function comprobarCompatibilidad() {
+        if (!fuenteSeleccionada) return;
+
+        const sumaTotalConsumo =
+            (procesadorGuardado?.consumo ?? 0) +
+            (disipadorGuardado?.consumo ?? 0) +
+            (placaBaseGuardada?.consumo ?? 0) +
+            (memoriaRamGuardada?.consumo ?? 0) +
+            (memoriaRamSecundariaGuardada?.consumo ?? 0) +
+            (discoDuroGuardado?.consumo ?? 0) +
+            (discoDuroSecundarioGuardado?.consumo ?? 0) +
+            (tarjetaGraficaGuardada?.consumo ?? 0);
+
+        const fuenteIncompatible = fuenteSeleccionada.potencia > sumaTotalConsumo;
+
+        setEsCompatible(fuenteIncompatible);
+    }
+
+    useEffect(() => {
+        fuenteSeleccionada && comprobarCompatibilidad();
+    }, [fuenteSeleccionada]);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -154,9 +205,9 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
         setIsDragging(true);
     };
 
-    const desplegar = () => { };
+    const desplegar = () => {};
 
-    const replegar = () => { };
+    const replegar = () => {};
     return (
         <>
             <Head title="montaje - fuente alimentacion" />
@@ -387,6 +438,11 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                     </CollapsibleContent>
                                 </Collapsible>
                             )}
+                            {!fuentesCorsair && !fuentesEvga && !fuentesThermaltake && !fuentesBequiet && (
+                                <div className="flex h-full w-full items-center justify-center">
+                                    No se ha encontrado ninguna fuente de alimentación que coincida con tu búsqueda.
+                                </div>
+                            )}
                         </div>
                     }
                     main={
@@ -408,7 +464,13 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${fuenteActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem botonEliminar={() => setFuenteSeleccionada(null)} mostrarBoton={Boolean(fuenteSeleccionada)}>
+                                <AreaSoltarItem
+                                    botonEliminar={() => {
+                                        setFuenteSeleccionada(null);
+                                        guardarFuenteAlimentacion!(null);
+                                    }}
+                                    mostrarBoton={Boolean(fuenteSeleccionada)}
+                                >
                                     {!fuenteActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {fuenteSeleccionada?.nombre}
@@ -505,15 +567,20 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                             <Link href={route('montaje.torre')}>Siguiente</Link>
                                         </Button>
                                     ) : (
-                                        <Button
-                                            variant={'outline'}
-                                            className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${fuenteActiva && 'hidden'} disabled hover:cursor-no-drop`}
-                                            onClick={() => {
-                                                guardarFuenteAlimentacion!(fuenteSeleccionada);
-                                            }}
-                                        >
-                                            <h1>Incompatible</h1>
-                                        </Button>
+                                        <>
+                                            <div className="flex items-center justify-center gap-4">
+                                                <Button
+                                                    variant={'outline'}
+                                                    className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${fuenteActiva && 'hidden'} disabled hover:cursor-no-drop`}
+                                                    onClick={() => {
+                                                        guardarFuenteAlimentacion!(fuenteSeleccionada);
+                                                    }}
+                                                >
+                                                    <h1>Incompatible</h1>
+                                                </Button>
+                                                <TooltipIncopatibilidadComponente mensaje="La potencia de la fuente es menor al consumo de los componentes" />
+                                            </div>
+                                        </>
                                     )}
                                 </>
                             )}

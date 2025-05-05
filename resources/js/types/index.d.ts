@@ -8,6 +8,8 @@ export interface Auth {
 export interface BreadcrumbItem {
     titulo: string;
     href: string;
+    activo?: boolean;
+    componente?: any;
 }
 
 export interface NavGroup {
@@ -41,6 +43,68 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export interface Procesador {
+    id: string;
+    nombre: string;
+    marca: string;
+    socket: string;
+    graficos_integrados: string;
+    disipador_incluido: string;
+    frecuencia_base: number;
+    frecuencia_turbo: number;
+    nucleos: number;
+    hilos: number;
+    cache: number;
+    disipador_incluido: string;
+    passmark: number;
+    consumo: number;
+    precio: number;
+    created_at: Date;
+    updated_at: Date;
+}
+
+export interface Disipador {
+    id: string;
+    nombre: string;
+    marca: string;
+    socket: Array;
+    refrigeracion_liquida: string;
+    consumo: number;
+    precio: number;
+    created_at: Date;
+    updated_at: Date;
+}
+
+export interface PlacaBase {
+    id: string;
+    nombre: string;
+    marca: string;
+    socket: string;
+    factor_forma: string;
+    zocalos_ram: number;
+    puertos_m2: number;
+    puertos_sata: number;
+    puertos_pcie: number;
+    consumo: number;
+    precio: number;
+    created_at: Date;
+    updated_at: Date;
+}
+
+export interface MemoriaRam {
+    id: string;
+    nombre: string;
+    marca: string;
+    almacenamiento: number;
+    tipo: string;
+    pack: number;
+    frecuencia: number;
+    consumo: number;
+    precio: number;
+    created_at: Date;
+    updated_at: Date;
+}
+
 export interface DiscoDuro {
     id: string;
     nombre: string;
@@ -72,24 +136,6 @@ export interface TarjetaGrafica {
     updated_at: Date;
 }
 
-export interface Procesador {
-    id: string;
-    nombre: string;
-    marca: string;
-    socket: string;
-    frecuencia_base: number;
-    frecuencia_turbo: number;
-    nucleos: number;
-    hilos: number;
-    cache: number;
-    disipador_incluido: string;
-    passmark: number;
-    consumo: number;
-    precio: number;
-    created_at: Date;
-    updated_at: Date;
-}
-
 export interface FuenteAlimentacion {
     id: string;
     nombre: string;
@@ -102,21 +148,6 @@ export interface FuenteAlimentacion {
     updated_at: Date;
 }
 
-export interface PlacaBase {
-    id: string;
-    nombre: string;
-    marca: string;
-    socket: string;
-    factor_forma: string;
-    zocalos_ram: number;
-    puertos_m2: number;
-    puertos_sata: number;
-    consumo: number;
-    precio: number;
-    created_at: Date;
-    updated_at: Date;
-}
-
 export interface Torre {
     id: string;
     nombre: string;
@@ -124,32 +155,7 @@ export interface Torre {
     factor_forma: string;
     soporte_RGB: string;
     longitud_maxima_gpu: number;
-    precio: number;
-    created_at: Date;
-    updated_at: Date;
-}
-
-export interface MemoriaRam {
-    id: string;
-    nombre: string;
-    marca: string;
-    almacenamiento: number;
-    tipo: string;
-    pack: number;
-    frecuencia: number;
-    consumo: number;
-    precio: number;
-    created_at: Date;
-    updated_at: Date;
-}
-
-export interface Disipador {
-    id: string;
-    nombre: string;
-    marca: string;
-    socket: [];
     refrigeracion_liquida: string;
-    consumo: number;
     precio: number;
     created_at: Date;
     updated_at: Date;
@@ -190,7 +196,7 @@ export interface ComponentesMontaje {
     fuente_alimentacion: FuenteAlimentacion;
     disipador: Disipador;
     torre: Torre;
-    otros?: { precio: number; potencia: number; nombre: string };
+    otros?: { precio: number; potencia: number; nombre: string, tipo_montaje: string };
 }
 
 export interface EstadoMontaje {
@@ -220,4 +226,6 @@ export interface EstadoMontaje {
     guardarMontajeAnterior?: (montajeAnterior: ComponentesMontaje | null) => void;
     componenteSaltado?: boolean | null;
     guardarComponenteSaltado?: (componenteSaltado: boolean | null) => void;
+    tipoMontaje?: string | null;
+    guardarTipoMontaje?: (tipoMontaje: string | null) => void;
 }

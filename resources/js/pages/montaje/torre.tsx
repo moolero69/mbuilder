@@ -1,5 +1,6 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
+import { TooltipIncopatibilidadComponente } from '@/components/TooltipIncopatibilidad';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -15,45 +16,66 @@ import { ArrowBigDown, Euro, Factory, Microchip, Minus, Move, PcCase, Plus, Sear
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        titulo: 'Procesador',
-        href: '/montaje/procesador',
-    },
-    {
-        titulo: 'Disipador',
-        href: '/montaje/disipador',
-    },
-    {
-        titulo: 'Placa base',
-        href: '/montaje/placaBase',
-    },
-    {
-        titulo: 'Memoria Ram',
-        href: '/montaje/memoriaRam',
-    },
-    {
-        titulo: 'Disco Duro',
-        href: '/montaje/discoDuro',
-    },
-    {
-        titulo: 'Tarjeta Gráfica',
-        href: '/montaje/tarjetaGrafica',
-    },
-    {
-        titulo: 'Fuente de Alimentacion',
-        href: '/montaje/fuenteAlimentacion',
-    },
-    {
-        titulo: 'Torre',
-        href: '/montaje/torre',
-    },
-];
-
 export default function MontajeTorre({ torres }: { torres: Torre[] }) {
-    const { placaBaseGuardada, guardarTorre, editarMontaje, torreGuardada, componenteSaltado, guardarComponenteSaltado } = useProgresoMontaje(
-        (state) => state,
-    );
+    const {
+        guardarTorre,
+        editarMontaje,
+        componenteSaltado,
+        guardarComponenteSaltado,
+        procesadorGuardado,
+        placaBaseGuardada,
+        disipadorGuardado,
+        memoriaRamGuardada,
+        discoDuroGuardado,
+        tarjetaGraficaGuardada,
+        fuenteAlimentacionGuardada,
+        torreGuardada,
+    } = useProgresoMontaje((state) => state);
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            titulo: 'Procesador',
+            href: '/montaje/procesador',
+            componente: procesadorGuardado,
+        },
+        {
+            titulo: 'Disipador',
+            href: '/montaje/disipador',
+            componente: disipadorGuardado,
+        },
+        {
+            titulo: 'Placa base',
+            href: '/montaje/placaBase',
+            componente: placaBaseGuardada,
+        },
+        {
+            titulo: 'Memoria RAM',
+            href: '/montaje/memoriaRam',
+            componente: memoriaRamGuardada,
+        },
+        {
+            titulo: 'Disco Duro',
+            href: '/montaje/discoDuro',
+            componente: discoDuroGuardado,
+        },
+        {
+            titulo: 'Tarjeta Gráfica',
+            href: '/montaje/tarjetaGrafica',
+            componente: tarjetaGraficaGuardada,
+        },
+        {
+            titulo: 'Fuente de Alimentacion',
+            href: '/montaje/fuenteAlimentacion',
+            componente: fuenteAlimentacionGuardada,
+        },
+        {
+            titulo: 'Torre',
+            href: '/montaje/torre',
+            componente: torreGuardada,
+            activo: true,
+        },
+    ];
+
     const progresoMontaje = [
         'procesador',
         'disipador',
@@ -66,7 +88,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
         'fuenteAlimentacion',
         'torre',
     ];
-    const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(true);
 
     const [dialogoEditarAbierto, setDialogoEditarAbierto] = useState(false);
     const nombreMontajeEditar: any = sessionStorage.getItem('nombreMontajeEditar');
@@ -98,6 +120,50 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
     const [mostrarDialogoSaltarComponente, setMostrarDialogoSaltarComponente] = useState(false);
 
     const [torresFiltradas, setTorresFiltradas] = useState<Torre[]>(torres);
+
+    useEffect(() => {
+        !editarMontaje &&
+            toast.custom(
+                (t) => (
+                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
+                        <span>
+                            <Wrench size={30} className="text-[var(--rojo-neon)]" />
+                        </span>
+                        <div className="flex w-full justify-center text-center text-xl">
+                            <p className="font-['exo_2']">Arrastra tu torre</p>
+                        </div>
+                    </div>
+                ),
+                { duration: 2750 },
+            );
+
+        function filtrarTorres() {
+            let torresCompatibles: Torre[];
+
+            torresCompatibles = torres.filter(
+                (torre) =>
+                    torre.longitud_maxima_gpu >= tarjetaGraficaGuardada!.longitud &&
+                    torre.refrigeracion_liquida === disipadorGuardado!.refrigeracion_liquida,
+            );
+
+            setTorresFiltradas(torresCompatibles);
+        }
+
+        !componenteSaltado && filtrarTorres();
+    }, []);
+
+    function comprobarCompatibilidad() {
+        if (!disipadorGuardado || !tarjetaGraficaGuardada || !torreSeleccionada) return;
+
+        const graficaIncompatible = torreSeleccionada?.longitud_maxima_gpu < tarjetaGraficaGuardada.longitud;
+        const refrigeracionIncompatible = torreSeleccionada.refrigeracion_liquida === 'No' && disipadorGuardado.refrigeracion_liquida === 'Si';
+
+        graficaIncompatible || refrigeracionIncompatible ? setEsCompatible(false) : setEsCompatible(true);
+    }
+
+    useEffect(() => {
+        torreSeleccionada && comprobarCompatibilidad();
+    }, [torreSeleccionada]);
 
     const torresAeroCool = (() => {
         const filtrados = torresFiltradas?.filter((t) => t.marca === 'Aerocool' && t.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
@@ -167,33 +233,6 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
         const filtrados = torresFiltradas?.filter((t) => t.marca === 'Thermaltake' && t.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return filtrados?.length ? filtrados : null;
     })();
-
-    useEffect(() => {
-        !editarMontaje &&
-            toast.custom(
-                (t) => (
-                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
-                        <span>
-                            <Wrench size={30} className="text-[var(--rojo-neon)]" />
-                        </span>
-                        <div className="flex w-full justify-center text-center text-xl">
-                            <p className="font-['exo_2']">Arrastra tu torre</p>
-                        </div>
-                    </div>
-                ),
-                { duration: 3500 },
-            );
-
-        const comprobarCompatibilidad = (torre: Torre) => {
-            const torresCompatibles = torres.filter((t) => t.factor_forma === placaBaseGuardada?.factor_forma);
-
-            const compatible = torre?.factor_forma === placaBaseGuardada!.factor_forma;
-            setEsCompatible(compatible);
-            setTorresFiltradas(torresCompatibles);
-        };
-
-        !componenteSaltado && comprobarCompatibilidad(torreSeleccionada!);
-    }, []);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -815,6 +854,23 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                     </CollapsibleContent>
                                 </Collapsible>
                             )}
+                            {!torresAeroCool &&
+                                !torresCoolerMaster &&
+                                !torresCorsair &&
+                                !torresDeepCool &&
+                                !torresFractal &&
+                                !torresLianLi &&
+                                !torresMars &&
+                                !torresNfortec &&
+                                !torresNox &&
+                                !torresNzxt &&
+                                !torresPhanteks &&
+                                !torresSharkoon &&
+                                !torresThermalTake && (
+                                    <div className="flex h-full w-full items-center justify-center">
+                                        No se ha encontrado ninguna torre que coincida con tu búsqueda.
+                                    </div>
+                                )}
                         </div>
                     }
                     main={
@@ -836,7 +892,13 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${torreActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem botonEliminar={() => setTorreSeleccionada(null)} mostrarBoton={Boolean(torreSeleccionada)}>
+                                <AreaSoltarItem
+                                    botonEliminar={() => {
+                                        setTorreSeleccionada(null);
+                                        guardarTorre!(null);
+                                    }}
+                                    mostrarBoton={Boolean(torreSeleccionada)}
+                                >
                                     {!torreActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {torreSeleccionada?.nombre}
@@ -902,15 +964,20 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             )}
                                         </Button>
                                     ) : (
-                                        <Button
-                                            variant={'outline'}
-                                            className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${torreActiva && 'hidden'} disabled hover:cursor-no-drop`}
-                                            onClick={() => {
-                                                guardarTorre!(torreSeleccionada);
-                                            }}
-                                        >
-                                            <h1>Incompatible</h1>
-                                        </Button>
+                                        <>
+                                            <div className="flex items-center justify-center gap-4">
+                                                <Button
+                                                    variant={'outline'}
+                                                    className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${torreActiva && 'hidden'} disabled hover:cursor-no-drop`}
+                                                    onClick={() => {
+                                                        guardarTorre!(torreSeleccionada);
+                                                    }}
+                                                >
+                                                    <h1>Incompatible</h1>
+                                                </Button>
+                                                <TooltipIncopatibilidadComponente mensaje="La gráfica no entra en la torre o la torre no es compatible con tu tipo de refrigeración." />
+                                            </div>
+                                        </>
                                     )}
                                 </>
                             )}

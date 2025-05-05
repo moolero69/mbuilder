@@ -1,6 +1,7 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
 import DialogoSaltarComponente from '@/components/DialogoSaltarComponente';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
+import { TooltipIncopatibilidadComponente } from '@/components/TooltipIncopatibilidad';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
@@ -14,40 +15,81 @@ import { ArrowBigDown, Box, Euro, Factory, Gauge, MemoryStick, Microchip, Minus,
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        titulo: 'Procesador',
-        href: '/montaje/procesador',
-    },
-    {
-        titulo: 'Disipador',
-        href: '/montaje/disipador',
-    },
-    {
-        titulo: 'Placa base',
-        href: '/montaje/placaBase',
-    },
-    {
-        titulo: 'Memoria Ram',
-        href: '/montaje/memoriaRam',
-    },
-];
-
 export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: MemoriaRam[] }) {
     const {
-        procesadorGuardado,
         guardarMemoriaRam,
         guardarMemoriaRamSecundaria,
         editarMontaje,
-        memoriaRamGuardada,
         componenteSaltado,
         guardarComponenteSaltado,
+        tipoMontaje,
+        procesadorGuardado,
+        placaBaseGuardada,
+        disipadorGuardado,
+        memoriaRamGuardada,
+        discoDuroGuardado,
+        tarjetaGraficaGuardada,
+        fuenteAlimentacionGuardada,
+        torreGuardada,
     } = useProgresoMontaje((state) => state);
-    const progresoMontaje = !editarMontaje
-        ? ['procesador', 'disipador', 'placaBase']
-        : ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
 
-    const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            titulo: 'Procesador',
+            href: '/montaje/procesador',
+            componente: procesadorGuardado,
+        },
+        {
+            titulo: 'Disipador',
+            href: '/montaje/disipador',
+            componente: disipadorGuardado,
+        },
+        {
+            titulo: 'Placa base',
+            href: '/montaje/placaBase',
+            componente: placaBaseGuardada,
+        },
+        {
+            titulo: 'Memoria RAM',
+            href: '/montaje/memoriaRam',
+            componente: memoriaRamGuardada,
+            activo: true,
+        },
+        {
+            titulo: 'Disco Duro',
+            href: '/montaje/discoDuro',
+            componente: discoDuroGuardado,
+        },
+        {
+            titulo: 'Tarjeta Gráfica',
+            href: '/montaje/tarjetaGrafica',
+            componente: tarjetaGraficaGuardada,
+        },
+        {
+            titulo: 'Fuente de Alimentacion',
+            href: '/montaje/fuenteAlimentacion',
+            componente: fuenteAlimentacionGuardada,
+        },
+        {
+            titulo: 'Torre',
+            href: '/montaje/torre',
+            componente: torreGuardada,
+        },
+    ];
+    const progresoMontaje = [
+        'procesador',
+        'disipador',
+        'placaBase',
+        'memoriaRam',
+        'memoriaRamSecundaria',
+        'discoDuro',
+        'discoDuroSecundario',
+        'tarjetaGrafica',
+        'fuenteAlimentacion',
+        'torre',
+    ];
+
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(true);
 
     const [memoriaSeleccionada, setMemoriaSeleccionada] = useState<MemoriaRam | null>(memoriaRamGuardada!);
     const [modoSeleccionarIgual, setModoSeleccionarIgual] = useState<boolean>(false);
@@ -107,28 +149,46 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                         </div>
                     </div>
                 ),
-                { duration: 3500 },
+                { duration: 2750 },
             );
 
-        const comprobarCompatibilidad = (memoria: MemoriaRam) => {
+        const filtrarMemorias = () => {
             const socketsDDR5 = ['AM5', 'LGA1700'];
             const socketsDDR4 = ['AM4', 'LGA1200'];
 
-            const memoriasCompatibles = memoriasRam.filter((memoria) => {
-                const socket = procesadorGuardado?.socket;
-                const tipoMemoria = memoria.tipo;
-                return (socketsDDR5.includes(socket!) && tipoMemoria === 'DDR5') || (socketsDDR4.includes(socket!) && tipoMemoria === 'DDR4');
+            const socket = procesadorGuardado?.socket;
+
+            // Aqui no se compara el tipo de montaje por consumo ya que la diferencia entre ellas es infima
+
+            const memoriasCompatibles = memoriasRam.filter((mem) => {
+                const esDDR5 = socketsDDR5.includes(socket!) && mem.tipo === 'DDR5';
+                const esDDR4 = socketsDDR4.includes(socket!) && mem.tipo === 'DDR4';
+                return esDDR5 || esDDR4;
             });
 
-            const compatible =
-                (socketsDDR5.includes(procesadorGuardado!.socket) && memoria?.tipo === 'DDR5') ||
-                (socketsDDR4.includes(procesadorGuardado!.socket) && memoria?.tipo === 'DDR4');
-
-            setEsCompatible(compatible);
             setMemoriasFiltradas(memoriasCompatibles);
         };
-        !componenteSaltado && comprobarCompatibilidad(memoriaRamGuardada!);
+
+        !componenteSaltado && filtrarMemorias();
     }, []);
+
+    function comprobarCompatibilidad() {
+        if (!placaBaseGuardada || !memoriaSeleccionada) return;
+
+        const zocalosPlaca = placaBaseGuardada.zocalos_ram;
+        const zocalosOcupados: number = modoSeleccionarOtra ? memoriaRamGuardada!.pack + memoriaSeleccionada.pack : memoriaSeleccionada.pack * 2;
+        console.log(zocalosOcupados);
+
+        zocalosPlaca < zocalosOcupados ? setEsCompatible(false) : setEsCompatible(true);
+    }
+
+    useEffect(() => {
+        if (modoSeleccionarIgual) {
+            comprobarCompatibilidad();
+        } else if (modoSeleccionarOtra && memoriaSeleccionada) {
+            comprobarCompatibilidad();
+        }
+    }, [modoSeleccionarIgual, modoSeleccionarOtra, memoriaSeleccionada]);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -137,12 +197,10 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
             const item = memoriasRam.find((p) => p.id === active.id);
             if (item) {
                 setMemoriaSeleccionada(item);
-                // guardarMemoriaRam!(item);
             }
         }
         setMemoriaActiva(null);
         setIsDragging(false);
-        setEsCompatible(true);
     };
 
     const handleDragStart = (event: any) => {
@@ -516,6 +574,11 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                     </CollapsibleContent>
                                 </Collapsible>
                             )}
+                            {!memoriasCorsair && !memoriasCrucial && !memoriasKingston && !memoriasAdata && !memoriasGskill && (
+                                <div className="flex h-full w-full items-center justify-center">
+                                    No se ha encontrado ninguna memoria que coincida con tu búsqueda.
+                                </div>
+                            )}
                         </div>
                     }
                     main={
@@ -537,7 +600,15 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${memoriaActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem botonEliminar={() => setMemoriaSeleccionada(null)} mostrarBoton={Boolean(memoriaSeleccionada)}>
+                                <AreaSoltarItem
+                                    botonEliminar={() => {
+                                        setMemoriaSeleccionada(null);
+                                        setModoSeleccionarIgual(false);
+                                        setModoSeleccionarOtra(false);
+                                        guardarMemoriaRam!(null);
+                                    }}
+                                    mostrarBoton={Boolean(memoriaSeleccionada)}
+                                >
                                     {!memoriaActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {memoriaSeleccionada?.nombre}
@@ -640,7 +711,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                 <DropdownMenu.Trigger asChild>
                                                     <Button
                                                         variant={'outline'}
-                                                        className="fade-in relative rounded-lg border-[var(--azul-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--azul-neon)] shadow-[0_0_10px_var(--azul-neon)] transition-all duration-500 hover:bg-[var(--azul-neon)] hover:text-black hover:shadow-[0_0_20px_var(--azul-neon)]"
+                                                        className={`fade-in relative rounded-lg border-[var(--azul-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--azul-neon)] shadow-[0_0_10px_var(--azul-neon)] transition-all duration-500 hover:bg-[var(--azul-neon)] hover:text-black hover:shadow-[0_0_20px_var(--azul-neon)] ${memoriaActiva && 'hidden'}`}
                                                     >
                                                         Añadir memoria extra
                                                     </Button>
@@ -688,22 +759,27 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         guardarMemoriaRamSecundaria!(memoriaSeleccionada);
                                                     }
 
-                                                    modoSeleccionarOtra && guardarMemoriaRamSecundaria!(memoriaSeleccionada)
+                                                    modoSeleccionarOtra && guardarMemoriaRamSecundaria!(memoriaSeleccionada);
                                                 }}
                                                 asChild
                                             >
                                                 <Link href={route('montaje.discoDuro')}>Siguiente</Link>
                                             </Button>
                                         ) : (
-                                            <Button
-                                                variant={'outline'}
-                                                className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${memoriaActiva && 'hidden'} disabled hover:cursor-no-drop`}
-                                                onClick={() => {
-                                                    guardarMemoriaRam!(memoriaSeleccionada);
-                                                }}
-                                            >
-                                                <h1>Incompatible</h1>
-                                            </Button>
+                                            <>
+                                                <div className="flex items-center justify-center gap-4">
+                                                    <Button
+                                                        variant={'outline'}
+                                                        className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${memoriaActiva && 'hidden'} disabled hover:cursor-no-drop`}
+                                                        onClick={() => {
+                                                            guardarMemoriaRam!(memoriaSeleccionada);
+                                                        }}
+                                                    >
+                                                        <h1>Incompatible</h1>
+                                                    </Button>
+                                                    <TooltipIncopatibilidadComponente mensaje="El número de zócalos ocupados es mayor al que tiene la placa escogida." />
+                                                </div>
+                                            </>
                                         )}
                                     </div>
                                 </>

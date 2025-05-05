@@ -30,6 +30,7 @@ class ImportarProcesadores extends Command
                 'nombre' => $fila['Nombre'],
                 'marca' => $fila['Marca'],
                 'socket' => $fila['Socket'],
+                'graficos_integrados' => $fila['Graficos Integrados'],
                 'frecuencia_base' => $fila['Frecuencia_Base'],
                 'frecuencia_turbo' => $fila['Frecuencia_Turbo'],
                 'nucleos' => $fila['Nucleos'],

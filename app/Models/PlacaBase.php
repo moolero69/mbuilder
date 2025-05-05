@@ -20,6 +20,7 @@ class PlacaBase extends Model
         "zocalos_ram",
         "puertos_m2",
         "puertos_sata",
+        "puertos_pcie",
         "consumo",
         "precio"
     ];

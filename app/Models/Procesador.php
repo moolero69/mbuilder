@@ -16,6 +16,7 @@ class Procesador extends Model
         "nombre",
         "marca",
         "socket",
+        "graficos_integrados",
         "frecuencia_base",
         "frecuencia_turbo",
         "nucleos",

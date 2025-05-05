@@ -1,7 +1,7 @@
 import Header from '@/components/header-principal';
 import { Button } from '@/components/ui/button';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
 import { useEffect } from 'react';
 
@@ -233,7 +233,11 @@ export default function editarMontajes() {
                                 {memoriaRamSecundariaGuardada && (
                                     <li>
                                         <strong className="text-[var(--azul-neon)]">Memoria RAM secundaria:</strong>{' '}
-                                        {memoriaRamSecundariaGuardada ? memoriaRamSecundariaGuardada.nombre : <span className="text-red-500">Sin memoria RAM</span>}
+                                        {memoriaRamSecundariaGuardada ? (
+                                            memoriaRamSecundariaGuardada.nombre
+                                        ) : (
+                                            <span className="text-red-500">Sin memoria RAM</span>
+                                        )}
                                     </li>
                                 )}
                                 <li>
@@ -242,7 +246,11 @@ export default function editarMontajes() {
                                 </li>
                                 <li>
                                     <strong className="text-[var(--azul-neon)]">Disco Duro:</strong>{' '}
-                                    {discoDuroSecundarioGuardado ? discoDuroSecundarioGuardado.nombre : <span className="text-red-500">Sin disco duro</span>}
+                                    {discoDuroSecundarioGuardado ? (
+                                        discoDuroSecundarioGuardado.nombre
+                                    ) : (
+                                        <span className="text-red-500">Sin disco duro</span>
+                                    )}
                                 </li>
                                 <li>
                                     <strong className="text-[var(--azul-neon)]">Gráfica:</strong>{' '}
@@ -270,6 +278,13 @@ export default function editarMontajes() {
                     </div>
                 </div>
                 <div className="flex w-full items-center justify-center">
+                    <Button
+                        variant={'outline'}
+                        className={`fade-in relative rounded-lg border-[var(--azul-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--azul-neon)] shadow-[0_0_10px_var(--azul-neon)] transition-all duration-500 hover:bg-[var(--azul-neon)] hover:text-black hover:shadow-[0_0_20px_var(--azul-neon)]`}
+                        asChild
+                    >
+                        <Link href={route('montaje.torre')}>Volver al montaje</Link>
+                    </Button>
                     <Button
                         className="fade-in m-10 rounded-lg border-[var(--naranja-neon)] px-8 py-4 text-center font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:cursor-pointer hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)]"
                         variant={'outline'}

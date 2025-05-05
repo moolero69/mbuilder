@@ -1,6 +1,8 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
+import AvisoComponente from '@/components/avisoComponente';
 import DialogoSaltarComponente from '@/components/DialogoSaltarComponente';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
+import { TooltipIncopatibilidadComponente } from '@/components/TooltipIncopatibilidad';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
@@ -13,17 +15,81 @@ import { ArrowBigDown, Cpu, Euro, Factory, Gauge, MemoryStick, Minus, Move, Plus
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        titulo: 'Procesador',
-        href: '/montaje/procesador',
-    },
-];
-
-
 export default function MontajeProcesador({ procesadores }: { procesadores: Procesador[] }) {
-    const { guardarProcesador, editarMontaje, procesadorGuardado, guardarComponenteSaltado } = useProgresoMontaje((state) => state);
-    const progresoMontaje = editarMontaje && ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+    const {
+        guardarProcesador,
+        editarMontaje,
+        guardarComponenteSaltado,
+        tipoMontaje,
+        componenteSaltado,
+        procesadorGuardado,
+        placaBaseGuardada,
+        disipadorGuardado,
+        memoriaRamGuardada,
+        discoDuroGuardado,
+        tarjetaGraficaGuardada,
+        fuenteAlimentacionGuardada,
+        torreGuardada,
+    } = useProgresoMontaje((state) => state);
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            titulo: 'Procesador',
+            href: '/montaje/procesador',
+            activo: true,
+            componente: procesadorGuardado,
+        },
+        {
+            titulo: 'Disipador',
+            href: '/montaje/disipador',
+            componente: disipadorGuardado,
+        },
+        {
+            titulo: 'Placa base',
+            href: '/montaje/placaBase',
+            componente: placaBaseGuardada,
+        },
+        {
+            titulo: 'Memoria RAM',
+            href: '/montaje/memoriaRam',
+            componente: memoriaRamGuardada,
+        },
+        {
+            titulo: 'Disco Duro',
+            href: '/montaje/discoDuro',
+            componente: discoDuroGuardado,
+        },
+        {
+            titulo: 'Tarjeta Gráfica',
+            href: '/montaje/tarjetaGrafica',
+            componente: tarjetaGraficaGuardada,
+        },
+        {
+            titulo: 'Fuente de Alimentacion',
+            href: '/montaje/fuenteAlimentacion',
+            componente: fuenteAlimentacionGuardada,
+        },
+        {
+            titulo: 'Torre',
+            href: '/montaje/torre',
+            componente: torreGuardada,
+        },
+    ];
+
+    const progresoMontaje = [
+        'procesador',
+        'disipador',
+        'placaBase',
+        'memoriaRam',
+        'memoriaRamSecundaria',
+        'discoDuro',
+        'discoDuroSecundario',
+        'tarjetaGrafica',
+        'fuenteAlimentacion',
+        'torre',
+    ];
+
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(true);
 
     const [procesadorSeleccionado, setProcesadorSeleccionado] = useState<Procesador | null>(procesadorGuardado!);
     const [procesadorActivo, setProcesadorActivo] = useState<Procesador | null>(null);
@@ -32,34 +98,63 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
     const [amdDesplegado, setAmdDesplegado] = useState(false);
     const [busquedaGeneral, setBusquedaGeneral] = useState('');
 
+    const [procesadoresFiltrados, setProcesadoresFiltrados] = useState<Procesador[]>(procesadores);
+
+    useEffect(() => {
+        !editarMontaje &&
+            toast.custom(
+                (t) => (
+                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
+                        <span>
+                            <Wrench size={30} className="text-[var(--rojo-neon)]" />
+                            {}
+                        </span>
+                        <div className="flex w-full justify-center text-center text-xl">
+                            <p className="font-['exo_2']">Arrastra tu procesador</p>
+                        </div>
+                    </div>
+                ),
+                { duration: 2750 },
+            );
+
+        function filtrarProcesadores() {
+            let filtrados: Procesador[] = [];
+
+            if (tipoMontaje === 'eco') {
+                filtrados = procesadores.filter((p) => p.consumo <= 65);
+            } else if (tipoMontaje === 'equilibrado') {
+                filtrados = procesadores.filter((p) => p.consumo <= 105);
+            } else if (tipoMontaje === 'pro') {
+                filtrados = procesadores;
+            }
+
+            setProcesadoresFiltrados(filtrados);
+        }
+
+        !componenteSaltado && filtrarProcesadores();
+    }, []);
+
+    function comprobarCompatibilidad() {
+        if (!placaBaseGuardada) return;
+
+        placaBaseGuardada.socket != procesadorSeleccionado?.socket ? setEsCompatible(false) : setEsCompatible(true);
+    }
+
+    useEffect(() => {
+        procesadorSeleccionado && comprobarCompatibilidad();
+    }, [procesadorSeleccionado]);
+
     const [mostrarDialogoSaltarComponente, setMostrarDialogoSaltarComponente] = useState(false);
 
     const procesadoresAmd = (() => {
-        const p = procesadores.filter((p) => p.marca === 'AMD' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const p = procesadoresFiltrados.filter((p) => p.marca === 'AMD' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return p.length ? p : null;
     })();
 
     const procesadoresIntel = (() => {
-        const p = procesadores.filter((p) => p.marca === 'Intel' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const p = procesadoresFiltrados.filter((p) => p.marca === 'Intel' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return p.length ? p : null;
     })();
-
-    useEffect(() => {
-        !editarMontaje && (toast.custom(
-            (t) => (
-                <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
-                    <span>
-                        <Wrench size={30} className="text-[var(--rojo-neon)]" />
-                        { }
-                    </span>
-                    <div className="flex w-full justify-center text-center text-xl">
-                        <p className="font-['exo_2']">Arrastra tu procesador</p>
-                    </div>
-                </div>
-            ),
-            { duration: 3500 },
-        ))
-    }, []);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -250,6 +345,14 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
                                     </CollapsibleContent>
                                 </Collapsible>
                             )}
+
+                            {!procesadoresIntel && !procesadoresAmd && (
+                                <>
+                                    <div className="flex h-full w-full items-center justify-center">
+                                        No se ha encontrado ningún procesador que coincida con tu búsqueda.
+                                    </div>
+                                </>
+                            )}
                         </div>
                     }
                     main={
@@ -271,7 +374,13 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${procesadorActivo && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem botonEliminar={() => setProcesadorSeleccionado(null)} mostrarBoton={Boolean(procesadorSeleccionado)}>
+                                <AreaSoltarItem
+                                    botonEliminar={() => {
+                                        setProcesadorSeleccionado(null);
+                                        guardarProcesador!(null);
+                                    }}
+                                    mostrarBoton={Boolean(procesadorSeleccionado)}
+                                >
                                     {!procesadorActivo && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {procesadorSeleccionado?.nombre}
@@ -372,17 +481,41 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
                                             </div>
                                         </div>
                                     </div>
-                                    <Button
-                                        variant="outline"
-                                        className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${procesadorActivo && 'hidden'}`}
-                                        onClick={() => {
-                                            guardarProcesador!(procesadorSeleccionado);
-                                            guardarComponenteSaltado!(false);
-                                        }}
-                                        asChild
-                                    >
-                                        <Link href={route('montaje.disipador')}>Siguiente</Link>
-                                    </Button>
+                                    <div className={`flex gap-6 ${isDragging && 'hidden'}`}>
+                                        {procesadorSeleccionado.disipador_incluido === 'No' && (
+                                            <AvisoComponente mensaje="Procesador SIN disipador incluido" />
+                                        )}
+                                        {procesadorSeleccionado.graficos_integrados === 'No' && (
+                                            <AvisoComponente mensaje="Procesador SIN gráficos integrados, tarjeta gráfica obligatoria." />
+                                        )}
+                                    </div>
+                                    {esCompatible ? (
+                                        <Button
+                                            variant={'outline'}
+                                            className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${procesadorActivo && 'hidden'}`}
+                                            onClick={() => {
+                                                guardarProcesador!(procesadorSeleccionado);
+                                            }}
+                                            asChild
+                                        >
+                                            <Link href={route('montaje.disipador')}>Siguiente</Link>
+                                        </Button>
+                                    ) : (
+                                        <>
+                                            <div className="flex items-center justify-center gap-4">
+                                                <Button
+                                                    variant={'outline'}
+                                                    className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${procesadorActivo && 'hidden'} disabled hover:cursor-no-drop`}
+                                                    onClick={() => {
+                                                        guardarProcesador!(procesadorSeleccionado);
+                                                    }}
+                                                >
+                                                    <h1>Incompatible</h1>
+                                                </Button>
+                                                <TooltipIncopatibilidadComponente mensaje="El socket del procesador no coincide con el de la placa escogida." />
+                                            </div>
+                                        </>
+                                    )}
                                 </>
                             )}
                         </div>

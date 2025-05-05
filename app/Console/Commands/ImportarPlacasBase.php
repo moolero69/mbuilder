@@ -34,6 +34,7 @@ class ImportarPlacasBase extends Command
                 'zocalos_ram' => $fila['Zocalos RAM'],
                 'puertos_m2' => $fila['Puertos M2'],
                 'puertos_sata' => $fila['Puertos SATA'],
+                'puertos_pcie' => $fila['Puertos PCIe'],
                 'consumo' => $fila['Consumo'],
                 'precio' => $fila['Precio'],
             ]);

@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 export default function Pruebas() {
     const [intelDesplegado, setIntelDesplegado] = useState(false);
-    const { procesadorGuardado, editarMontaje, placaBaseGuardada, memoriaRamGuardada, torreGuardada, montajeAnterior, componenteSaltado, memoriaRamSecundariaGuardada, discoDuroGuardado, discoDuroSecundarioGuardado } = useProgresoMontaje((state) => state);
+    const { procesadorGuardado, editarMontaje, placaBaseGuardada, memoriaRamGuardada, torreGuardada, montajeAnterior, componenteSaltado, memoriaRamSecundariaGuardada, discoDuroGuardado, discoDuroSecundarioGuardado, tipoMontaje } = useProgresoMontaje((state) => state);
     return (
         <>
             <Head title="pruebas"></Head>
@@ -44,6 +44,9 @@ export default function Pruebas() {
                 {/* <h1>{componenteSaltado!.toString()}</h1> */}
                 <h1>{discoDuroGuardado?.nombre || 'Sin disco principal'}</h1>
                 <h1>{discoDuroSecundarioGuardado?.nombre || 'Sin disco secundario'}</h1>
+                <h1>Tipo: {tipoMontaje || 'Sin tipo montaje'}</h1>
+                <h1> {procesadorGuardado?.nombre || 'Sin procesador'}</h1>
+
             </div>
         </>
     );

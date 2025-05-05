@@ -1,41 +1,41 @@
-Nombre,Marca,Factor Forma,Soporte RGB,Longitud GPU,Precio
-Corsair iCUE 4000X RGB,Corsair,ATX,Si,360,120
-NZXT H510 Elite,NZXT,ATX,Si,381,150
-Cooler Master MasterBox MB511 ARGB,Cooler Master,ATX,Si,410,90
-Lian Li PC-O11 Dynamic,Lian Li,ATX,No,420,140
-Fractal Design Meshify C,Fractal Design,ATX,No,315,100
-be quiet! Pure Base 500DX,be quiet!,ATX,Si,369,110
-Phanteks Eclipse P400A,Phanteks,ATX,Si,420,95
-Thermaltake View 71 RGB,Thermaltake,ATX,Si,410,180
-Corsair 5000D Airflow,Corsair,ATX,No,420,130
-NZXT H7 Flow,NZXT,ATX,No,400,130
-Lian Li Lancool II Mesh,Lian Li,ATX,Si,384,110
-Fractal Design Define 7,Fractal Design,ATX,No,491,160
-Phanteks Enthoo Pro II,Phanteks,ATX,No,503,180
-NOX Hummer ZX,Nox,ATX,No,370,50
-Aerocool Aero One Frost,Aerocool,ATX,Si,327,55
-Mars Gaming MC500,Mars Gaming,ATX,Si,370,50
-Sharkoon VG6-W,Sharkoon,ATX,Si,375,55
-DeepCool Matrexx 55,DeepCool,ATX,Si,370,60
-Nfortec Draco V2,Nfortec,ATX,Si,350,70
-NOX Infinity Neon,Nox,ATX,Si,320,55
-Aerocool Cylon,Aerocool,ATX,Si,346,45
-Sharkoon TG4,Sharkoon,ATX,Si,375,60
-DeepCool CC560,DeepCool,ATX,No,370,50
-Nfortec Scorpius,Nfortec,ATX,Si,350,75
-NOX Modus,Nox,ATX,No,325,45
-Aerocool Bolt,Aerocool,ATX,Si,355,50
-NZXT H510,NZXT,ATX,No,381,90
-Lian Li PC-K62,Lian Li,ATX,No,300,100
-Fractal Design Focus G,Fractal Design,ATX,No,380,70
-Corsair 7000D Airflow,Corsair,ATX,No,450,200
-Kolink Inspire K2,Kolink,m-atx,Si,320,40
-Mars Gaming MCM,Mars Gaming,m-atx,Si,330,35
-Cooler Master MasterBox Q300L,Cooler Master,m-atx,No,360,60
-NOX Hummer Fusion,Nox,m-atx,Si,370,55
-Thermaltake S100,Thermaltake,m-atx,No,330,50
-Sharkoon S1000,Sharkoon,m-atx,No,400,45
-DeepCool MACUBE 110,DeepCool,m-atx,No,320,55
-Aerocool Atomic,Aerocool,m-atx,Si,335,60
-Fractal Design Pop Mini,Fractal Design,m-atx,No,365,80
-Cooler Master MasterBox MB320L,Cooler Master,m-atx,Si,344,65
+Nombre,Marca,Factor Forma,Soporte RGB,Longitud GPU,Refrigeracion Liquida,Precio
+Corsair iCUE 4000X RGB,Corsair,ATX,Si,360,Si,120
+NZXT H510 Elite,NZXT,ATX,Si,381,Si,150
+Cooler Master MasterBox MB511 ARGB,Cooler Master,ATX,Si,410,Si,90
+Lian Li PC-O11 Dynamic,Lian Li,ATX,No,420,Si,140
+Fractal Design Meshify C,Fractal Design,ATX,No,315,No,100
+be quiet! Pure Base 500DX,be quiet!,ATX,Si,369,Si,110
+Phanteks Eclipse P400A,Phanteks,ATX,Si,420,Si,95
+Thermaltake View 71 RGB,Thermaltake,ATX,Si,410,Si,180
+Corsair 5000D Airflow,Corsair,ATX,No,420,Si,130
+NZXT H7 Flow,NZXT,ATX,No,400,Si,130
+Lian Li Lancool II Mesh,Lian Li,ATX,Si,384,Si,110
+Fractal Design Define 7,Fractal Design,ATX,No,491,Si,160
+Phanteks Enthoo Pro II,Phanteks,ATX,No,503,Si,180
+NOX Hummer ZX,Nox,ATX,No,370,No,50
+Aerocool Aero One Frost,Aerocool,ATX,Si,327,No,55
+Mars Gaming MC500,Mars Gaming,ATX,Si,370,No,50
+Sharkoon VG6-W,Sharkoon,ATX,Si,375,No,55
+DeepCool Matrexx 55,DeepCool,ATX,Si,370,Si,60
+Nfortec Draco V2,Nfortec,ATX,Si,350,No,70
+NOX Infinity Neon,Nox,ATX,Si,320,No,55
+Aerocool Cylon,Aerocool,ATX,Si,346,No,45
+Sharkoon TG4,Sharkoon,ATX,Si,375,No,60
+DeepCool CC560,DeepCool,ATX,No,370,Si,50
+Nfortec Scorpius,Nfortec,ATX,Si,350,No,75
+NOX Modus,Nox,ATX,No,325,No,45
+Aerocool Bolt,Aerocool,ATX,Si,355,No,50
+NZXT H510,NZXT,ATX,No,381,Si,90
+Lian Li PC-K62,Lian Li,ATX,No,300,No,100
+Fractal Design Focus G,Fractal Design,ATX,No,380,No,70
+Corsair 7000D Airflow,Corsair,ATX,No,450,Si,200
+Kolink Inspire K2,Kolink,m-atx,Si,320,No,40
+Mars Gaming MCM,Mars Gaming,m-atx,Si,330,No,35
+Cooler Master MasterBox Q300L,Cooler Master,m-atx,No,360,No,60
+NOX Hummer Fusion,Nox,m-atx,Si,370,No,55
+Thermaltake S100,Thermaltake,m-atx,No,330,No,50
+Sharkoon S1000,Sharkoon,m-atx,No,400,No,45
+DeepCool MACUBE 110,DeepCool,m-atx,No,320,Si,55
+Aerocool Atomic,Aerocool,m-atx,Si,335,No,60
+Fractal Design Pop Mini,Fractal Design,m-atx,No,365,Si,80
+Cooler Master MasterBox MB320L,Cooler Master,m-atx,Si,344,No,65

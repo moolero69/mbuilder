@@ -2234,6 +2234,7 @@ namespace App\Models {
      * @property int $nucleos
      * @property float $frecuencia_turbo
      * @property float $frecuencia_base
+     * @property string $graficos_integrados
      * @property string $socket
      * @property string $marca
      * @property string $nombre
@@ -2242,6 +2243,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereNombre($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereMarca($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereSocket($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereGraficosIntegrados($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereFrecuenciaBase($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereFrecuenciaTurbo($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Procesador>|Procesador whereNucleos($value)
@@ -2876,6 +2878,7 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property float $precio
+     * @property string $refrigeracion_liquida
      * @property int $longitud_maxima_gpu
      * @property string $soporte_RGB
      * @property string $factor_forma
@@ -2888,6 +2891,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre whereFactorForma($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre whereSoporteRgb($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre whereLongitudMaximaGpu($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre whereRefrigeracionLiquida($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre wherePrecio($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Torre>|Torre whereUpdatedAt($value)

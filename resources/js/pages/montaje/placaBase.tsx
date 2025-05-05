@@ -1,6 +1,7 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
 import DialogoSaltarComponente from '@/components/DialogoSaltarComponente';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
+import { TooltipIncopatibilidadComponente } from '@/components/TooltipIncopatibilidad';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
@@ -13,29 +14,81 @@ import { ArrowBigDown, CircuitBoard, Cpu, Euro, Factory, Minus, Move, Plus, Sear
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        titulo: 'Procesador',
-        href: '/montaje/procesador',
-    },
-    {
-        titulo: 'Disipador',
-        href: '/montaje/disipador',
-    },
-    {
-        titulo: 'Placa base',
-        href: '/montaje/placaBase',
-    },
-];
-
 export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase[] }) {
-    const { procesadorGuardado, guardarPlacaBase, editarMontaje, placaBaseGuardada, componenteSaltado, guardarComponenteSaltado } =
-        useProgresoMontaje((state) => state);
+    const {
+        guardarPlacaBase,
+        editarMontaje,
+        componenteSaltado,
+        guardarComponenteSaltado,
+        tipoMontaje,
+        procesadorGuardado,
+        placaBaseGuardada,
+        disipadorGuardado,
+        memoriaRamGuardada,
+        discoDuroGuardado,
+        tarjetaGraficaGuardada,
+        fuenteAlimentacionGuardada,
+        torreGuardada,
+    } = useProgresoMontaje((state) => state);
 
-    const progresoMontaje = !editarMontaje
-        ? ['procesador', 'disipador']
-        : ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
-    const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            titulo: 'Procesador',
+            href: '/montaje/procesador',
+            componente: procesadorGuardado,
+        },
+        {
+            titulo: 'Disipador',
+            href: '/montaje/disipador',
+            componente: disipadorGuardado,
+        },
+        {
+            titulo: 'Placa base',
+            href: '/montaje/placaBase',
+            componente: placaBaseGuardada,
+            activo: true,
+        },
+        {
+            titulo: 'Memoria RAM',
+            href: '/montaje/memoriaRam',
+            componente: memoriaRamGuardada,
+        },
+        {
+            titulo: 'Disco Duro',
+            href: '/montaje/discoDuro',
+            componente: discoDuroGuardado,
+        },
+        {
+            titulo: 'Tarjeta Gráfica',
+            href: '/montaje/tarjetaGrafica',
+            componente: tarjetaGraficaGuardada,
+        },
+        {
+            titulo: 'Fuente de Alimentacion',
+            href: '/montaje/fuenteAlimentacion',
+            componente: fuenteAlimentacionGuardada,
+        },
+        {
+            titulo: 'Torre',
+            href: '/montaje/torre',
+            componente: torreGuardada,
+        },
+    ];
+
+    const progresoMontaje = [
+        'procesador',
+        'disipador',
+        'placaBase',
+        'memoriaRam',
+        'memoriaRamSecundaria',
+        'discoDuro',
+        'discoDuroSecundario',
+        'tarjetaGrafica',
+        'fuenteAlimentacion',
+        'torre',
+    ];
+
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(true);
 
     const [placaBaseSeleccionada, setPlacaBaseSeleccionada] = useState<PlacaBase | null>(placaBaseGuardada!);
     const [placaBaseActiva, setPlacaBaseActiva] = useState<PlacaBase | null>(null);
@@ -86,19 +139,39 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                         </div>
                     </div>
                 ),
-                { duration: 3500 },
+                { duration: 2750 },
             );
 
-        const comprobarCompatibilidad = (placa: PlacaBase) => {
-            const esCompatible = procesadorGuardado?.socket === placa?.socket;
-            setEsCompatible(esCompatible);
+        function filtrarPlacas() {
+            if (!procesadorGuardado) return;
 
-            const placasCompatibles = placasBase.filter((placa) => procesadorGuardado?.socket === placa.socket);
-            setPlacasFiltradas(placasCompatibles);
-        };
+            let consumoMaximo = 0;
 
-        !componenteSaltado && comprobarCompatibilidad(placaBaseGuardada!);
+            if (tipoMontaje === 'eco') {
+                consumoMaximo = 22;
+            } else if (tipoMontaje === 'equilibrado') {
+                consumoMaximo = 26;
+            } else if (tipoMontaje === 'pro') {
+                consumoMaximo = 32;
+            }
+
+            const filtradas = placasBase.filter((placa) => placa.socket === procesadorGuardado.socket && placa.consumo <= consumoMaximo);
+
+            setPlacasFiltradas(filtradas);
+        }
+
+        !componenteSaltado && filtrarPlacas();
     }, []);
+
+    function comprobarCompatibilidad() {
+        if (!procesadorGuardado) return;
+
+        procesadorGuardado.socket != placaBaseSeleccionada?.socket && setEsCompatible(false);
+    }
+
+    useEffect(() => {
+        placaBaseSeleccionada && comprobarCompatibilidad();
+    }, [placaBaseSeleccionada]);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -112,7 +185,7 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
         }
         setPlacaBaseActiva(null);
         setIsDragging(false);
-        setEsCompatible(true);
+        // setEsCompatible(true);
     };
 
     const handleDragStart = (event: any) => {
@@ -191,24 +264,32 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseAsrock[1].id}
-                                                        nombre={placasBaseAsrock[1].nombre}
-                                                        icono={<CircuitBoard />}
-                                                        precio={placasBaseAsrock[1].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseAsrock[2].id}
-                                                        nombre={placasBaseAsrock[2].nombre}
-                                                        icono={<CircuitBoard />}
-                                                        precio={placasBaseAsrock[2].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
+                                                {placasBaseAsrock[1] && (
+                                                    <>
+                                                        <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                            <ItemArrastrable
+                                                                id={placasBaseAsrock[1].id}
+                                                                nombre={placasBaseAsrock[1].nombre}
+                                                                icono={<CircuitBoard />}
+                                                                precio={placasBaseAsrock[1].precio}
+                                                            />
+                                                        </div>
+                                                        <Separator className="border-[1px] border-gray-600" />
+                                                    </>
+                                                )}
+                                                {placasBaseAsrock[2] && (
+                                                    <>
+                                                        <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                            <ItemArrastrable
+                                                                id={placasBaseAsrock[2].id}
+                                                                nombre={placasBaseAsrock[2].nombre}
+                                                                icono={<CircuitBoard />}
+                                                                precio={placasBaseAsrock[2].precio}
+                                                            />
+                                                        </div>
+                                                        <Separator className="border-[1px] border-gray-600" />
+                                                    </>
+                                                )}
                                             </div>
                                         </>
                                     )}
@@ -246,37 +327,48 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                     {!asusDesplegado && (
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseAsus[0].id}
-                                                        nombre={placasBaseAsus[0].nombre}
-                                                        icono={<CircuitBoard />}
-                                                        precio={placasBaseAsus[0].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseAsus[1].id}
-                                                        nombre={placasBaseAsus[1].nombre}
-                                                        icono={<CircuitBoard />}
-                                                        precio={placasBaseAsus[1].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseAsus[2].id}
-                                                        nombre={placasBaseAsus[2].nombre}
-                                                        icono={<CircuitBoard />}
-                                                        precio={placasBaseAsus[2].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
+                                                {placasBaseAsus[0] && (
+                                                    <>
+                                                        <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                            <ItemArrastrable
+                                                                id={placasBaseAsus[0].id}
+                                                                nombre={placasBaseAsus[0].nombre}
+                                                                icono={<CircuitBoard />}
+                                                                precio={placasBaseAsus[0].precio}
+                                                            />
+                                                        </div>
+                                                        <Separator className="border-[1px] border-gray-600" />
+                                                    </>
+                                                )}
+                                                {placasBaseAsus[1] && (
+                                                    <>
+                                                        <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                            <ItemArrastrable
+                                                                id={placasBaseAsus[1].id}
+                                                                nombre={placasBaseAsus[1].nombre}
+                                                                icono={<CircuitBoard />}
+                                                                precio={placasBaseAsus[1].precio}
+                                                            />
+                                                        </div>
+                                                        <Separator className="border-[1px] border-gray-600" />
+                                                    </>
+                                                )}
+                                                {placasBaseAsus[2] && (
+                                                    <>
+                                                        <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                            <ItemArrastrable
+                                                                id={placasBaseAsus[2].id}
+                                                                nombre={placasBaseAsus[2].nombre}
+                                                                icono={<CircuitBoard />}
+                                                                precio={placasBaseAsus[2].precio}
+                                                            />
+                                                        </div>
+                                                        <Separator className="border-[1px] border-gray-600" />
+                                                    </>
+                                                )}
                                             </div>
                                         </>
                                     )}
-
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
                                         {placasBaseAsus.map((placa) => (
                                             <div key={placa.id} className="w-full">
@@ -311,37 +403,48 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                     {!msiDesplegado && (
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseMsi[0].id}
-                                                        nombre={placasBaseMsi[0].nombre}
-                                                        icono={<CircuitBoard />}
-                                                        precio={placasBaseMsi[0].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseMsi[1].id}
-                                                        nombre={placasBaseMsi[1].nombre}
-                                                        icono={<CircuitBoard />}
-                                                        precio={placasBaseMsi[1].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseMsi[2].id}
-                                                        nombre={placasBaseMsi[2].nombre}
-                                                        icono={<CircuitBoard />}
-                                                        precio={placasBaseMsi[2].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
+                                                {placasBaseMsi[0] && (
+                                                    <>
+                                                        <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                            <ItemArrastrable
+                                                                id={placasBaseMsi[0].id}
+                                                                nombre={placasBaseMsi[0].nombre}
+                                                                icono={<CircuitBoard />}
+                                                                precio={placasBaseMsi[0].precio}
+                                                            />
+                                                        </div>
+                                                        <Separator className="border-[1px] border-gray-600" />
+                                                    </>
+                                                )}
+                                                {placasBaseMsi[1] && (
+                                                    <>
+                                                        <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                            <ItemArrastrable
+                                                                id={placasBaseMsi[1].id}
+                                                                nombre={placasBaseMsi[1].nombre}
+                                                                icono={<CircuitBoard />}
+                                                                precio={placasBaseMsi[1].precio}
+                                                            />
+                                                        </div>
+                                                        <Separator className="border-[1px] border-gray-600" />
+                                                    </>
+                                                )}
+                                                {placasBaseMsi[2] && (
+                                                    <>
+                                                        <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                            <ItemArrastrable
+                                                                id={placasBaseMsi[2].id}
+                                                                nombre={placasBaseMsi[2].nombre}
+                                                                icono={<CircuitBoard />}
+                                                                precio={placasBaseMsi[2].precio}
+                                                            />
+                                                        </div>
+                                                        <Separator className="border-[1px] border-gray-600" />
+                                                    </>
+                                                )}
                                             </div>
                                         </>
                                     )}
-
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
                                         {placasBaseMsi.map((placa) => (
                                             <div key={placa.id} className="w-full">
@@ -376,37 +479,35 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                     {!gigabyteDesplegado && (
                                         <>
                                             <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseGigabyte[0].id}
-                                                        nombre={placasBaseGigabyte[0].nombre}
-                                                        icono={<CircuitBoard />}
-                                                        precio={placasBaseGigabyte[0].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseGigabyte[1].id}
-                                                        nombre={placasBaseGigabyte[1].nombre}
-                                                        icono={<CircuitBoard />}
-                                                        precio={placasBaseGigabyte[1].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={placasBaseGigabyte[2].id}
-                                                        nombre={placasBaseGigabyte[2].nombre}
-                                                        icono={<CircuitBoard />}
-                                                        precio={placasBaseGigabyte[2].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
+                                                {placasBaseGigabyte[0] && (
+                                                    <>
+                                                        <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                            <ItemArrastrable
+                                                                id={placasBaseGigabyte[0].id}
+                                                                nombre={placasBaseGigabyte[0].nombre}
+                                                                icono={<CircuitBoard />}
+                                                                precio={placasBaseGigabyte[0].precio}
+                                                            />
+                                                        </div>
+                                                        <Separator className="border-[1px] border-gray-600" />
+                                                    </>
+                                                )}
+                                                {placasBaseGigabyte[1] && (
+                                                    <>
+                                                        <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                            <ItemArrastrable
+                                                                id={placasBaseGigabyte[1].id}
+                                                                nombre={placasBaseGigabyte[1].nombre}
+                                                                icono={<CircuitBoard />}
+                                                                precio={placasBaseGigabyte[1].precio}
+                                                            />
+                                                        </div>
+                                                        <Separator className="border-[1px] border-gray-600" />
+                                                    </>
+                                                )}
                                             </div>
                                         </>
                                     )}
-
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
                                         {placasBaseGigabyte.map((placa) => (
                                             <div key={placa.id} className="w-full">
@@ -423,6 +524,11 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                         ))}
                                     </CollapsibleContent>
                                 </Collapsible>
+                            )}
+                            {!placasBaseAsrock && !placasBaseAsus && !placasBaseMsi && !placasBaseGigabyte && (
+                                <div className="flex h-full w-full items-center justify-center">
+                                    No se ha encontrado ninguna placa base que coincida con tu búsqueda.
+                                </div>
                             )}
                         </div>
                     }
@@ -445,7 +551,13 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${placaBaseActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem botonEliminar={() => setPlacaBaseSeleccionada(null)} mostrarBoton={Boolean(placaBaseSeleccionada)}>
+                                <AreaSoltarItem
+                                    botonEliminar={() => {
+                                        setPlacaBaseSeleccionada(null);
+                                        guardarPlacaBase!(null);
+                                    }}
+                                    mostrarBoton={Boolean(placaBaseSeleccionada)}
+                                >
                                     {!placaBaseActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {placaBaseSeleccionada?.nombre}
@@ -545,15 +657,20 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                             <Link href={route('montaje.memoriaRam')}>Siguiente</Link>
                                         </Button>
                                     ) : (
-                                        <Button
-                                            variant={'outline'}
-                                            className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${placaBaseActiva && 'hidden'} disabled hover:cursor-no-drop`}
-                                            onClick={() => {
-                                                guardarPlacaBase!(placaBaseSeleccionada);
-                                            }}
-                                        >
-                                            <h1>Incompatible</h1>
-                                        </Button>
+                                        <>
+                                            <div className="flex items-center justify-center gap-4">
+                                                <Button
+                                                    variant={'outline'}
+                                                    className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${placaBaseActiva && 'hidden'} disabled hover:cursor-no-drop`}
+                                                    onClick={() => {
+                                                        guardarPlacaBase!(placaBaseSeleccionada);
+                                                    }}
+                                                >
+                                                    <h1>Incompatible</h1>
+                                                </Button>
+                                                <TooltipIncopatibilidadComponente mensaje="El socket de la placa escogida no es compatible con el del procesador escogido." />
+                                            </div>
+                                        </>
                                     )}
                                 </>
                             )}

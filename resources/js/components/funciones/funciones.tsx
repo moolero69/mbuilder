@@ -1,7 +1,19 @@
-import { useProgresoMontaje } from "@/hooks/useProgresoMontaje";
+import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 
-export function limpiarComponentes(){
-    const {guardarProcesador, guardarPlacaBase, guardarMemoriaRam, guardarMemoriaRamSecundaria, guardarDiscoDuro, guardarDiscoDuroSecundario, guardarTarjetaGrafica, guardarFuenteAlimentacion, guardarTorre} = useProgresoMontaje((state) => state);
+export function limpiarComponentes() {
+    const {
+        guardarProcesador,
+        guardarPlacaBase,
+        guardarMemoriaRam,
+        guardarMemoriaRamSecundaria,
+        guardarDiscoDuro,
+        guardarDiscoDuroSecundario,
+        guardarTarjetaGrafica,
+        guardarFuenteAlimentacion,
+        guardarTorre,
+        guardarTipoMontaje,
+        guardarEditarMontaje,
+    } = useProgresoMontaje((state) => state);
 
     guardarProcesador!(null);
     guardarPlacaBase!(null);
@@ -12,4 +24,7 @@ export function limpiarComponentes(){
     guardarTarjetaGrafica!(null);
     guardarFuenteAlimentacion!(null);
     guardarTorre!(null);
+    guardarTipoMontaje!(null);
+    guardarEditarMontaje!(false);
+    sessionStorage.clear();
 }

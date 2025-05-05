@@ -3,25 +3,23 @@ import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import { DatosCompartidos } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import React from 'react';
+import { limpiarComponentes } from './funciones/funciones';
 import { Button } from './ui/button';
 import UsuarioHeader from './usuario-header';
-import { limpiarComponentes } from './funciones/funciones';
 
 const Header: React.FC = () => {
     const page = usePage<DatosCompartidos>();
     const { auth } = page.props;
-    const { editarMontaje, guardarEditarMontaje } = useProgresoMontaje((state) => state);
     return (
         <>
             <Toaster position="bottom-center" />
-            <header className="sticky top-0 z-50 flex h-[120px] w-full items-center justify-between border-b-3 bg-gradient-to-r from-[#0d0d0d] via-[#131313] to-[#0d0d0d] px-6 py-4 colores-borde">
+            <header className="colores-borde sticky top-0 z-50 flex h-[120px] w-full items-center justify-between border-b-3 bg-gradient-to-r from-[#0d0d0d] via-[#131313] to-[#0d0d0d] px-6 py-4">
                 <div className="relative z-10 flex items-center gap-4 px-5">
                     <img src="/img/logo-64px.png" alt="logo mbuilder" className="rounded-sm bg-white shadow-md" />
                     <Link
                         href={route('home')}
                         onClick={() => {
-                            guardarEditarMontaje!(false);
-                            sessionStorage.clear();
+                            sessionStorage.clear()
                             limpiarComponentes();
                         }}
                     >
@@ -41,7 +39,12 @@ const Header: React.FC = () => {
                     <ul className="flex items-center space-x-6">
                         {auth.user ? (
                             <div className="flex items-center gap-5 px-2 py-1">
-                                <Button variant={'link'} className="text-[var(--verde-neon)] hover:text-white" asChild>
+                                <Button
+                                    variant={'link'}
+                                    className="text-[var(--verde-neon)] hover:text-white"
+                                    onClick={() => {limpiarComponentes()}}
+                                    asChild
+                                >
                                     <Link href={route('usuario.montajes')}>Mis montajes</Link>
                                 </Button>
                                 <UsuarioHeader />

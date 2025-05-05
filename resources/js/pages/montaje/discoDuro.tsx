@@ -1,6 +1,7 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
 import DialogoSaltarComponente from '@/components/DialogoSaltarComponente';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
+import { TooltipIncopatibilidadComponente } from '@/components/TooltipIncopatibilidad';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
@@ -8,43 +9,88 @@ import MontajeLayout from '@/layouts/app/montaje-layout';
 import { BreadcrumbItem, DiscoDuro } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ArrowBigDown, Box, CircuitBoard, Euro, Factory, Gauge, Microchip, Minus, Move, Plus, Search, Wrench } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        titulo: 'Procesador',
-        href: '/montaje/procesador',
-    },
-    {
-        titulo: 'Disipador',
-        href: '/montaje/disipador',
-    },
-    {
-        titulo: 'Placa base',
-        href: '/montaje/placaBase',
-    },
-    {
-        titulo: 'Memoria Ram',
-        href: '/montaje/memoriaRam',
-    },
-    {
-        titulo: 'Disco Duro',
-        href: '/montaje/discoDuro',
-    },
-];
-
 export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDuro[] }) {
-    const { procesadorGuardado, guardarDiscoDuro, guardarDiscoDuroSecundario, editarMontaje, discoDuroGuardado, componenteSaltado, guardarComponenteSaltado } =
-        useProgresoMontaje((state) => state);
-    const progresoMontaje = !editarMontaje
-        ? ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria']
-        : ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
+    const {
+        guardarDiscoDuro,
+        guardarDiscoDuroSecundario,
+        editarMontaje,
+        componenteSaltado,
+        guardarComponenteSaltado,
+        tipoMontaje,
+        procesadorGuardado,
+        placaBaseGuardada,
+        disipadorGuardado,
+        memoriaRamGuardada,
+        discoDuroGuardado,
+        tarjetaGraficaGuardada,
+        fuenteAlimentacionGuardada,
+        torreGuardada,
+    } = useProgresoMontaje((state) => state);
 
-    const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            titulo: 'Procesador',
+            href: '/montaje/procesador',
+            componente: procesadorGuardado,
+        },
+        {
+            titulo: 'Disipador',
+            href: '/montaje/disipador',
+            componente: disipadorGuardado,
+        },
+        {
+            titulo: 'Placa base',
+            href: '/montaje/placaBase',
+            componente: placaBaseGuardada,
+        },
+        {
+            titulo: 'Memoria RAM',
+            href: '/montaje/memoriaRam',
+            componente: memoriaRamGuardada,
+        },
+        {
+            titulo: 'Disco Duro',
+            href: '/montaje/discoDuro',
+            componente: discoDuroGuardado,
+            activo: true,
+        },
+        {
+            titulo: 'Tarjeta Gráfica',
+            href: '/montaje/tarjetaGrafica',
+            componente: tarjetaGraficaGuardada,
+        },
+        {
+            titulo: 'Fuente de Alimentacion',
+            href: '/montaje/fuenteAlimentacion',
+            componente: fuenteAlimentacionGuardada,
+        },
+        {
+            titulo: 'Torre',
+            href: '/montaje/torre',
+            componente: torreGuardada,
+        },
+    ];
+
+    const progresoMontaje = [
+        'procesador',
+        'disipador',
+        'placaBase',
+        'memoriaRam',
+        'memoriaRamSecundaria',
+        'discoDuro',
+        'discoDuroSecundario',
+        'tarjetaGrafica',
+        'fuenteAlimentacion',
+        'torre',
+    ];
+
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(true);
 
     const [discoSeleccionado, setDiscoSeleccionado] = useState<DiscoDuro | null>(discoDuroGuardado!);
     const [modoSeleccionarIgual, setModoSeleccionarIgual] = useState<boolean>(false);
@@ -110,29 +156,57 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                         </div>
                     </div>
                 ),
-                { duration: 3500 },
+                { duration: 2750 },
             );
 
-        const comprobarCompatibilidad = (disco: DiscoDuro) => {
-            const conexionesPorSocket: Record<string, string[]> = {
-                AM5: ['M.2', 'SATA'],
-                LGA1700: ['M.2', 'SATA'],
-                AM4: ['SATA'],
-                LGA1200: ['SATA'],
-            };
+        function filtrarDiscos() {
+            const tieneM2 = placaBaseGuardada!.puertos_m2 > 0;
+            const tieneSATA = placaBaseGuardada!.puertos_sata > 0;
 
-            const socket = procesadorGuardado?.socket || '';
-            const conexionesValidas = conexionesPorSocket[socket] || [];
+            const discosCompatibles = discosDuros.filter((d) => {
+                const esM2 = d.conexion === 'M.2';
+                const esSATA = d.conexion === 'SATA';
 
-            const discosCompatibles = discosDuros.filter((disco) => conexionesValidas.includes(disco.conexion));
-            const compatible = conexionesValidas.includes(disco?.conexion);
+                const conexionCompatible = (tieneM2 && esM2) || (tieneSATA && esSATA) || (tieneM2 && tieneSATA);
 
-            setEsCompatible(compatible);
+                return conexionCompatible;
+            });
+
             setDiscosFiltrados(discosCompatibles);
-        };
+        }
 
-        !componenteSaltado && comprobarCompatibilidad(discoDuroGuardado!);
+        !componenteSaltado && filtrarDiscos();
     }, []);
+
+    function comprobarCompatibilidad() {
+        if (!placaBaseGuardada || !discoDuroGuardado || !discoSeleccionado) return;
+
+        const sataPlaca = placaBaseGuardada.puertos_sata;
+        const m2Placa = placaBaseGuardada.puertos_m2;
+
+        const discos = modoSeleccionarOtro ? [discoDuroGuardado, discoSeleccionado] : [discoSeleccionado];
+
+        let numeroSata = discos.filter((d) => d.conexion === 'SATA').length;
+        let numeroM2 = discos.filter((d) => d.conexion === 'M.2').length;
+
+        if (modoSeleccionarIgual) {
+            numeroSata = numeroSata * 2;
+            numeroM2 = numeroM2 * 2;
+        }
+
+        const incompatibilidadSata = numeroSata > sataPlaca;
+        const incompatibilidadM2 = numeroM2 > m2Placa;
+
+        incompatibilidadSata || incompatibilidadM2 ? setEsCompatible(false) : setEsCompatible(true);
+    }
+
+    useEffect(() => {
+        if (modoSeleccionarIgual) {
+            comprobarCompatibilidad();
+        } else if (modoSeleccionarOtro && discoSeleccionado) {
+            comprobarCompatibilidad();
+        }
+    }, [modoSeleccionarIgual, modoSeleccionarOtro, discoSeleccionado]);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -141,12 +215,10 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
             const item = discosDuros.find((p) => p.id === active.id);
             if (item) {
                 setDiscoSeleccionado(item);
-                // guardarDiscoDuro!(item);
             }
         }
         setDiscoActivo(null);
         setIsDragging(false);
-        setEsCompatible(true);
     };
 
     const handleDragStart = (event: any) => {
@@ -172,6 +244,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
         setToshibaDesplegado(false);
         setWdDesplegado(false);
     };
+
     return (
         <>
             <Head title="montaje - disco duro" />
@@ -550,6 +623,11 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                     </CollapsibleContent>
                                 </Collapsible>
                             )}
+                            {!discosKingston && !discosCrucial && !discosSamsung && !discosSeagate && !discosToshiba && !discosWd && (
+                                <div className="flex h-full w-full items-center justify-center">
+                                    No se ha encontrado ningún disco que coincida con tu búsqueda.
+                                </div>
+                            )}
                         </div>
                     }
                     main={
@@ -571,7 +649,15 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${discoActivo && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem botonEliminar={() => setDiscoSeleccionado(null)} mostrarBoton={Boolean(discoSeleccionado)}>
+                                <AreaSoltarItem
+                                    botonEliminar={() => {
+                                        setDiscoSeleccionado(null);
+                                        setModoSeleccionarIgual(false);
+                                        setModoSeleccionarOtra(false);
+                                        guardarDiscoDuro!(null);
+                                    }}
+                                    mostrarBoton={Boolean(discoSeleccionado)}
+                                >
                                     {!discoActivo && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {discoSeleccionado?.nombre}
@@ -672,7 +758,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                                 <DropdownMenu.Trigger asChild>
                                                     <Button
                                                         variant={'outline'}
-                                                        className="fade-in relative rounded-lg border-[var(--azul-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--azul-neon)] shadow-[0_0_10px_var(--azul-neon)] transition-all duration-500 hover:bg-[var(--azul-neon)] hover:text-black hover:shadow-[0_0_20px_var(--azul-neon)]"
+                                                        className={`fade-in relative rounded-lg border-[var(--azul-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--azul-neon)] shadow-[0_0_10px_var(--azul-neon)] transition-all duration-500 hover:bg-[var(--azul-neon)] hover:text-black hover:shadow-[0_0_20px_var(--azul-neon)] ${discoActivo && 'hidden'}`}
                                                     >
                                                         Añadir disco extra
                                                     </Button>
@@ -727,15 +813,20 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                                 <Link href={route('montaje.tarjetaGrafica')}>Siguiente</Link>
                                             </Button>
                                         ) : (
-                                            <Button
-                                                variant={'outline'}
-                                                className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${discoActivo && 'hidden'} disabled hover:cursor-no-drop`}
-                                                onClick={() => {
-                                                    guardarDiscoDuro!(discoSeleccionado);
-                                                }}
-                                            >
-                                                <h1>Incompatible</h1>
-                                            </Button>
+                                            <>
+                                                <div className="flex items-center justify-center gap-4">
+                                                    <Button
+                                                        variant={'outline'}
+                                                        className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${discoActivo && 'hidden'} disabled hover:cursor-no-drop`}
+                                                        onClick={() => {
+                                                            guardarDiscoDuro!(discoSeleccionado);
+                                                        }}
+                                                    >
+                                                        <h1>Incompatible</h1>
+                                                    </Button>
+                                                    <TooltipIncopatibilidadComponente mensaje="El número de discos escogidos es mayor del que soporta la placa seleccionada." />
+                                                </div>
+                                            </>
                                         )}
                                     </div>
                                 </>

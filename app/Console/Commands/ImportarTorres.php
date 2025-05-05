@@ -32,6 +32,7 @@ class ImportarTorres extends Command
                 'factor_forma' => $fila['Factor Forma'],
                 'soporte_RGB' => $fila['Soporte RGB'],
                 'longitud_maxima_gpu' => $fila['Longitud GPU'],
+                'refrigeracion_liquida' => $fila['Refrigeracion Liquida'],
                 'precio' => $fila['Precio'],
             ]);
         }

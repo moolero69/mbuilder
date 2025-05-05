@@ -1,6 +1,7 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
 import DialogoSaltarComponente from '@/components/DialogoSaltarComponente';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
+import { TooltipIncopatibilidadComponente } from '@/components/TooltipIncopatibilidad';
 import { Button } from '@/components/ui/button';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import MontajeLayout from '@/layouts/app/montaje-layout';
@@ -13,46 +14,85 @@ import { ArrowBigDown, Euro, Factory, MemoryStick, Minus, Move, Plus, Search, Wa
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        titulo: 'Procesador',
-        href: '/montaje/procesador',
-    },
-    {
-        titulo: 'Disipador',
-        href: '/montaje/disipador',
-    },
-];
-
 export default function MontajeDisipador({ disipadores }: { disipadores: Disipador[] }) {
     const {
-        procesadorGuardado,
-        disipadorGuardado,
-        guardarPlacaBase,
         editarMontaje,
-        placaBaseGuardada,
-        componenteSaltado,
         guardarComponenteSaltado,
         guardarDisipador,
+        tipoMontaje,
+        componenteSaltado,
+        procesadorGuardado,
+        placaBaseGuardada,
+        disipadorGuardado,
+        memoriaRamGuardada,
+        discoDuroGuardado,
+        tarjetaGraficaGuardada,
+        fuenteAlimentacionGuardada,
+        torreGuardada,
     } = useProgresoMontaje((state) => state);
-    const progresoMontaje = !editarMontaje
-        ? ['procesador']
-        : [
-              'procesador',
-              'placaBase',
-              'memoriaRam',
-              'memoriaRamSecundaria',
-              'discoDuro',
-              'discoDuroSecundario',
-              'tarjetaGrafica',
-              'fuenteAlimentacion',
-              'torre',
-              'disipador',
-          ];
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            titulo: 'Procesador',
+            href: '/montaje/procesador',
+            componente: procesadorGuardado,
+        },
+        {
+            titulo: 'Disipador',
+            href: '/montaje/disipador',
+            componente: disipadorGuardado,
+            activo: true,
+        },
+        {
+            titulo: 'Placa base',
+            href: '/montaje/placaBase',
+            componente: placaBaseGuardada,
+        },
+        {
+            titulo: 'Memoria RAM',
+            href: '/montaje/memoriaRam',
+            componente: memoriaRamGuardada,
+        },
+        {
+            titulo: 'Disco Duro',
+            href: '/montaje/discoDuro',
+            componente: discoDuroGuardado,
+        },
+        {
+            titulo: 'Tarjeta Gráfica',
+            href: '/montaje/tarjetaGrafica',
+            componente: tarjetaGraficaGuardada,
+        },
+        {
+            titulo: 'Fuente de Alimentacion',
+            href: '/montaje/fuenteAlimentacion',
+            componente: fuenteAlimentacionGuardada,
+        },
+        {
+            titulo: 'Torre',
+            href: '/montaje/torre',
+            componente: torreGuardada,
+        },
+    ];
+
+    const progresoMontaje = [
+        'procesador',
+        'placaBase',
+        'memoriaRam',
+        'memoriaRamSecundaria',
+        'discoDuro',
+        'discoDuroSecundario',
+        'tarjetaGrafica',
+        'fuenteAlimentacion',
+        'torre',
+        'disipador',
+    ];
 
     const [disipadorSeleccionado, setDisipadorSeleccionado] = useState<Disipador | null>(disipadorGuardado!);
     const [disipadorActivo, setDisipadorActivo] = useState<Disipador | null>(null);
     const [isDragging, setIsDragging] = useState(false);
+
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(true);
 
     const [corsairDesplegado, setCorsairDesplegado] = useState(false);
     const [beQuietDesplegado, setBeQuietDesplegado] = useState(false);
@@ -64,28 +104,30 @@ export default function MontajeDisipador({ disipadores }: { disipadores: Disipad
 
     const [mostrarDialogoSaltarComponente, setMostrarDialogoSaltarComponente] = useState(false);
 
+    const [disipadoresFiltrados, setDisipadoresFiltrados] = useState<Disipador[]>(disipadores);
+
     const disipadoresCorsair = (() => {
-        const p = disipadores.filter((d) => d.marca === 'Corsair' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const p = disipadoresFiltrados.filter((d) => d.marca === 'Corsair' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return p.length ? p : null;
     })();
 
     const disipadoresBeQuiet = (() => {
-        const p = disipadores.filter((d) => d.marca === 'be quiet!' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const p = disipadoresFiltrados.filter((d) => d.marca === 'be quiet!' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return p.length ? p : null;
     })();
 
     const disipadoresCoolerMaster = (() => {
-        const p = disipadores.filter((d) => d.marca === 'Cooler Master' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const p = disipadoresFiltrados.filter((d) => d.marca === 'Cooler Master' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return p.length ? p : null;
     })();
 
     const disipadoresDeepCool = (() => {
-        const p = disipadores.filter((d) => d.marca === 'Deepcool' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const p = disipadoresFiltrados.filter((d) => d.marca === 'Deepcool' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return p.length ? p : null;
     })();
 
     const disipadoresNzxt = (() => {
-        const p = disipadores.filter((d) => d.marca === 'NZXT' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        const p = disipadoresFiltrados.filter((d) => d.marca === 'NZXT' && d.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return p.length ? p : null;
     })();
 
@@ -103,9 +145,43 @@ export default function MontajeDisipador({ disipadores }: { disipadores: Disipad
                         </div>
                     </div>
                 ),
-                { duration: 3500 },
+                { duration: 2750 },
             );
+
+        function filtrarDisipadores() {
+            let consumoMax = 0;
+
+            if (tipoMontaje === 'eco') {
+                consumoMax = 180;
+            } else if (tipoMontaje === 'equilibrado') {
+                consumoMax = 250;
+            } else if (tipoMontaje === 'pro') {
+                consumoMax = 300;
+            }
+
+            const filtrados = disipadores.filter((d) => {
+                const socketsCompatibles = d.socket.split(',');
+                return d.consumo <= consumoMax && socketsCompatibles.includes(procesadorGuardado!.socket);
+            });
+
+            setDisipadoresFiltrados(filtrados);
+        }
+
+        !componenteSaltado && filtrarDisipadores();
     }, []);
+
+    function comprobarCompatibilidad() {
+        if (!procesadorGuardado) return;
+
+        const socketsCompatibles = disipadorSeleccionado?.socket.split(',');
+        const esCompatible = socketsCompatibles.includes(procesadorGuardado.socket);
+
+        setEsCompatible(esCompatible);
+    }
+
+    useEffect(() => {
+        disipadorSeleccionado && comprobarCompatibilidad();
+    }, [disipadorSeleccionado]);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -443,6 +519,11 @@ export default function MontajeDisipador({ disipadores }: { disipadores: Disipad
                                     </CollapsibleContent>
                                 </Collapsible>
                             )}
+                            {!disipadoresCorsair && !disipadoresBeQuiet && !disipadoresCoolerMaster && !disipadoresDeepCool && !disipadoresNzxt && (
+                                <div className="flex h-full w-full items-center justify-center">
+                                    No se ha encontrado ningún disipador que coincida con tu búsqueda.
+                                </div>
+                            )}
                         </div>
                     }
                     main={
@@ -464,7 +545,13 @@ export default function MontajeDisipador({ disipadores }: { disipadores: Disipad
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${disipadorActivo && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem botonEliminar={() => setDisipadorSeleccionado(null)} mostrarBoton={Boolean(disipadorSeleccionado)}>
+                                <AreaSoltarItem
+                                    botonEliminar={() => {
+                                        setDisipadorSeleccionado(null);
+                                        guardarDisipador!(null);
+                                    }}
+                                    mostrarBoton={Boolean(disipadorSeleccionado)}
+                                >
                                     {!disipadorActivo && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {disipadorSeleccionado?.nombre}
@@ -519,9 +606,9 @@ export default function MontajeDisipador({ disipadores }: { disipadores: Disipad
                                             <MemoryStick size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                                    Sockets soportados
+                                                    Sockets válidos
                                                 </h2>
-                                                <p className="text-sm text-gray-300">{disipadorSeleccionado.socket}</p>
+                                                <p className="text-sm text-gray-300">{disipadorSeleccionado.socket.replace(/,/g, ' | ')}</p>
                                             </div>
                                         </div>
                                         <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
@@ -552,17 +639,33 @@ export default function MontajeDisipador({ disipadores }: { disipadores: Disipad
                                             </div>
                                         </div>
                                     </div>
-                                    <Button
-                                        variant="outline"
-                                        className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${disipadorActivo && 'hidden'}`}
-                                        onClick={() => {
-                                            guardarDisipador!(disipadorSeleccionado);
-                                            guardarComponenteSaltado!(false);
-                                        }}
-                                        asChild
-                                    >
-                                        <Link href={route('montaje.placaBase')}>Siguiente</Link>
-                                    </Button>
+                                    {esCompatible ? (
+                                        <Button
+                                            variant={'outline'}
+                                            className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${disipadorActivo && 'hidden'}`}
+                                            onClick={() => {
+                                                guardarDisipador!(disipadorSeleccionado);
+                                            }}
+                                            asChild
+                                        >
+                                            <Link href={route('montaje.placaBase')}>Siguiente</Link>
+                                        </Button>
+                                    ) : (
+                                        <>
+                                            <div className="flex items-center justify-center gap-4">
+                                                <Button
+                                                    variant={'outline'}
+                                                    className={`fade-in rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${disipadorActivo && 'hidden'} disabled hover:cursor-no-drop`}
+                                                    onClick={() => {
+                                                        guardarDisipador!(disipadorSeleccionado);
+                                                    }}
+                                                >
+                                                    <h1>Incompatible</h1>
+                                                </Button>
+                                                <TooltipIncopatibilidadComponente mensaje="El socket del procesador no coincide con el de la placa escogida." />
+                                            </div>
+                                        </>
+                                    )}
                                 </>
                             )}
                         </div>

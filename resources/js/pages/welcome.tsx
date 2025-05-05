@@ -27,7 +27,7 @@ export default function Welcome() {
                         Descubre la mejor combinación de componentes para optimizar rendimiento, compatibilidad y eficiencia.
                     </p>
                     <Button className="mt-6 rounded-3xl bg-[var(--verde-neon)] p-8 py-3 font-bold text-black" asChild onClick={() => limpiarComponentes()}>
-                        <Link href={route('montaje.procesador')}>Vamos</Link>
+                        <Link href={route('montaje.tipo')}>Vamos</Link>
                     </Button>
 
                     <section className="grid grid-cols-1 gap-6 px-6 py-12 text-center md:grid-cols-3">

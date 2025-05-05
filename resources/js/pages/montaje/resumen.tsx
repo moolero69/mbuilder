@@ -30,6 +30,7 @@ export default function ResumenMontaje() {
         fuenteAlimentacionGuardada,
         torreGuardada,
         disipadorGuardado,
+        tipoMontaje
     } = useProgresoMontaje((state) => state);
 
     const { data, setData, post } = useForm<MontajeForm>({
@@ -82,6 +83,7 @@ export default function ResumenMontaje() {
         precio: precioTotal,
         consumo: consumoTotal,
         nombre: data.nombre,
+        tipo_montaje: tipoMontaje
     };
 
     const construirJsonMontaje = () => {

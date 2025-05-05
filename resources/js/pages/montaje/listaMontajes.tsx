@@ -1,5 +1,7 @@
 import Header from '@/components/header-principal';
+import TooltipIncopatibilidadMonatje from '@/components/TooltipIncopatibilidad';
 import TooltipIncopatibilidad from '@/components/TooltipIncopatibilidad';
+import TooltipTipoMontaje from '@/components/TooltipTipoMontaje';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
@@ -29,6 +31,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         guardarEditarMontaje,
         guardarMontajeAnterior,
         guardarDisipador,
+        guardarTipoMontaje,
     } = useProgresoMontaje((state) => state);
 
     function editarMontaje() {
@@ -42,6 +45,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         const tarjetaGrafica = componenteSeleccionado!.tarjeta_grafica;
         const fuenteAlimentacion = componenteSeleccionado!.fuente_alimentacion;
         const torre = componenteSeleccionado!.torre;
+        const tipo_montaje = componenteSeleccionado!.otros!.tipo_montaje;
 
         guardarProcesador!(procesador);
         guardarDisipador!(disipador);
@@ -54,6 +58,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         guardarFuenteAlimentacion!(fuenteAlimentacion);
         guardarTorre!(torre);
         guardarEditarMontaje!(true);
+        guardarTipoMontaje!(tipo_montaje);
     }
 
     useEffect(() => {
@@ -115,13 +120,18 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                 return (
                                     <div
                                         key={montaje.id}
-                                        className="colores-borde-glow rounded-xl bg-gradient-to-b from-black to-[#0d0d0d] p-5 transition-all duration-300 hover:scale-[1.02]"
+                                        className="colores-borde-glow rounded-xl bg-gradient-to-b from-black to-[#0d0d0d] p-5 transition-all duration-300 "
                                     >
                                         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-between">
-                                            <h2 className="mb-3 font-['Orbitron'] text-2xl font-bold text-[var(--naranja-neon)] drop-shadow-[0_0_5px_var(--naranja-neon)]">
-                                                {montaje.nombre}
-                                            </h2>
-                                            {componenteFaltante && <TooltipIncopatibilidad mensaje="Posible incopatibilidad entre componentes" />}
+                                            <div className='flex gap-3 justify-center items-center '>
+                                                <h2 className="mb-3 font-['Orbitron'] text-2xl font-bold text-[var(--naranja-neon)] drop-shadow-[0_0_5px_var(--naranja-neon)]">
+                                                    {montaje.nombre}
+                                                </h2>
+                                                {datos.otros?.tipo_montaje === 'eco' && <TooltipTipoMontaje tipo="eco" />}
+                                                {datos.otros?.tipo_montaje === 'equilibrado' && <TooltipTipoMontaje tipo="equilibrado" />}
+                                                {datos.otros?.tipo_montaje === 'pro' && <TooltipTipoMontaje tipo="pro" />}
+                                            </div>
+                                            {componenteFaltante && <TooltipIncopatibilidadMonatje mensaje="Posible incopatibilidad entre componentes" />}
                                         </div>
 
                                         <p className="mb-4 text-sm text-gray-400">Creado el {new Date(montaje.created_at).toLocaleDateString()}</p>

@@ -22,6 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
+    Route::get('montaje/tipo-montaje', function () {return Inertia::render('montaje/tipoMontaje');})->name('montaje.tipo');
     Route::get('montaje/procesador', MontajeProcesadorController::class)->name('montaje.procesador');
     Route::get('montaje/disipador', MontajeDisipadorController::class)->name('montaje.disipador');
     Route::get('montaje/placaBase', MontajePlacaBaseController::class)->name('montaje.placaBase');

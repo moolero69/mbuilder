@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('marca');
             $table->string('socket');
+            $table->string('graficos_integrados');
             $table->decimal('frecuencia_base', 3, 1);
             $table->decimal('frecuencia_turbo', 3, 1);
             $table->integer('nucleos');

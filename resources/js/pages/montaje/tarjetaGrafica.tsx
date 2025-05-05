@@ -1,6 +1,8 @@
 import { AreaSoltarItem } from '@/components/AreaSoltarItem';
+import AvisoComponente from '@/components/avisoComponente';
 import DialogoSaltarComponente from '@/components/DialogoSaltarComponente';
 import { ItemArrastrable } from '@/components/ItemArrastrable';
+import { TooltipIncopatibilidadComponente } from '@/components/TooltipIncopatibilidad';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
@@ -9,59 +11,86 @@ import { BreadcrumbItem, TarjetaGrafica } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import {
-    ArrowBigDown,
-    CircuitBoard,
-    Euro,
-    Factory,
-    Gamepad2,
-    MemoryStick,
-    Microchip,
-    Minus,
-    Move,
-    Plus,
-    Search,
-    ShieldAlert,
-    Wrench,
-    Zap,
-} from 'lucide-react';
+import { ArrowBigDown, CircuitBoard, Euro, Factory, Gamepad2, MemoryStick, Microchip, Minus, Move, Plus, Search, Wrench, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        titulo: 'Procesador',
-        href: '/montaje/procesador',
-    },
-    {
-        titulo: 'Disipador',
-        href: '/montaje/disipador',
-    },
-    {
-        titulo: 'Placa base',
-        href: '/montaje/placaBase',
-    },
-    {
-        titulo: 'Memoria Ram',
-        href: '/montaje/memoriaRam',
-    },
-    {
-        titulo: 'Disco Duro',
-        href: '/montaje/discoDuro',
-    },
-    {
-        titulo: 'Tarjeta Gráfica',
-        href: '/montaje/tarjetaGrafica',
-    },
-];
-
 export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGraficas: TarjetaGrafica[] }) {
-    const { procesadorGuardado, guardarTarjetaGrafica, editarMontaje, tarjetaGraficaGuardada, componenteSaltado, guardarComponenteSaltado } =
-        useProgresoMontaje((state) => state);
-    const progresoMontaje = !editarMontaje
-        ? ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario',]
-        : ['procesador', 'disipador', 'placaBase', 'memoriaRam', 'memoriaRamSecundaria', 'discoDuro', 'discoDuroSecundario', 'tarjetaGrafica', 'fuenteAlimentacion', 'torre'];
-    const [esCompatible, setEsCompatible] = useState<boolean | null>(null);
+    const {
+        guardarTarjetaGrafica,
+        editarMontaje,
+        componenteSaltado,
+        guardarComponenteSaltado,
+        tipoMontaje,
+        procesadorGuardado,
+        placaBaseGuardada,
+        disipadorGuardado,
+        memoriaRamGuardada,
+        discoDuroGuardado,
+        tarjetaGraficaGuardada,
+        fuenteAlimentacionGuardada,
+        torreGuardada,
+    } = useProgresoMontaje((state) => state);
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            titulo: 'Procesador',
+            href: '/montaje/procesador',
+            componente: procesadorGuardado,
+        },
+        {
+            titulo: 'Disipador',
+            href: '/montaje/disipador',
+            componente: disipadorGuardado,
+        },
+        {
+            titulo: 'Placa base',
+            href: '/montaje/placaBase',
+            componente: placaBaseGuardada,
+        },
+        {
+            titulo: 'Memoria RAM',
+            href: '/montaje/memoriaRam',
+            componente: memoriaRamGuardada,
+        },
+        {
+            titulo: 'Disco Duro',
+            href: '/montaje/discoDuro',
+            componente: discoDuroGuardado,
+        },
+        {
+            titulo: 'Tarjeta Gráfica',
+            href: '/montaje/tarjetaGrafica',
+            componente: tarjetaGraficaGuardada,
+            activo: true,
+        },
+        {
+            titulo: 'Fuente de Alimentacion',
+            href: '/montaje/fuenteAlimentacion',
+            componente: fuenteAlimentacionGuardada,
+        },
+        {
+            titulo: 'Torre',
+            href: '/montaje/torre',
+            componente: torreGuardada,
+        },
+    ];
+
+    const progresoMontaje = [
+        'procesador',
+        'disipador',
+        'placaBase',
+        'memoriaRam',
+        'memoriaRamSecundaria',
+        'discoDuro',
+        'discoDuroSecundario',
+        'tarjetaGrafica',
+        'fuenteAlimentacion',
+        'torre',
+    ];
+
+    const [cuelloBotella, setCuelloBotella] = useState<boolean | null>(false);
+    const [esCompatible, setEsCompatible] = useState<boolean | null>(true);
 
     const [graficaSeleccionada, setGraficaSeleccionada] = useState<TarjetaGrafica | null>(tarjetaGraficaGuardada!);
 
@@ -79,6 +108,67 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
 
     const [graficasFiltradas, setGraficasFiltradas] = useState<TarjetaGrafica[]>(tarjetasGraficas);
 
+    useEffect(() => {
+        !editarMontaje &&
+            toast.custom(
+                (t) => (
+                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
+                        <span>
+                            <Wrench size={30} className="text-[var(--rojo-neon)]" />
+                        </span>
+                        <div className="flex w-full justify-center text-center text-xl">
+                            <p className="font-['exo_2']">Arrastra tu tarjeta gráfica</p>
+                        </div>
+                    </div>
+                ),
+                { duration: 2750 },
+            );
+
+        function filtrarTarjetasGraficas() {
+            let limiteConsumo = 0;
+
+            if (tipoMontaje === 'eco') {
+                limiteConsumo = 125;
+            } else if (tipoMontaje === 'equilibrado') {
+                limiteConsumo = 225;
+            } else if (tipoMontaje === 'pro') {
+                limiteConsumo = 450;
+            }
+
+            const tienePuertoPcie = placaBaseGuardada!.puertos_pcie > 0;
+
+            const tarjetasFiltradas = tarjetasGraficas.filter((tarjeta) => {
+                return tienePuertoPcie && tarjeta.consumo <= limiteConsumo;
+            });
+
+            setGraficasFiltradas(tarjetasFiltradas);
+        }
+
+        !componenteSaltado && filtrarTarjetasGraficas();
+    }, []);
+
+    function comprobarCuelloBotella() {
+        const passmarkCPU = procesadorGuardado?.passmark || 0;
+        const passmarkGPU = graficaSeleccionada?.passmark || 0;
+        let cuelloDeBotella = 0;
+
+        const ratio = (passmarkCPU / passmarkGPU) * 100;
+        cuelloDeBotella = ratio - 100;
+        console.log(cuelloDeBotella);
+        setCuelloBotella(cuelloDeBotella <= 15);
+    }
+
+    function comprobarCompatibilidad() {
+        if (!placaBaseGuardada || !graficaSeleccionada) return;
+
+        setEsCompatible(placaBaseGuardada.puertos_pcie >= 1);
+    }
+
+    useEffect(() => {
+        graficaSeleccionada && comprobarCuelloBotella();
+        graficaSeleccionada && comprobarCompatibilidad();
+    }, [graficaSeleccionada]);
+
     const graficasNvidia = (() => {
         const g = graficasFiltradas?.filter((g) => g.marca === 'NVIDIA' && g.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
         return g?.length ? g : null;
@@ -94,54 +184,6 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
         return g?.length ? g : null;
     })();
 
-    useEffect(() => {
-        !editarMontaje &&
-            toast.custom(
-                (t) => (
-                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
-                        <span>
-                            <Wrench size={30} className="text-[var(--rojo-neon)]" />
-                        </span>
-                        <div className="flex w-full justify-center text-center text-xl">
-                            <p className="font-['exo_2']">Arrastra tu tarjeta gráfica</p>
-                        </div>
-                    </div>
-                ),
-                { duration: 3500 },
-            );
-
-        const comprobarCompatibilidad = (grafica: TarjetaGrafica) => {
-            const conexionesPorSocket: Record<string, (tarjeta: TarjetaGrafica) => boolean> = {
-                // Para AM5 y LGA1700, no hay filtro de precio (se muestran todas las tarjetas gráficas)
-                AM5: () => true,
-                LGA1700: () => true,
-
-                // Para AM4 y LGA1200, filtramos las tarjetas gráficas cuyo precio sea menor a 600
-                AM4: (tarjeta) => tarjeta.precio < 600,
-                LGA1200: (tarjeta) => tarjeta.precio < 600,
-            };
-
-            const validaciones = conexionesPorSocket[procesadorGuardado!.socket];
-            const graficasCompatibles = tarjetasGraficas.filter(validaciones);
-
-            // Calcular cuello de botella
-            const passmarkCPU = procesadorGuardado?.passmark || 0;
-            const passmarkGPU = grafica?.passmark || 0;
-
-            let cuelloDeBotella = 0;
-
-            if (passmarkGPU > 0) {
-                const ratio = (passmarkCPU / passmarkGPU) * 100;
-                cuelloDeBotella = Math.max(0, 100 - ratio);
-            }
-
-            setEsCompatible(cuelloDeBotella <= 10);
-            setGraficasFiltradas(graficasCompatibles);
-        };
-
-        !componenteSaltado && comprobarCompatibilidad(tarjetaGraficaGuardada!);
-    }, []);
-
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
 
@@ -154,7 +196,6 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
         }
         setGraficaActiva(null);
         setIsDragging(false);
-        setEsCompatible(true);
     };
 
     const handleDragStart = (event: any) => {
@@ -210,7 +251,7 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                                 <Collapsible open={nvidiaDesplegado} onOpenChange={setNvidiaDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            Nvidia
+                                            NVIDIA
                                         </p>
                                         <CollapsibleTrigger asChild>
                                             <Button variant="ghost" size="sm">
@@ -219,37 +260,47 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                                         </CollapsibleTrigger>
                                     </div>
                                     {!nvidiaDesplegado && (
-                                        <>
-                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={graficasNvidia[0].id}
-                                                        nombre={graficasNvidia[0].nombre}
-                                                        icono={<MemoryStick />}
-                                                        precio={graficasNvidia[0].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={graficasNvidia[1].id}
-                                                        nombre={graficasNvidia[1].nombre}
-                                                        icono={<MemoryStick />}
-                                                        precio={graficasNvidia[1].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={graficasNvidia[2].id}
-                                                        nombre={graficasNvidia[2].nombre}
-                                                        icono={<MemoryStick />}
-                                                        precio={graficasNvidia[2].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                            </div>
-                                        </>
+                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                            {graficasNvidia[0] && (
+                                                <>
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={graficasNvidia[0].id}
+                                                            nombre={graficasNvidia[0].nombre}
+                                                            icono={<MemoryStick />}
+                                                            precio={graficasNvidia[0].precio}
+                                                        />
+                                                    </div>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                </>
+                                            )}
+                                            {graficasNvidia[1] && (
+                                                <>
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={graficasNvidia[1].id}
+                                                            nombre={graficasNvidia[1].nombre}
+                                                            icono={<MemoryStick />}
+                                                            precio={graficasNvidia[1].precio}
+                                                        />
+                                                    </div>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                </>
+                                            )}
+                                            {graficasNvidia[2] && (
+                                                <>
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={graficasNvidia[2].id}
+                                                            nombre={graficasNvidia[2].nombre}
+                                                            icono={<MemoryStick />}
+                                                            precio={graficasNvidia[2].precio}
+                                                        />
+                                                    </div>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                </>
+                                            )}
+                                        </div>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
                                         {graficasNvidia.map((grafica) => (
@@ -283,37 +334,47 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                                         </CollapsibleTrigger>
                                     </div>
                                     {!amdDesplegado && (
-                                        <>
-                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={graficasAmd[0].id}
-                                                        nombre={graficasAmd[0].nombre}
-                                                        icono={<MemoryStick />}
-                                                        precio={graficasAmd[0].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={graficasAmd[1].id}
-                                                        nombre={graficasAmd[1].nombre}
-                                                        icono={<MemoryStick />}
-                                                        precio={graficasAmd[1].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={graficasAmd[2].id}
-                                                        nombre={graficasAmd[2].nombre}
-                                                        icono={<MemoryStick />}
-                                                        precio={graficasAmd[2].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                            </div>
-                                        </>
+                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                            {graficasAmd[0] && (
+                                                <>
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={graficasAmd[0].id}
+                                                            nombre={graficasAmd[0].nombre}
+                                                            icono={<MemoryStick />}
+                                                            precio={graficasAmd[0].precio}
+                                                        />
+                                                    </div>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                </>
+                                            )}
+                                            {graficasAmd[1] && (
+                                                <>
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={graficasAmd[1].id}
+                                                            nombre={graficasAmd[1].nombre}
+                                                            icono={<MemoryStick />}
+                                                            precio={graficasAmd[1].precio}
+                                                        />
+                                                    </div>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                </>
+                                            )}
+                                            {graficasAmd[2] && (
+                                                <>
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={graficasAmd[2].id}
+                                                            nombre={graficasAmd[2].nombre}
+                                                            icono={<MemoryStick />}
+                                                            precio={graficasAmd[2].precio}
+                                                        />
+                                                    </div>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                </>
+                                            )}
+                                        </div>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
                                         {graficasAmd.map((grafica) => (
@@ -347,28 +408,47 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                                         </CollapsibleTrigger>
                                     </div>
                                     {!intelDesplegado && (
-                                        <>
-                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={graficasIntel[0].id}
-                                                        nombre={graficasIntel[0].nombre}
-                                                        icono={<MemoryStick />}
-                                                        precio={graficasIntel[0].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={graficasIntel[1].id}
-                                                        nombre={graficasIntel[1].nombre}
-                                                        icono={<MemoryStick />}
-                                                        precio={graficasIntel[1].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                            </div>
-                                        </>
+                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                            {graficasIntel[0] && (
+                                                <>
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={graficasIntel[0].id}
+                                                            nombre={graficasIntel[0].nombre}
+                                                            icono={<MemoryStick />}
+                                                            precio={graficasIntel[0].precio}
+                                                        />
+                                                    </div>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                </>
+                                            )}
+                                            {graficasIntel[1] && (
+                                                <>
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={graficasIntel[1].id}
+                                                            nombre={graficasIntel[1].nombre}
+                                                            icono={<MemoryStick />}
+                                                            precio={graficasIntel[1].precio}
+                                                        />
+                                                    </div>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                </>
+                                            )}
+                                            {graficasIntel[2] && (
+                                                <>
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={graficasIntel[2].id}
+                                                            nombre={graficasIntel[2].nombre}
+                                                            icono={<MemoryStick />}
+                                                            precio={graficasIntel[2].precio}
+                                                        />
+                                                    </div>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                </>
+                                            )}
+                                        </div>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
                                         {graficasIntel.map((grafica) => (
@@ -386,6 +466,11 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                                         ))}
                                     </CollapsibleContent>
                                 </Collapsible>
+                            )}
+                            {!graficasNvidia && !graficasIntel && !graficasAmd && (
+                                <div className="flex h-full w-full items-center justify-center">
+                                    No se ha encontrado ninguna gráfica que coincida con tu búsqueda.
+                                </div>
                             )}
                         </div>
                     }
@@ -408,7 +493,13 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                             <div
                                 className={`relative z-20 h-[80px] w-[50%] border-2 ${graficaActiva && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
                             >
-                                <AreaSoltarItem botonEliminar={() => setGraficaSeleccionada(null)} mostrarBoton={Boolean(graficaSeleccionada)}>
+                                <AreaSoltarItem
+                                    botonEliminar={() => {
+                                        setGraficaSeleccionada(null);
+                                        guardarTarjetaGrafica!(null);
+                                    }}
+                                    mostrarBoton={Boolean(graficaSeleccionada)}
+                                >
                                     {!graficaActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             {graficaSeleccionada && `${graficaSeleccionada?.marca} ${graficaSeleccionada?.nombre}`}
@@ -502,22 +593,40 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                                             </div>
                                         </div>
                                     </div>
-                                    {!esCompatible && (
-                                        <div className="mb-3 flex gap-2 border-2 border-[var(--amarillo-neon)] p-3">
-                                            <ShieldAlert color="red" />
-                                            <p className='font-["exo_2"] font-bold'>Cuello de botella detectado</p>
-                                        </div>
+                                    {!cuelloBotella && (
+                                        <>
+                                            <div className={`${isDragging && 'hidden'}`}>
+                                                <AvisoComponente mensaje="Cuello de botella mayor al 15% detectado" />
+                                            </div>
+                                        </>
                                     )}
-                                    <Button
-                                        variant={'outline'}
-                                        className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${graficaActiva && 'hidden'}`}
-                                        onClick={() => {
-                                            guardarTarjetaGrafica!(graficaSeleccionada);
-                                        }}
-                                        asChild
-                                    >
-                                        <Link href={route('montaje.fuenteAlimentacion')}>Siguiente</Link>
-                                    </Button>
+                                    {esCompatible ? (
+                                        <Button
+                                            variant={'outline'}
+                                            className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${graficaActiva && 'hidden'}`}
+                                            onClick={() => {
+                                                guardarTarjetaGrafica!(graficaSeleccionada);
+                                            }}
+                                            asChild
+                                        >
+                                            <Link href={route('montaje.fuenteAlimentacion')}>Siguiente</Link>
+                                        </Button>
+                                    ) : (
+                                        <>
+                                            <div className="flex items-center justify-center gap-4">
+                                                <Button
+                                                    variant={'outline'}
+                                                    className={`fade-in $graficaActivaa && 'hidden'} disabled rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:cursor-no-drop hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)]`}
+                                                    onClick={() => {
+                                                        guardarTarjetaGrafica!(graficaSeleccionada);
+                                                    }}
+                                                >
+                                                    <h1>Incompatible</h1>
+                                                </Button>
+                                                <TooltipIncopatibilidadComponente mensaje="La placa base escogida no permite conexiones PCIe" />
+                                            </div>
+                                        </>
+                                    )}
                                 </>
                             )}
                         </div>

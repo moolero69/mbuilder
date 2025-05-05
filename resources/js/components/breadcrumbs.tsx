@@ -5,18 +5,29 @@ import { ChevronRight } from 'lucide-react';
 import { Fragment } from 'react';
 
 export function Breadcrumbs({ breadcrumbs }: { breadcrumbs: BreadcrumbItemType[] }) {
+    // Buscar el índice del breadcrumb activo
+    const indexResaltado = breadcrumbs.findIndex((item) => item.activo === true);
+
     return (
         <>
             {breadcrumbs.length > 0 && (
                 <Breadcrumb className="breadcrumb-gaming font-['Exo_2'] text-base">
                     <BreadcrumbList>
                         {breadcrumbs.map((item, index) => {
-                            const isLast = index === breadcrumbs.length - 1;
+                            const isResaltado = index === indexResaltado;
+                            const estaDeshabilitado = !item.componente;
+
                             return (
                                 <Fragment key={index}>
                                     <BreadcrumbItem className="text-xl">
-                                        {isLast ? (
-                                            <BreadcrumbPage className="current-page underline">{item.titulo}</BreadcrumbPage>
+                                        {isResaltado ? (
+                                            <BreadcrumbPage className="current-page underline">
+                                                {item.titulo}
+                                            </BreadcrumbPage>
+                                        ) : estaDeshabilitado ? (
+                                            <span className="text-gray-500 opacity-60 cursor-default">
+                                                {item.titulo}
+                                            </span>
                                         ) : (
                                             <BreadcrumbLink asChild>
                                                 <Link href={item.href} className="hover:underline">
@@ -25,7 +36,7 @@ export function Breadcrumbs({ breadcrumbs }: { breadcrumbs: BreadcrumbItemType[]
                                             </BreadcrumbLink>
                                         )}
                                     </BreadcrumbItem>
-                                    {!isLast && (
+                                    {index < breadcrumbs.length - 1 && (
                                         <BreadcrumbSeparator className="separator">
                                             <ChevronRight />
                                         </BreadcrumbSeparator>
