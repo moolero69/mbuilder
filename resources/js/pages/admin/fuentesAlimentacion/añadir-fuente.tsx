@@ -6,25 +6,25 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import InputError from '@/components/input-error';
 
-export default function CrearDisipador() {
+export default function CrearFuenteAlimentacion() {
     const { data, setData, post, processing, errors } = useForm({
         nombre: '',
         marca: '',
-        socket: '',
-        refrigeracion_liquida: '',
-        consumo: 0,
+        certificacion: '',
+        potencia: 0,
+        modular: '',
         precio: 0,
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('admin.disipadores.guardar'));
+        post(route('admin.fuentes.guardar'));
     };
 
     return (
         <>
-            <Head title="Añadir disipador" />
-            <AdminLayout titulo='Añadir disipador'>
+            <Head title="Añadir fuente de alimentación" />
+            <AdminLayout titulo="Añadir fuente de alimentación">
                 <form onSubmit={submit} className="grid grid-cols-2 gap-6 max-w-5xl mx-auto">
                     <div>
                         <Label htmlFor="nombre">Nombre</Label>
@@ -39,21 +39,21 @@ export default function CrearDisipador() {
                     </div>
 
                     <div>
-                        <Label htmlFor="socket">Socket</Label>
-                        <Input id="marca" value={data.marca} onChange={(e) => setData('socket', e.target.value)} />
-                        <InputError message={errors.socket} />
+                        <Label htmlFor="certificacion">Certificación</Label>
+                        <Input id="certificacion" value={data.certificacion} onChange={(e) => setData('certificacion', e.target.value)} />
+                        <InputError message={errors.certificacion} />
                     </div>
 
                     <div>
-                        <Label htmlFor="refrigeracion_liquida">Refrigeración líquida</Label>
-                        <Input id="refrigeracion_liquida" value={data.refrigeracion_liquida} onChange={(e) => setData('refrigeracion_liquida', e.target.value)} />
-                        <InputError message={errors.refrigeracion_liquida} />
+                        <Label htmlFor="potencia">Potencia (W)</Label>
+                        <Input type="number" id="potencia" value={data.potencia} onChange={(e) => setData('potencia', parseInt(e.target.value))} />
+                        <InputError message={errors.potencia} />
                     </div>
 
                     <div>
-                        <Label htmlFor="consumo">Consumo (W)</Label>
-                        <Input type="number" id="consumo" value={data.consumo} onChange={(e) => setData('consumo', parseInt(e.target.value))} />
-                        <InputError message={errors.consumo} />
+                        <Label htmlFor="modular">Modular</Label>
+                        <Input id="modular" value={data.modular} onChange={(e) => setData('modular', e.target.value)} />
+                        <InputError message={errors.modular} />
                     </div>
 
                     <div>
@@ -63,7 +63,7 @@ export default function CrearDisipador() {
                     </div>
 
                     <div className="col-span-2 flex justify-center mt-4">
-                        <Button disabled={processing}>Guardar disipador</Button>
+                        <Button disabled={processing}>Guardar fuente</Button>
                     </div>
                 </form>
             </AdminLayout>

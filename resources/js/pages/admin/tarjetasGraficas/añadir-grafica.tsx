@@ -6,29 +6,29 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import InputError from '@/components/input-error';
 
-export default function CrearPlacaBase() {
+export default function CrearTarjetaGrafica() {
     const { data, setData, post, processing, errors } = useForm({
         nombre: '',
         marca: '',
-        socket: '',
-        factor_forma: '',
-        zocalos_ram: 0,
-        puertos_m2: 0,
-        puertos_sata: 0,
-        puertos_pcie: 0,
+        tipo: '',
+        serie: '',
+        tipo_memoria: '',
+        memoria: 0,
+        longitud: 0,
+        passmark: 0,
         consumo: 0,
         precio: 0,
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('admin.placasBase.guardar'));
+        post(route('admin.graficas.guardar'));
     };
 
     return (
         <>
-            <Head title="Añadir placa base" />
-            <AdminLayout titulo="Añadir placa base">
+            <Head title="Añadir tarjeta gráfica" />
+            <AdminLayout titulo="Añadir tarjeta gráfica">
                 <form onSubmit={submit} className="grid grid-cols-2 gap-6 max-w-5xl mx-auto">
                     <div>
                         <Label htmlFor="nombre">Nombre</Label>
@@ -43,39 +43,39 @@ export default function CrearPlacaBase() {
                     </div>
 
                     <div>
-                        <Label htmlFor="socket">Socket</Label>
-                        <Input id="socket" value={data.socket} onChange={(e) => setData('socket', e.target.value)} />
-                        <InputError message={errors.socket} />
+                        <Label htmlFor="tipo">Tipo</Label>
+                        <Input id="tipo" value={data.tipo} onChange={(e) => setData('tipo', e.target.value)} />
+                        <InputError message={errors.tipo} />
                     </div>
 
                     <div>
-                        <Label htmlFor="factor_forma">Factor de forma</Label>
-                        <Input id="factor_forma" value={data.factor_forma} onChange={(e) => setData('factor_forma', e.target.value)} maxLength={10} />
-                        <InputError message={errors.factor_forma} />
+                        <Label htmlFor="serie">Serie</Label>
+                        <Input id="serie" value={data.serie} onChange={(e) => setData('serie', e.target.value)} />
+                        <InputError message={errors.serie} />
                     </div>
 
                     <div>
-                        <Label htmlFor="zocalos_ram">Zócalos RAM</Label>
-                        <Input type="number" id="zocalos_ram" value={data.zocalos_ram} onChange={(e) => setData('zocalos_ram', parseInt(e.target.value))} />
-                        <InputError message={errors.zocalos_ram} />
+                        <Label htmlFor="tipo_memoria">Tipo de memoria</Label>
+                        <Input id="tipo_memoria" value={data.tipo_memoria} onChange={(e) => setData('tipo_memoria', e.target.value)} />
+                        <InputError message={errors.tipo_memoria} />
                     </div>
 
                     <div>
-                        <Label htmlFor="puertos_m2">Puertos M.2</Label>
-                        <Input type="number" id="puertos_m2" value={data.puertos_m2} onChange={(e) => setData('puertos_m2', parseInt(e.target.value))} />
-                        <InputError message={errors.puertos_m2} />
+                        <Label htmlFor="memoria">Memoria (GB)</Label>
+                        <Input type="number" id="memoria" value={data.memoria} onChange={(e) => setData('memoria', parseInt(e.target.value))} />
+                        <InputError message={errors.memoria} />
                     </div>
 
                     <div>
-                        <Label htmlFor="puertos_sata">Puertos SATA</Label>
-                        <Input type="number" id="puertos_sata" value={data.puertos_sata} onChange={(e) => setData('puertos_sata', parseInt(e.target.value))} />
-                        <InputError message={errors.puertos_sata} />
+                        <Label htmlFor="longitud">Longitud (mm)</Label>
+                        <Input type="number" id="longitud" value={data.longitud} onChange={(e) => setData('longitud', parseInt(e.target.value))} />
+                        <InputError message={errors.longitud} />
                     </div>
 
                     <div>
-                        <Label htmlFor="puertos_pcie">Puertos PCIe</Label>
-                        <Input type="number" id="puertos_pcie" value={data.puertos_pcie} onChange={(e) => setData('puertos_pcie', parseInt(e.target.value))} />
-                        <InputError message={errors.puertos_pcie} />
+                        <Label htmlFor="passmark">PassMark</Label>
+                        <Input type="number" id="passmark" value={data.passmark} onChange={(e) => setData('passmark', parseInt(e.target.value))} />
+                        <InputError message={errors.passmark} />
                     </div>
 
                     <div>
@@ -91,7 +91,7 @@ export default function CrearPlacaBase() {
                     </div>
 
                     <div className="col-span-2 flex justify-center mt-4">
-                        <Button disabled={processing}>Guardar placa base</Button>
+                        <Button disabled={processing}>Guardar tarjeta gráfica</Button>
                     </div>
                 </form>
             </AdminLayout>

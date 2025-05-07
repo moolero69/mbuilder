@@ -42,7 +42,7 @@ export default function TablaProcesadores({ procesadores }: { procesadores: any 
                         </TableHeader>
                         <TableBody>
                             {procesadores.data.map((proc: any) => (
-                                <TableRow key={proc.id}>
+                                <TableRow key={proc.id} onClick={() => window.location.href = route('admin.procesadores.editar', proc.id)}>
                                     <TableCell>{proc.nombre}</TableCell>
                                     <TableCell>{proc.marca}</TableCell>
                                     <TableCell>{proc.socket}</TableCell>

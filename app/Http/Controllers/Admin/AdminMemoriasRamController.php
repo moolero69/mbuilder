@@ -24,7 +24,7 @@ class AdminMemoriasRamController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('admin/memoriasRam/añadir-memoria');
     }
 
     /**
@@ -32,7 +32,20 @@ class AdminMemoriasRamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'almacenamiento' => 'required|integer|min:1',
+            'tipo' => 'required|string|max:255',
+            'pack' => 'required|integer|min:1',
+            'frecuencia' => 'required|integer|min:1',
+            'consumo' => 'required|integer|min:0',
+            'precio' => 'required|numeric|min:0',
+        ]);
+
+        MemoriaRam::create($validar);
+
+        return to_route('admin.memoriasRam')->with('success', 'Memoria RAM guardada correctamente.');
     }
 
     /**

@@ -24,7 +24,7 @@ class AdminDiscosDurosController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('admin/discosDuros/añadir-disco');
     }
 
     /**
@@ -32,7 +32,21 @@ class AdminDiscosDurosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'tecnologia' => 'required|string|max:255',
+            'almacenamiento' => 'required|string|max:255',
+            'conexion' => 'required|string|max:255',
+            'pulgadas' => 'required|numeric|min:0',
+            'velocidad' => 'required|integer|min:0',
+            'consumo' => 'required|numeric|min:0',
+            'precio' => 'required|numeric|min:0',
+        ]);
+
+        DiscoDuro::create($validated);
+
+        return to_route('admin.discosDuros')->with('success', 'Disco duro creado correctamente.');
     }
 
     /**

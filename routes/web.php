@@ -49,6 +49,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('admin/procesadores', [AdminProcesadoresController::class, 'index'])->name('admin.procesadores');
     Route::get('admin/procesadores/crear', [AdminProcesadoresController::class, 'create'])->name('admin.procesadores.crear');
     Route::post('admin/procesadores', [AdminProcesadoresController::class, 'store'])->name('admin.procesadores.guardar');
+    Route::get('admin/procesadores/editar/{id}', [AdminProcesadoresController::class, 'edit'])->name('admin.procesadores.editar');
+    Route::put('admin/procesadores/editar/{id}', [AdminProcesadoresController::class, 'update'])->name('admin.procesadores.actualizar');
+
+
 
     Route::get('admin/disipadores', [AdminDisipadoresController::class, 'index'])->name('admin.disipadores');
     Route::get('admin/disipadores/crear', [AdminDisipadoresController::class, 'create'])->name('admin.disipadores.crear');
@@ -60,10 +64,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('admin/placasBase', [AdminPlacasBaseController::class, 'store'])->name('admin.placasBase.guardar');
 
     Route::get('admin/memoriasRam', [AdminMemoriasRamController::class, 'index'])->name('admin.memoriasRam');
+    Route::get('admin/memoriasRam/crear', [AdminMemoriasRamController::class, 'create'])->name('admin.memoriasRam.crear');
+    Route::post('admin/memoriasRam', [AdminMemoriasRamController::class, 'store'])->name('admin.memoriasRam.guardar');
+
     Route::get('admin/discosDuros', [AdminDiscosDurosController::class, 'index'])->name('admin.discosDuros');
+    Route::get('admin/discosDuros/crear', [AdminDiscosDurosController::class, 'create'])->name('admin.discosDuros.crear');
+    Route::post('admin/discosDuros', [AdminDiscosDurosController::class, 'store'])->name('admin.discosDuros.guardar');
+
     Route::get('admin/tarjetasGraficas', [AdminTarjetasGraficasController::class, 'index'])->name('admin.graficas');
+    Route::get('admin/tarjetasGraficas/crear', [AdminTarjetasGraficasController::class, 'create'])->name('admin.graficas.crear');
+    Route::post('admin/tarjetasGraficas', [AdminTarjetasGraficasController::class, 'store'])->name('admin.graficas.guardar');
+
     Route::get('admin/fuentesAlimentacion', [AdminFuentesAlimentacionController::class, 'index'])->name('admin.fuentes');
+    Route::get('admin/fuentesAlimentacion/crear', [AdminFuentesAlimentacionController::class, 'create'])->name('admin.fuentes.crear');
+    Route::post('admin/fuentesAlimentacion', [AdminFuentesAlimentacionController::class, 'store'])->name('admin.fuentes.guardar');
+
     Route::get('admin/torres', [AdminTorresController::class, 'index'])->name('admin.torres');
+    Route::get('admin/torres/crear', [AdminTorresController::class, 'create'])->name('admin.torres.crear');
+    Route::post('admin/torres', [AdminTorresController::class, 'store'])->name('admin.torres.guardar');
+
 
 
     Route::get('pruebas', PruebasController::class)->name('pruebas');

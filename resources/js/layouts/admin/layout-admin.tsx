@@ -106,11 +106,11 @@ export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
                 </Sidebar>
             </SidebarProvider>
 
-            <main className="absolute ml-[257px] h-full w-[calc(100dvw-257px)] flex flex-col p-2">
-                <span className="flex justify-center font-['Orbitron'] text-3xl font-extrabold text-white drop-shadow-[5px_5px_6px_var(--verde-neon)] h-[60px]">
+            <main className="absolute ml-[257px] h-full w-[calc(100dvw-257px)] flex flex-col p-2 justify-center bg-[linear-gradient(135deg,#0d0d0d,#1a1a1a,#262626)]">
+                <span className="flex justify-center font-['Orbitron'] text-3xl font-extrabold text-white drop-shadow-[4px_3px_4px_var(--verde-neon)] h-[60px] items-center">
                     {titulo}
                 </span>
-                <div className="flex-1 overflow-auto max-h-[calc(100dvh-60px)]">
+                <div className="flex-1 overflow-auto max-h-[calc(100dvh-60px)] [&_input]:border-[var(--verde-neon)] [&_input]:focus:border-[#00ff9c]">
                     {children}
                 </div>
             </main>

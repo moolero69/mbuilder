@@ -24,7 +24,7 @@ class AdminTorresController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('admin/torres/añadir-torre');
     }
 
     /**
@@ -32,7 +32,19 @@ class AdminTorresController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'factor_forma' => 'required|string|max:10',
+            'soporte_RGB' => 'required|string|max:255',
+            'longitud_maxima_gpu' => 'required|integer',
+            'refrigeracion_liquida' => 'required|string|max:255',
+            'precio' => 'required|numeric|min:0',
+        ]);
+
+        Torre::create($validar);
+
+        return redirect()->route('admin.torres')->with('success', 'Torre creada exitosamente.');
     }
 
     /**

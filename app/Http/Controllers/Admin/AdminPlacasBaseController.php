@@ -36,7 +36,7 @@ class AdminPlacasBaseController extends Controller
             'nombre' => 'required|string|max:255',
             'marca' => 'required|string|max:255',
             'socket' => 'required|string|max:255',
-            'factor_forma' => 'required|string|max:255',
+            'factor_forma' => 'required|string|max:10',
             'zocalos_ram' => 'required|integer',
             'puertos_m2' => 'required|integer',
             'puertos_sata' => 'required|integer',
@@ -47,7 +47,7 @@ class AdminPlacasBaseController extends Controller
 
         PlacaBase::create($validar);
 
-        return redirect()->route('admin.placas')->with('success', 'Placa base añadida correctamente.');
+        return redirect()->route('admin.placasBase')->with('success', 'Placa base añadida correctamente.');
     }
 
     /**

@@ -1,38 +1,39 @@
-import { FormEventHandler } from 'react';
-import { useForm, Head } from '@inertiajs/react';
-import AdminLayout from '@/layouts/admin/layout-admin';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import InputError from '@/components/input-error';
+import AdminLayout from '@/layouts/admin/layout-admin';
+import { Procesador } from '@/types';
+import { Head, useForm } from '@inertiajs/react';
+import { FormEventHandler } from 'react';
 
-export default function CrearProcesador() {
-    const { data, setData, post, processing, errors } = useForm({
-        nombre: '',
-        marca: '',
-        socket: '',
-        graficos_integrados: '',
-        disipador_incluido: '',
-        frecuencia_base: 0,
-        frecuencia_turbo: 0,
-        nucleos: 0,
-        hilos: 0,
-        cache: 0,
-        passmark: 0,
-        consumo: 0,
-        precio: 0,
+export default function EditarrProcesador({ procesador }: { procesador: Procesador }) {
+    const { data, setData, put, processing, errors } = useForm({
+        nombre: procesador.nombre,
+        marca: procesador.marca,
+        socket: procesador.socket,
+        graficos_integrados: procesador.graficos_integrados,
+        disipador_incluido: procesador.disipador_incluido,
+        frecuencia_base: procesador.frecuencia_base,
+        frecuencia_turbo: procesador.frecuencia_turbo,
+        nucleos: procesador.nucleos,
+        hilos: procesador.hilos,
+        cache: procesador.cache,
+        passmark: procesador.passmark,
+        consumo: procesador.consumo,
+        precio: procesador.precio,
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('admin.procesadores.guardar'));
+        put(route('admin.procesadores.actualizar', procesador.id));
     };
 
     return (
         <>
-            <Head title="Añadir procesador" />
-            <AdminLayout titulo='Añadir procesador'>
-                <form onSubmit={submit} className="grid grid-cols-2 gap-6 max-w-5xl mx-auto">
+            <Head title="Editar procesador" />
+            <AdminLayout titulo="Editar procesador">
+                <form onSubmit={submit} className="mx-auto grid max-w-5xl grid-cols-2 gap-6">
                     <div>
                         <Label htmlFor="nombre">Nombre</Label>
                         <Input id="nombre" value={data.nombre} onChange={(e) => setData('nombre', e.target.value)} />
@@ -53,25 +54,45 @@ export default function CrearProcesador() {
 
                     <div>
                         <Label htmlFor="graficos_integrados">Gráficos integrados</Label>
-                        <Input id="graficos_integrados" value={data.graficos_integrados} onChange={(e) => setData('graficos_integrados', e.target.value)} />
+                        <Input
+                            id="graficos_integrados"
+                            value={data.graficos_integrados}
+                            onChange={(e) => setData('graficos_integrados', e.target.value)}
+                        />
                         <InputError message={errors.graficos_integrados} />
                     </div>
 
                     <div>
                         <Label htmlFor="disipador_incluido">Disipador incluido</Label>
-                        <Input id="disipador_incluido" value={data.disipador_incluido} onChange={(e) => setData('disipador_incluido', e.target.value)} />
+                        <Input
+                            id="disipador_incluido"
+                            value={data.disipador_incluido}
+                            onChange={(e) => setData('disipador_incluido', e.target.value)}
+                        />
                         <InputError message={errors.disipador_incluido} />
                     </div>
 
                     <div>
                         <Label htmlFor="frecuencia_base">Frecuencia base (GHz)</Label>
-                        <Input type="number" step="0.1" id="frecuencia_base" value={data.frecuencia_base} onChange={(e) => setData('frecuencia_base', parseFloat(e.target.value))} />
+                        <Input
+                            type="number"
+                            step="0.1"
+                            id="frecuencia_base"
+                            value={data.frecuencia_base}
+                            onChange={(e) => setData('frecuencia_base', parseFloat(e.target.value))}
+                        />
                         <InputError message={errors.frecuencia_base} />
                     </div>
 
                     <div>
                         <Label htmlFor="frecuencia_turbo">Frecuencia turbo (GHz)</Label>
-                        <Input type="number" step="0.1" id="frecuencia_turbo" value={data.frecuencia_turbo} onChange={(e) => setData('frecuencia_turbo', parseFloat(e.target.value))} />
+                        <Input
+                            type="number"
+                            step="0.1"
+                            id="frecuencia_turbo"
+                            value={data.frecuencia_turbo}
+                            onChange={(e) => setData('frecuencia_turbo', parseFloat(e.target.value))}
+                        />
                         <InputError message={errors.frecuencia_turbo} />
                     </div>
 
@@ -107,12 +128,18 @@ export default function CrearProcesador() {
 
                     <div>
                         <Label htmlFor="precio">Precio (€)</Label>
-                        <Input type="number" step="0.01" id="precio" value={data.precio} onChange={(e) => setData('precio', parseFloat(e.target.value))} />
+                        <Input
+                            type="number"
+                            step="0.01"
+                            id="precio"
+                            value={data.precio}
+                            onChange={(e) => setData('precio', parseFloat(e.target.value))}
+                        />
                         <InputError message={errors.precio} />
                     </div>
 
-                    <div className="col-span-2 flex justify-center mt-4">
-                        <Button disabled={processing} >Guardar procesador</Button>
+                    <div className="col-span-2 mt-4 flex justify-center">
+                        <Button disabled={processing}>Editar procesador</Button>
                     </div>
                 </form>
             </AdminLayout>

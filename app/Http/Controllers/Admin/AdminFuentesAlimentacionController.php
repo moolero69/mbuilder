@@ -24,7 +24,7 @@ class AdminFuentesAlimentacionController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('admin/fuentesAlimentacion/añadir-fuente');
     }
 
     /**
@@ -32,7 +32,19 @@ class AdminFuentesAlimentacionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'certificacion' => 'required|string|max:255',
+            'potencia' => 'required|integer|min:1',
+            'modular' => 'required|string|max:255',
+            'precio' => 'required|numeric|min:0',
+        ]);
+
+        FuenteAlimentacion::create($validar);
+
+        // Redireccionar con mensaje de éxito
+        return redirect()->route('admin.fuentes')->with('success', 'Fuente de alimentación creada exitosamente.');
     }
 
     /**
