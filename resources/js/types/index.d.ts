@@ -229,3 +229,15 @@ export interface EstadoMontaje {
     tipoMontaje?: string | null;
     guardarTipoMontaje?: (tipoMontaje: string | null) => void;
 }
+
+export interface AdminLayoutProps {
+    children: ReactNode;
+}
+
+export interface LinksPaginacionProps{
+    links:{
+        url: string | null;
+        label: string;
+        active: boolean;
+    }[]
+}

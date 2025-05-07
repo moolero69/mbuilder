@@ -6,8 +6,13 @@ export default function AppLogo() {
             <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
                 <AppLogoIcon className="size-5 fill-current text-white dark:text-black" />
             </div>
-            <div className="ml-1 grid flex-1 text-left text-sm">
-                <span className="mb-0.5 truncate leading-none font-semibold">Laravel Starter Kit</span>
+            <div className="flex flex-col items-center justify-center ml-4">
+                <h1 className="font-['Orbitron'] text-2xl font-extrabold tracking-widest text-white drop-shadow-[5px_5px_6px_var(--azul-neon)] transition duration-500 hover:drop-shadow-[5px_5px_6px_var(--rojo-neon)]">
+                    MBUILDER
+                </h1>
+                <h1 className="font-['Orbitron'] text-2xl font-extrabold tracking-widest text-white drop-shadow-[5px_5px_6px_var(--azul-neon)] transition duration-500 hover:drop-shadow-[5px_5px_6px_var(--rojo-neon)]">
+                    ADMIN
+                </h1>
             </div>
         </>
     );

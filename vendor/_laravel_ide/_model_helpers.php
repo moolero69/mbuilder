@@ -1906,6 +1906,7 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property float $precio
      * @property int $consumo
+     * @property int $puertos_pcie
      * @property int $puertos_sata
      * @property int $puertos_m2
      * @property int $zocalos_ram
@@ -1922,6 +1923,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase whereZocalosRam($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase wherePuertosM2($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase wherePuertosSata($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase wherePuertosPcie($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase whereConsumo($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase wherePrecio($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PlacaBase>|PlacaBase whereCreatedAt($value)

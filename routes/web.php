@@ -1,5 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDiscosDurosController;
+use App\Http\Controllers\Admin\AdminDisipadoresController;
+use App\Http\Controllers\Admin\AdminFuentesAlimentacionController;
+use App\Http\Controllers\Admin\AdminMemoriasRamController;
+use App\Http\Controllers\Admin\AdminPlacasBaseController;
+use App\Http\Controllers\Admin\AdminProcesadoresController;
+use App\Http\Controllers\Admin\AdminTarjetasGraficasController;
+use App\Http\Controllers\Admin\AdminTorresController;
 use App\Http\Controllers\Montaje\MontajeController;
 use App\Http\Controllers\Montaje\MontajeDiscoDuroController;
 use App\Http\Controllers\Montaje\MontajeFuenteAlimentacionController;
@@ -37,6 +45,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('montaje/editar', [MontajeController::class, 'update'])->name('montaje.editar');
     Route::delete('montaje/eliminar', [MontajeController::class, 'destroy'])->name('montaje.eliminar');
     Route::get('usuario/montajes', [MontajeController::class, 'show'])->name('usuario.montajes');
+
+    Route::get('admin/procesadores', [AdminProcesadoresController::class, 'index'])->name('admin.procesadores');
+    Route::get('admin/disipadores', [AdminDisipadoresController::class, 'index'])->name('admin.disipadores');
+    Route::get('admin/placasBase', [AdminPlacasBaseController::class, 'index'])->name('admin.placasBase');
+    Route::get('admin/memoriasRam', [AdminMemoriasRamController::class, 'index'])->name('admin.memoriasRam');
+    Route::get('admin/discosDuros', [AdminDiscosDurosController::class, 'index'])->name('admin.discosDuros');
+    Route::get('admin/tarjetasGraficas', [AdminTarjetasGraficasController::class, 'index'])->name('admin.graficas');
+    Route::get('admin/fuentesAlimentacion', [AdminFuentesAlimentacionController::class, 'index'])->name('admin.fuentes');
+    Route::get('admin/torres', [AdminTorresController::class, 'index'])->name('admin.torres');
+
 
     Route::get('pruebas', PruebasController::class)->name('pruebas');
 

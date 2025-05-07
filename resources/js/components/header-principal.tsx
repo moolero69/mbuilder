@@ -1,5 +1,4 @@
 import { Toaster } from '@/components/ui/sonner';
-import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import { DatosCompartidos } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import React from 'react';
@@ -19,7 +18,7 @@ const Header: React.FC = () => {
                     <Link
                         href={route('home')}
                         onClick={() => {
-                            sessionStorage.clear()
+                            sessionStorage.clear();
                             limpiarComponentes();
                         }}
                     >
@@ -41,8 +40,20 @@ const Header: React.FC = () => {
                             <div className="flex items-center gap-5 px-2 py-1">
                                 <Button
                                     variant={'link'}
+                                    className="text-[var(--azul-neon)] hover:text-white"
+                                    onClick={() => {
+                                        limpiarComponentes();
+                                    }}
+                                    asChild
+                                >
+                                    <Link href={route('admin.procesadores')}>Admin</Link>
+                                </Button>
+                                <Button
+                                    variant={'link'}
                                     className="text-[var(--verde-neon)] hover:text-white"
-                                    onClick={() => {limpiarComponentes()}}
+                                    onClick={() => {
+                                        limpiarComponentes();
+                                    }}
                                     asChild
                                 >
                                     <Link href={route('usuario.montajes')}>Mis montajes</Link>
