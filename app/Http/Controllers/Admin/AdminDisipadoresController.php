@@ -24,7 +24,7 @@ class AdminDisipadoresController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('admin/disipadores/añadir-disipador');
     }
 
     /**
@@ -32,7 +32,19 @@ class AdminDisipadoresController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'socket' => 'required|string|max:255',
+            'refrigeracion_liquida' => 'required|string|max:255',
+            'consumo' => 'required|integer',
+            'precio' => 'required|numeric',
+        ]);
+    
+        // Guardar el disipador
+        Disipador::create($validar);
+    
+        return redirect()->route('admin.disipadores')->with('success', 'Disipador añadido correctamente.');
     }
 
     /**

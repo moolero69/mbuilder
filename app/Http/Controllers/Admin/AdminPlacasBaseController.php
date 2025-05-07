@@ -24,7 +24,7 @@ class AdminPlacasBaseController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('admin/placasBase/añadir-placa');
     }
 
     /**
@@ -32,7 +32,22 @@ class AdminPlacasBaseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'socket' => 'required|string|max:255',
+            'factor_forma' => 'required|string|max:255',
+            'zocalos_ram' => 'required|integer',
+            'puertos_m2' => 'required|integer',
+            'puertos_sata' => 'required|integer',
+            'puertos_pcie' => 'required|integer',
+            'consumo' => 'required|integer',
+            'precio' => 'required|numeric',
+        ]);
+
+        PlacaBase::create($validar);
+
+        return redirect()->route('admin.placas')->with('success', 'Placa base añadida correctamente.');
     }
 
     /**

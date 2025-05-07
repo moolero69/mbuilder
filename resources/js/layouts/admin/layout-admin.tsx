@@ -17,6 +17,7 @@ import {
 import UsuarioHeader from '@/components/usuario-header';
 import { AdminLayoutProps } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
+import { Toaster } from 'sonner';
 
 const items = [
     {
@@ -61,12 +62,10 @@ const items = [
     },
 ];
 
-export default function AdminLayout({ children }: AdminLayoutProps) {
-    const { url } = usePage();
-
+export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
     return (
         <div className="flex h-dvh">
-            {/* <Header /> */}
+            <Toaster position="bottom-center" />
             <SidebarProvider>
                 <Sidebar className="colores-borde h-full border-r">
                     <SidebarHeader>
@@ -107,7 +106,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 </Sidebar>
             </SidebarProvider>
 
-            <main className="absolute ml-[257px] h-full w-[calc(100dvw-257px)]">{children}</main>
+            <main className="absolute ml-[257px] h-full w-[calc(100dvw-257px)] flex flex-col p-2">
+                <span className="flex justify-center font-['Orbitron'] text-3xl font-extrabold text-white drop-shadow-[5px_5px_6px_var(--verde-neon)] h-[60px]">
+                    {titulo}
+                </span>
+                <div className="flex-1 overflow-auto max-h-[calc(100dvh-60px)]">
+                    {children}
+                </div>
+            </main>
+
+
         </div>
     );
 }

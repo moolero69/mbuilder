@@ -24,7 +24,7 @@ class AdminProcesadoresController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('admin/procesadores/añadir-procesador');
     }
 
     /**
@@ -32,7 +32,25 @@ class AdminProcesadoresController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'socket' => 'required|string|max:255',
+            'graficos_integrados' => 'required|string|max:255',
+            'disipador_incluido' => 'required|string|max:255',
+            'frecuencia_base' => 'required|numeric',
+            'frecuencia_turbo' => 'required|numeric',
+            'nucleos' => 'required|integer',
+            'hilos' => 'required|integer',
+            'cache' => 'required|integer',
+            'passmark' => 'required|integer',
+            'consumo' => 'required|integer',
+            'precio' => 'required|numeric',
+        ]);
+    
+        Procesador::create($validar);
+    
+        return redirect()->route('admin.procesadores')->with('success', 'Procesador añadido correctamente.');
     }
 
     /**

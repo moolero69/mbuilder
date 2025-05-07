@@ -11,13 +11,6 @@ import { Label } from '@/components/ui/label';
 import EliminarUsuario from '@/components/eliminar-usuario';
 import AjustesLayout from '@/layouts/settings/ajustes-layout';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        titulo: 'Profile settings',
-        href: '/settings/profile',
-    },
-];
-
 type ProfileForm = {
     name: string;
     email: string;

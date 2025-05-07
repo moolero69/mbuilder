@@ -232,6 +232,7 @@ export interface EstadoMontaje {
 
 export interface AdminLayoutProps {
     children: ReactNode;
+    titulo: string;
 }
 
 export interface LinksPaginacionProps{

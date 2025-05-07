@@ -47,8 +47,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('usuario/montajes', [MontajeController::class, 'show'])->name('usuario.montajes');
 
     Route::get('admin/procesadores', [AdminProcesadoresController::class, 'index'])->name('admin.procesadores');
+    Route::get('admin/procesadores/crear', [AdminProcesadoresController::class, 'create'])->name('admin.procesadores.crear');
+    Route::post('admin/procesadores', [AdminProcesadoresController::class, 'store'])->name('admin.procesadores.guardar');
+
     Route::get('admin/disipadores', [AdminDisipadoresController::class, 'index'])->name('admin.disipadores');
+    Route::get('admin/disipadores/crear', [AdminDisipadoresController::class, 'create'])->name('admin.disipadores.crear');
+    Route::post('admin/disipadores', [AdminDisipadoresController::class, 'store'])->name('admin.disipadores.guardar');
+
+
     Route::get('admin/placasBase', [AdminPlacasBaseController::class, 'index'])->name('admin.placasBase');
+    Route::get('admin/placasBase/crear', [AdminPlacasBaseController::class, 'create'])->name('admin.placasBase.crear');
+    Route::post('admin/placasBase', [AdminPlacasBaseController::class, 'store'])->name('admin.placasBase.guardar');
+
     Route::get('admin/memoriasRam', [AdminMemoriasRamController::class, 'index'])->name('admin.memoriasRam');
     Route::get('admin/discosDuros', [AdminDiscosDurosController::class, 'index'])->name('admin.discosDuros');
     Route::get('admin/tarjetasGraficas', [AdminTarjetasGraficasController::class, 'index'])->name('admin.graficas');
