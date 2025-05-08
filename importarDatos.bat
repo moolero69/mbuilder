@@ -6,6 +6,7 @@ if /i "%respuesta%"=="s" (
     php artisan migrate
 )
 
+php artisan crear:Usuarios
 php artisan importar:Procesadores ./app/Console/Commands/componentes/procesadores.csv
 php artisan importar:PlacasBase ./app/Console/Commands/componentes/placas_base.csv
 php artisan importar:MemoriasRam ./app/Console/Commands/componentes/ram.csv

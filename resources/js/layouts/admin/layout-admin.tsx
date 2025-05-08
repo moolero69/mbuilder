@@ -1,4 +1,4 @@
-import { Box, CircuitBoard, Cpu, MemoryStick, PcCase, Power, Wind } from 'lucide-react';
+import { Box, CircuitBoard, Cpu, MemoryStick, PcCase, Power, User, Wind } from 'lucide-react';
 
 import AppLogo from '@/components/app-logo';
 import {
@@ -16,10 +16,10 @@ import {
 } from '@/components/ui/sidebar';
 import UsuarioHeader from '@/components/usuario-header';
 import { AdminLayoutProps } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { Toaster } from 'sonner';
 
-const items = [
+const componentes = [
     {
         title: 'Procesadores',
         url: '/admin/procesadores',
@@ -87,16 +87,35 @@ export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
                             <SidebarGroupLabel>Componentes</SidebarGroupLabel>
                             <SidebarGroupContent>
                                 <SidebarMenu>
-                                    {items.map((item) => (
+                                    {componentes.map((item) => (
                                         <SidebarMenuItem key={item.title}>
-                                            <SidebarMenuButton asChild className={`${rutaActual.startsWith(item.url) ? 'border-2 colores-borde-glow rounded-xl' : ''}`}>
-                                                <a href={item.url} className="flex items-center gap-2">
+                                            <SidebarMenuButton
+                                                asChild
+                                                className={`${rutaActual.startsWith(item.url) ? 'colores-borde-glow rounded-xl border-2' : ''} my-2 h-[42px] text-lg`}
+                                            >
+                                                <a href={item.url} className="flex items-center gap-2 font-['Orbitron']">
                                                     <item.icon />
                                                     <span>{item.title}</span>
                                                 </a>
                                             </SidebarMenuButton>
                                         </SidebarMenuItem>
                                     ))}
+                                </SidebarMenu>
+                            </SidebarGroupContent>
+                            <SidebarGroupLabel className='mt-4'>Usuarios</SidebarGroupLabel>
+                            <SidebarGroupContent>
+                                <SidebarMenu>
+                                    <SidebarMenuItem>
+                                        <SidebarMenuButton
+                                            asChild
+                                            className={`${rutaActual.startsWith('/admin/usuarios') ? 'colores-borde-glow rounded-xl border-2' : ''} my-2 h-[42px] text-lg`}
+                                        >
+                                            <a href={'/admin/usuarios'} className="flex items-center gap-2 font-['Orbitron']">
+                                                <User />
+                                                <span>Usuarios</span>
+                                            </a>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
                                 </SidebarMenu>
                             </SidebarGroupContent>
                         </SidebarGroup>
@@ -108,11 +127,11 @@ export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
                 </Sidebar>
             </SidebarProvider>
 
-            <main className="absolute ml-[257px] h-full w-[calc(100dvw-257px)] flex flex-col p-2 justify-center bg-[linear-gradient(135deg,#0d0d0d,#1a1a1a,#262626)]">
-                <span className="flex justify-center font-['Orbitron'] text-3xl font-extrabold text-white drop-shadow-[4px_3px_4px_var(--verde-neon)] h-[60px] items-center">
+            <main className="absolute ml-[257px] flex h-full w-[calc(100dvw-257px)] flex-col justify-center bg-[linear-gradient(135deg,#0d0d0d,#1a1a1a,#262626)] p-2">
+                <span className="flex h-[60px] items-center justify-center font-['Orbitron'] text-3xl font-extrabold text-white drop-shadow-[4px_3px_4px_var(--verde-neon)]">
                     {titulo}
                 </span>
-                <div className="flex-1 overflow-auto max-h-[calc(100dvh-60px)] [&_input]:border-[var(--verde-neon)] [&_input]:focus:border-[#00ff9c]">
+                <div className="max-h-[calc(100dvh-60px)] flex-1 overflow-auto [&_input]:border-[var(--verde-neon)] [&_input]:focus:border-[#00ff9c]">
                     {children}
                 </div>
             </main>

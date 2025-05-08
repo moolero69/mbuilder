@@ -15,6 +15,7 @@ use Illuminate\Http\Middleware\TrustHosts;
 use Illuminate\Http\Middleware\TrustProxies;
 use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Session\Middleware\AuthenticateSession;
+use App\Http\Middleware\EsAdmin;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 

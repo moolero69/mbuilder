@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AdminPlacasBaseController;
 use App\Http\Controllers\Admin\AdminProcesadoresController;
 use App\Http\Controllers\Admin\AdminTarjetasGraficasController;
 use App\Http\Controllers\Admin\AdminTorresController;
+use App\Http\Controllers\Admin\AdminUsuariosController;
 use App\Http\Controllers\Montaje\MontajeController;
 use App\Http\Controllers\Montaje\MontajeDiscoDuroController;
 use App\Http\Controllers\Montaje\MontajeFuenteAlimentacionController;
@@ -30,7 +31,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    Route::get('montaje/tipo-montaje', function () {return Inertia::render('montaje/tipoMontaje');})->name('montaje.tipo');
+    Route::get('montaje/tipo-montaje', function () {
+        return Inertia::render('montaje/tipoMontaje');
+    })->name('montaje.tipo');
     Route::get('montaje/procesador', MontajeProcesadorController::class)->name('montaje.procesador');
     Route::get('montaje/disipador', MontajeDisipadorController::class)->name('montaje.disipador');
     Route::get('montaje/placaBase', MontajePlacaBaseController::class)->name('montaje.placaBase');
@@ -39,13 +42,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('montaje/tarjetaGrafica', MontajeTarjetaGraficaController::class)->name('montaje.tarjetaGrafica');
     Route::get('montaje/fuenteAlimentacion', MontajeFuenteAlimentacionController::class)->name('montaje.fuenteAlimentacion');
     Route::get('montaje/torre', MontajeTorreController::class)->name('montaje.torre');
-    Route::get('montaje/resumen', function () {return Inertia::render('montaje/resumen');})->name('montaje.resumen');
+    Route::get('montaje/resumen', function () {
+        return Inertia::render('montaje/resumen');
+    })->name('montaje.resumen');
     Route::post('montaje/guardar', [MontajeController::class, 'store'])->name('montaje.guardar');
-    Route::get('montaje/editar/confirmar', function () {return Inertia::render('montaje/editarMontaje');})->name('montaje.editar.confirmar');
+    Route::get('montaje/editar/confirmar', function () {
+        return Inertia::render('montaje/editarMontaje');
+    })->name('montaje.editar.confirmar');
     Route::post('montaje/editar', [MontajeController::class, 'update'])->name('montaje.editar');
     Route::delete('montaje/eliminar', [MontajeController::class, 'destroy'])->name('montaje.eliminar');
     Route::get('usuario/montajes', [MontajeController::class, 'show'])->name('usuario.montajes');
 
+    Route::get('pruebas', PruebasController::class)->name('pruebas');
+});
+
+
+Route::middleware(['auth', 'verified', 'es_admin'])->group(function () {
     Route::get('admin/procesadores', [AdminProcesadoresController::class, 'index'])->name('admin.procesadores');
     Route::get('admin/procesadores/crear', [AdminProcesadoresController::class, 'create'])->name('admin.procesadores.crear');
     Route::post('admin/procesadores', [AdminProcesadoresController::class, 'store'])->name('admin.procesadores.guardar');
@@ -109,10 +121,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('admin/torres/editar/{id}', [AdminTorresController::class, 'update'])->name('admin.torres.actualizar');
     Route::delete('/admin/torres/eliminar/{id}', [AdminTorresController::class, 'destroy'])->name('admin.torres.eliminar');
 
-
-
-
-    Route::get('pruebas', PruebasController::class)->name('pruebas');
+    Route::get('admin/usuarios', [AdminUsuariosController::class, 'index'])->name('admin.usuarios');
+    Route::get('admin/usuarios/crear', [AdminUsuariosController::class, 'create'])->name('admin.usuarios.crear');
+    Route::post('admin/usuarios', [AdminUsuariosController::class, 'store'])->name('admin.usuarios.guardar');
+    Route::get('admin/usuarios/editar/{id}', [AdminUsuariosController::class, 'edit'])->name('admin.usuarios.editar');
+    Route::put('admin/usuarios/editar/{id}', [AdminUsuariosController::class, 'update'])->name('admin.usuarios.actualizar');
+    Route::delete('/admin/usuarios/eliminar/{id}', [AdminUsuariosController::class, 'destroy'])->name('admin.usuarios.eliminar');
 
 });
 
@@ -127,6 +141,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 
-
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';

@@ -8,6 +8,7 @@ else
     php artisan migrate
 fi
 
+php artisan crear:Usuarios
 php artisan importar:Procesadores ./app/Console/Commands/componentes/procesadores.csv
 php artisan importar:PlacasBase ./app/Console/Commands/componentes/placas_base.csv
 php artisan importar:MemoriasRam ./app/Console/Commands/componentes/ram.csv

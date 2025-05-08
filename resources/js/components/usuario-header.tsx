@@ -24,7 +24,7 @@ export default function UsuarioHeader() {
                         <AvatarImage src="/img/avatar.png" className="h-[40px] w-[40px]" />
                         <AvatarFallback className="text-[var(--verde-neon)]">MB</AvatarFallback>
                     </Avatar>
-                    <h2 className="font-['Orbitron'] text-sm text-[var(--naranja-neon)]"> {auth.user.name} </h2>
+                    <h2 className="font-['Orbitron'] text-sm text-[var(--naranja-neon)]"> {auth.user.name}</h2>
                 </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 border border-[var(--verde-neon)] bg-[#0d0d0d] colores-borde-glow">
