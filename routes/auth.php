@@ -11,10 +11,10 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
+    Route::get('registro', [RegisteredUserController::class, 'create'])
         ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::post('registro', [RegisteredUserController::class, 'store']);
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
@@ -35,21 +35,21 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('verify-email', EmailVerificationPromptController::class)
+    Route::get('verificar-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 
-    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
+    Route::get('verificar-email/{id}/{hash}', VerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
 
-    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+    Route::post('email/notificacion-verificacion', [EmailVerificationNotificationController::class, 'store'])
         ->middleware('throttle:6,1')
         ->name('verification.send');
 
-    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
+    Route::get('confirmar-contraseña', [ConfirmablePasswordController::class, 'show'])
         ->name('password.confirm');
 
-    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+    Route::post('confirmar-contraseña', [ConfirmablePasswordController::class, 'store']);
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');

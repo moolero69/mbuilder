@@ -643,6 +643,24 @@ namespace App\Models {
     /**
      * App\Models\Disipador
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property float $precio
+     * @property int $consumo
+     * @property string $refrigeracion_liquida
+     * @property array $socket
+     * @property string $marca
+     * @property string $nombre
+     * @property string $id
+     * @method static \Illuminate\Database\Eloquent\Builder<Disipador>|Disipador whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Disipador>|Disipador whereNombre($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Disipador>|Disipador whereMarca($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Disipador>|Disipador whereSocket($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Disipador>|Disipador whereRefrigeracionLiquida($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Disipador>|Disipador whereConsumo($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Disipador>|Disipador wherePrecio($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Disipador>|Disipador whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Disipador>|Disipador whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Disipador>|Disipador newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Disipador>|Disipador newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Disipador>|Disipador query()
