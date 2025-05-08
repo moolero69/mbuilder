@@ -63,7 +63,10 @@ class AdminPlacasBaseController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
+        return inertia('admin/placasBase/editar-placa', [
+            'placaBase' => PlacaBase::findOrFail($id) // busca el componente por su id o lanza 404,
+        ]);
     }
 
     /**
@@ -71,14 +74,35 @@ class AdminPlacasBaseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'socket' => 'required|string|max:100',
+            'factor_forma' => 'required|string|max:100',
+            'zocalos_ram' => 'required|integer|min:0',
+            'puertos_m2' => 'required|integer|min:0',
+            'puertos_sata' => 'required|integer|min:0',
+            'puertos_pcie' => 'required|integer|min:0',
+            'consumo' => 'required|integer|min:0',
+            'precio' => 'required|numeric|min:0',
+        ]);
+    
+        $placa = PlacaBase::findOrFail($id);
+        $placa->update($validar);
+    
+        return redirect()->route('admin.placasBase')->with('success', 'Placa base actualizada correctamente.');
     }
+    
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $placa = PlacaBase::findOrFail($id);
+        $placa->delete();
+    
+        return redirect()->route('admin.placasBase')->with('success', 'Placa base eliminada correctamente');
     }
+    
 }

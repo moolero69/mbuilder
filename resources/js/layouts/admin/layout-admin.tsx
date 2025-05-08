@@ -63,6 +63,8 @@ const items = [
 ];
 
 export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
+    const rutaActual = window.location.pathname;
+
     return (
         <div className="flex h-dvh">
             <Toaster position="bottom-center" />
@@ -87,7 +89,7 @@ export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
                                 <SidebarMenu>
                                     {items.map((item) => (
                                         <SidebarMenuItem key={item.title}>
-                                            <SidebarMenuButton asChild>
+                                            <SidebarMenuButton asChild className={`${rutaActual.startsWith(item.url) ? 'border-2 colores-borde-glow rounded-xl' : ''}`}>
                                                 <a href={item.url} className="flex items-center gap-2">
                                                     <item.icon />
                                                     <span>{item.title}</span>
@@ -114,8 +116,6 @@ export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
                     {children}
                 </div>
             </main>
-
-
         </div>
     );
 }

@@ -93,5 +93,7 @@ class MontajeController extends Controller
     {
         $montaje = Montaje::findOrFail($request->id);
         $montaje->delete();
+
+        return redirect()->route('usuario.montajes')->with('success', 'Montaje eliminado correctamente.');
     }
 }

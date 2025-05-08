@@ -100,8 +100,12 @@ class AdminProcesadoresController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $procesador = Procesador::findOrFail($id);
+        $procesador->delete();
+    
+        return redirect()->route('admin.procesadores')->with('success', 'Procesador eliminado correctamente');
     }
+    
 }

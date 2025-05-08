@@ -60,7 +60,9 @@ class AdminTorresController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return inertia('admin/torres/editar-torre', [
+            'torre' => Torre::findOrFail($id) // busca el componente por su id o lanza 404,
+        ]);
     }
 
     /**
@@ -68,14 +70,31 @@ class AdminTorresController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'factor_forma' => 'required|string|max:255',
+            'soporte_RGB' => 'required|string|max:255',
+            'longitud_maxima_gpu' => 'required|integer',
+            'refrigeracion_liquida' => 'required|string|max:255',
+            'precio' => 'required|numeric',
+        ]);
+    
+        $torre = Torre::findOrFail($id);
+        $torre->update($validar);
+    
+        return redirect()->route('admin.torres')->with('success', 'Torre actualizada correctamente.');
     }
-
+    
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $torre = Torre::findOrFail($id);
+        $torre->delete();
+    
+        return redirect()->route('admin.torres')->with('success', 'Torre eliminada correctamente');
     }
+    
 }

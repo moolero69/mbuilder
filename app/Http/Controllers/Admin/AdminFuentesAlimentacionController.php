@@ -60,7 +60,9 @@ class AdminFuentesAlimentacionController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return inertia('admin/fuentesAlimentacion/editar-fuente', [
+            'fuenteAlimentacion' => FuenteAlimentacion::findOrFail($id) // busca el componente por su id o lanza 404,
+        ]);
     }
 
     /**
@@ -68,14 +70,31 @@ class AdminFuentesAlimentacionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'certificacion' => 'required|string|max:255',
+            'potencia' => 'required|integer',
+            'modular' => 'required|string|max:255',
+            'precio' => 'required|numeric',
+        ]);
+
+        $fuente = FuenteAlimentacion::findOrFail($id);
+        $fuente->update($validar);
+
+        return redirect()->route('admin.fuentes')->with('success', 'Fuente de alimentación actualizada correctamente.');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $fuente = FuenteAlimentacion::findOrFail($id);
+        $fuente->delete();
+    
+        return redirect()->route('admin.fuentes')->with('success', 'Fuente de alimentación eliminada correctamente');
     }
+    
 }

@@ -6,14 +6,19 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
 import { ComponentesMontaje, Montaje } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Check } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 type MontajeForm = {
     id: number;
 };
 
 export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
+    const { props }: any = usePage();
+    const exito = props.flash?.success;
+
     const [componenteSeleccionado, setComponenteSeleccionado] = useState<ComponentesMontaje>();
     const [dialogoEliminar, setDialogoEliminar] = useState(false);
     const [nombreMontaje, setNombreMontaje] = useState('');
@@ -65,6 +70,22 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         componenteSeleccionado && editarMontaje();
     }, [componenteSeleccionado]);
 
+    useEffect(() => {
+        exito && toast.custom(
+            (t) => (
+                <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl bg-white/90 p-4 text-black shadow-lg">
+                    <span>
+                        <Check size={30} className="text-[var(--rojo-neon)]" />
+                    </span>
+                    <div className="flex w-full justify-center text-center text-xl">
+                        <p className="font-['exo_2']">{exito}</p>
+                    </div>
+                </div>
+            ),
+            { duration: 3500 },
+        );;
+    }, [exito]);
+
     const { data, setData, delete: d } = useForm<MontajeForm>();
 
     const eliminarMontaje = () => {
@@ -104,7 +125,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                             </div>
                         </>
                     ) : (
-                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
                             {montajes.map((montaje) => {
                                 const datos = JSON.parse(montaje.datos);
 
@@ -120,8 +141,8 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                 return (
                                     <div
                                         key={montaje.id}
-                                        className="colores-borde-glow rounded-xl bg-gradient-to-b from-black to-[#0d0d0d] p-5 transition-all duration-300 "
-                                    >
+                                        className="colores-borde-glow flex h-full flex-col rounded-xl bg-gradient-to-b from-black to-[#0d0d0d] p-5 transition-all duration-300"
+                                        >
                                         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-between">
                                             <div className='flex gap-3 justify-center items-center '>
                                                 <h2 className="mb-3 font-['Orbitron'] text-2xl font-bold text-[var(--naranja-neon)] drop-shadow-[0_0_5px_var(--naranja-neon)]">
@@ -136,7 +157,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
 
                                         <p className="mb-4 text-sm text-gray-400">Creado el {new Date(montaje.created_at).toLocaleDateString()}</p>
 
-                                        <ul className="space-y-1 text-sm">
+                                        <ul className="space-y-1 text-sm mb-4">
                                             <li>
                                                 <strong className="text-[var(--azul-neon)]">Procesador:</strong>{' '}
                                                 {datos.procesador?.nombre || <span className="text-red-500">Sin procesador</span>}
@@ -204,7 +225,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                             </li>
                                         </ul>
 
-                                        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-between">
+                                        <div className="flex flex-col gap-2 sm:flex-row sm:justify-between mt-auto">
                                             <Button
                                                 variant="outline"
                                                 className="w-full border-[var(--azul-neon)] font-['Orbitron'] text-[var(--azul-neon)] shadow-[0_0_8px_var(--azul-neon)] transition-all duration-500 hover:bg-[var(--azul-neon)] hover:text-black hover:shadow-[0_0_16px_var(--azul-neon)] sm:w-auto"

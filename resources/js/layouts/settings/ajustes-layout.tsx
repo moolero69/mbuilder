@@ -27,7 +27,7 @@ const sidebarNavItems: NavItem[] = [
 ];
 
 export default function AjustesLayout({ children }: PropsWithChildren) {
-    const currentPath = window.location.pathname;
+    const rutaActual = window.location.pathname;
 
     return (
         <>
@@ -48,7 +48,7 @@ export default function AjustesLayout({ children }: PropsWithChildren) {
                                             `flex w-full items-center justify-start gap-3 rounded-md border border-transparent px-4 py-3 text-left font-['Orbitron'] text-base text-[var(--gris-neon)] transition-all duration-200 hover:border-[var(--gris-neon)] hover:bg-[var(--gris-neon)]/10`,
                                             {
                                                 'border-[var(--gris-neon)] bg-[var(--gris-neon)]/10 shadow-[0_0_8px_var(--gris-neon)/20]':
-                                                    currentPath === item.href,
+                                                    rutaActual === item.href,
                                             },
                                         )}
                                     >

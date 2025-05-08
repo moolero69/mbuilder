@@ -63,7 +63,9 @@ class AdminTarjetasGraficasController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return inertia('admin/tarjetasGraficas/editar-grafica', [
+            'tarjetaGrafica' => TarjetaGrafica::findOrFail($id) // busca el componente por su id o lanza 404,
+        ]);
     }
 
     /**
@@ -71,14 +73,33 @@ class AdminTarjetasGraficasController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'tipo' => 'required|string|max:255',
+            'serie' => 'required|string|max:255',
+            'tipo_memoria' => 'required|string|max:255',
+            'memoria' => 'required|integer',
+            'longitud' => 'required|integer',
+            'passmark' => 'required|integer',
+            'consumo' => 'required|integer',
+            'precio' => 'required|numeric',
+        ]);
+
+        $grafica = TarjetaGrafica::findOrFail($id);
+        $grafica->update($validar);
+
+        return redirect()->route('admin.graficas')->with('success', 'Tarjeta gráfica actualizada correctamente.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $tarjeta = TarjetaGrafica::findOrFail($id);
+        $tarjeta->delete();
+
+        return redirect()->route('admin.graficas')->with('success', 'Tarjeta gráfica eliminada correctamente');
     }
 }

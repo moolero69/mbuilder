@@ -205,9 +205,9 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
         setIsDragging(true);
     };
 
-    const desplegar = () => {};
+    const desplegar = () => { };
 
-    const replegar = () => {};
+    const replegar = () => { };
     return (
         <>
             <Head title="montaje - fuente alimentacion" />
@@ -253,8 +253,8 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                         </CollapsibleTrigger>
                                     </div>
                                     {!corsairDesplegado && (
-                                        <>
-                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                            {fuentesCorsair[0] && (
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={fuentesCorsair[0].id}
@@ -263,24 +263,32 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                                         precio={fuentesCorsair[0].precio}
                                                     />
                                                 </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={fuentesCorsair[1].id}
-                                                        nombre={fuentesCorsair[1].nombre}
-                                                        icono={<Power />}
-                                                        precio={fuentesCorsair[1].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                            </div>
-                                        </>
+                                            )}
+                                            {fuentesCorsair[1] && (
+                                                <>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={fuentesCorsair[1].id}
+                                                            nombre={fuentesCorsair[1].nombre}
+                                                            icono={<Power />}
+                                                            precio={fuentesCorsair[1].precio}
+                                                        />
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
                                         {fuentesCorsair.map((fuente) => (
                                             <div key={fuente.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={fuente.id} nombre={fuente.nombre} icono={<Power />} precio={fuente.precio} />
+                                                    <ItemArrastrable
+                                                        id={fuente.id}
+                                                        nombre={fuente.nombre}
+                                                        icono={<Power />}
+                                                        precio={fuente.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -303,8 +311,8 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                         </CollapsibleTrigger>
                                     </div>
                                     {!evgaDesplegado && (
-                                        <>
-                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                            {fuentesEvga[0] && (
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={fuentesEvga[0].id}
@@ -313,24 +321,32 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                                         precio={fuentesEvga[0].precio}
                                                     />
                                                 </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={fuentesEvga[1].id}
-                                                        nombre={fuentesEvga[1].nombre}
-                                                        icono={<Power />}
-                                                        precio={fuentesEvga[1].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                            </div>
-                                        </>
+                                            )}
+                                            {fuentesEvga[1] && (
+                                                <>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={fuentesEvga[1].id}
+                                                            nombre={fuentesEvga[1].nombre}
+                                                            icono={<Power />}
+                                                            precio={fuentesEvga[1].precio}
+                                                        />
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
                                         {fuentesEvga.map((fuente) => (
                                             <div key={fuente.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={fuente.id} nombre={fuente.nombre} icono={<Power />} precio={fuente.precio} />
+                                                    <ItemArrastrable
+                                                        id={fuente.id}
+                                                        nombre={fuente.nombre}
+                                                        icono={<Power />}
+                                                        precio={fuente.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -344,17 +360,17 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                 <Collapsible open={bequietDesplegado} onOpenChange={setBequietDesplegado} className="w-full space-y-2">
                                     <div className="flex h-12 items-center justify-between rounded-lg bg-black/50 px-4">
                                         <p className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-xl font-semibold text-transparent">
-                                            EVGA
+                                            Be Quiet!
                                         </p>
                                         <CollapsibleTrigger asChild>
                                             <Button variant="ghost" size="sm">
-                                                {evgaDesplegado ? <Minus /> : <Plus />}
+                                                {bequietDesplegado ? <Minus /> : <Plus />}
                                             </Button>
                                         </CollapsibleTrigger>
                                     </div>
                                     {!bequietDesplegado && (
-                                        <>
-                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                            {fuentesBequiet[0] && (
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={fuentesBequiet[0].id}
@@ -363,24 +379,32 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                                         precio={fuentesBequiet[0].precio}
                                                     />
                                                 </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={fuentesBequiet[1].id}
-                                                        nombre={fuentesBequiet[1].nombre}
-                                                        icono={<Power />}
-                                                        precio={fuentesBequiet[1].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                            </div>
-                                        </>
+                                            )}
+                                            {fuentesBequiet[1] && (
+                                                <>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={fuentesBequiet[1].id}
+                                                            nombre={fuentesBequiet[1].nombre}
+                                                            icono={<Power />}
+                                                            precio={fuentesBequiet[1].precio}
+                                                        />
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
                                         {fuentesBequiet.map((fuente) => (
                                             <div key={fuente.id} className="w-full">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable id={fuente.id} nombre={fuente.nombre} icono={<Power />} precio={fuente.precio} />
+                                                    <ItemArrastrable
+                                                        id={fuente.id}
+                                                        nombre={fuente.nombre}
+                                                        icono={<Power />}
+                                                        precio={fuente.precio}
+                                                    />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -403,8 +427,8 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                         </CollapsibleTrigger>
                                     </div>
                                     {!thermaltakeDesplegado && (
-                                        <>
-                                            <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                        <div className="space-y-3 rounded-xl bg-black/50 p-2">
+                                            {fuentesThermaltake[0] && (
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={fuentesThermaltake[0].id}
@@ -413,18 +437,21 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                                         precio={fuentesThermaltake[0].precio}
                                                     />
                                                 </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                                <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={fuentesThermaltake[1].id}
-                                                        nombre={fuentesThermaltake[1].nombre}
-                                                        icono={<Power />}
-                                                        precio={fuentesThermaltake[1].precio}
-                                                    />
-                                                </div>
-                                                <Separator className="border-[1px] border-gray-600" />
-                                            </div>
-                                        </>
+                                            )}
+                                            {fuentesThermaltake[1] && (
+                                                <>
+                                                    <Separator className="border-[1px] border-gray-600" />
+                                                    <div className="flex flex-row justify-center gap-5 py-3 align-middle">
+                                                        <ItemArrastrable
+                                                            id={fuentesThermaltake[1].id}
+                                                            nombre={fuentesThermaltake[1].nombre}
+                                                            icono={<Power />}
+                                                            precio={fuentesThermaltake[1].precio}
+                                                        />
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
                                     )}
                                     <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
                                         {fuentesThermaltake.map((fuente) => (

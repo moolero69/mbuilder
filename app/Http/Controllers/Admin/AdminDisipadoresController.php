@@ -40,10 +40,10 @@ class AdminDisipadoresController extends Controller
             'consumo' => 'required|integer',
             'precio' => 'required|numeric',
         ]);
-    
+
         // Guardar el disipador
         Disipador::create($validar);
-    
+
         return redirect()->route('admin.disipadores')->with('success', 'Disipador añadido correctamente.');
     }
 
@@ -60,22 +60,40 @@ class AdminDisipadoresController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
+        return inertia('admin/disipadores/editar-disipador', [
+            'disipador' => Disipador::findOrFail($id) // busca el componente por su id o lanza 404,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'socket' => 'string|max:255',
+            'refrigeracion_liquida' => 'required|string|max:255',
+            'consumo' => 'required|numeric|min:0',
+            'precio' => 'required|numeric|min:0',
+        ]);
+
+        $disipador = Disipador::findOrFail($id);
+        $disipador->update($validar);
+
+        return to_route('admin.disipadores')->with('success', 'Disipador actualizado correctamente.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $disipador = Disipador::findOrFail($id);
+        $disipador->delete();
+
+        return redirect()->route('admin.disipadores')->with('success', 'Disipador eliminado correctamente');
     }
 }

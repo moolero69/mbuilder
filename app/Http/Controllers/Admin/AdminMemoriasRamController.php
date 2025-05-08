@@ -61,7 +61,10 @@ class AdminMemoriasRamController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
+        return inertia('admin/memoriasRam/editar-memoria', [
+            'memoriaRam' => MemoriaRam::findOrFail($id) // busca el componente por su id o lanza 404,
+        ]);
     }
 
     /**
@@ -69,14 +72,32 @@ class AdminMemoriasRamController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'almacenamiento' => 'required|integer|min:0',
+            'tipo' => 'required|string|max:100',
+            'pack' => 'required|integer|min:1',
+            'frecuencia' => 'required|integer|min:0',
+            'consumo' => 'required|integer|min:0',
+            'precio' => 'required|numeric|min:0',
+        ]);
+
+        $ram = MemoriaRam::findOrFail($id);
+        $ram->update($validar);
+
+        return redirect()->route('admin.memoriasRam')->with('success', 'Memoria RAM actualizada correctamente.');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $memoria = MemoriaRam::findOrFail($id);
+        $memoria->delete();
+
+        return redirect()->route('admin.memoriasRam')->with('success', 'Memoria RAM eliminada correctamente');
     }
 }

@@ -62,7 +62,10 @@ class AdminDiscosDurosController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
+        return inertia('admin/discosDuros/editar-disco', [
+            'discoDuro' => DiscoDuro::findOrFail($id) // busca el componente por su id o lanza 404,
+        ]);
     }
 
     /**
@@ -70,14 +73,33 @@ class AdminDiscosDurosController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validar = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'tecnologia' => 'required|string|max:255',
+            'almacenamiento' => 'required|string|max:255',
+            'conexion' => 'required|string|max:255',
+            'pulgadas' => 'required|numeric',
+            'velocidad' => 'required|integer',
+            'consumo' => 'required|integer',
+            'precio' => 'required|numeric',
+        ]);
+
+        $disco = DiscoDuro::findOrFail($id);
+        $disco->update($validar);
+
+        return redirect()->route('admin.discosDuros')->with('success', 'Disco duro actualizado correctamente.');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $disco = DiscoDuro::findOrFail($id);
+        $disco->delete();
+
+        return redirect()->route('admin.discosDuros')->with('success', 'Disco duro eliminado correctamente');
     }
 }
