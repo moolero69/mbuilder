@@ -12,10 +12,12 @@ class AdminMemoriasRamController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $filas = $request->input('mostrar_filas', 15);
+    
         return Inertia::render('admin/memoriasRam/tabla-memorias', [
-            'memoriasRam' => MemoriaRam::latest()->paginate(15)
+            'memoriasRam' => MemoriaRam::latest()->paginate($filas),
         ]);
     }
 

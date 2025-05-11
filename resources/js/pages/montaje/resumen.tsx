@@ -30,7 +30,7 @@ export default function ResumenMontaje() {
         fuenteAlimentacionGuardada,
         torreGuardada,
         disipadorGuardado,
-        tipoMontaje
+        tipoMontaje,
     } = useProgresoMontaje((state) => state);
 
     const { data, setData, post } = useForm<MontajeForm>({
@@ -83,11 +83,24 @@ export default function ResumenMontaje() {
         precio: precioTotal,
         consumo: consumoTotal,
         nombre: data.nombre,
-        tipo_montaje: tipoMontaje
+        tipo_montaje: tipoMontaje,
+    };
+
+    const idComponentes = {
+        procesador_id: procesadorGuardado?.id ?? null,
+        disipador_id: disipadorGuardado?.id ?? null,
+        placabase_id: placaBaseGuardada?.id ?? null,
+        memoria_ram_id: memoriaRamGuardada?.id ?? null,
+        discoduro_id: discoDuroGuardado?.id ?? null,
+        discodurosecundario_id: discoDuroSecundarioGuardado?.id ?? null,
+        tarjeta_grafica_id: tarjetaGraficaGuardada?.id ?? null,
+        fuente_alimentacion_id: fuenteAlimentacionGuardada?.id ?? null,
+        torre_id: torreGuardada?.id ?? null,
     };
 
     const construirJsonMontaje = () => {
         post(route('montaje.guardar'), {
+            preserveScroll: true,
             onSuccess: () => {
                 toast.custom(
                     (t) => (
@@ -200,7 +213,10 @@ export default function ResumenMontaje() {
                     {memoriaRamGuardada && (
                         <div className="rounded border border-[var(--violeta-neon)] bg-gradient-to-br from-black via-[var(--violeta-neon)]/10 to-black p-4 text-center">
                             <h3 className="animate-[flicker_3s_infinite] text-xl font-bold text-[var(--violeta-neon)]">Memoria RAM</h3>
-                            <p className="text-lg font-semibold">{memoriaRamGuardada.nombre}</p>
+                            <p className="text-lg font-semibold">
+                                {memoriaRamGuardada.cantidad && `x${memoriaRamGuardada?.cantidad} `}
+                                {memoriaRamGuardada.nombre}
+                            </p>
                             <div className="flex w-full flex-wrap justify-center gap-4">
                                 <div>
                                     <p className="underline">Capacidad</p>
@@ -412,12 +428,14 @@ export default function ResumenMontaje() {
                         Compartir montaje
                     </button>
 
-                    <button
-                        className="rounded-lg border border-[var(--rosa-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--rosa-neon)] duration-1000 hover:bg-[var(--rosa-neon)] hover:text-black"
-                        // onClick={handleExportarPDF}
+                    <Button
+                        className="rounded-lg border border-[var(--azul-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--azul-neon)] transition-colors duration-1000 hover:bg-[var(--azul-neon)] hover:text-black"
+                        asChild
                     >
-                        Exportar a PDF
-                    </button>
+                        <Link href={route('montaje.generarPdf')} data={idComponentes} method="post">
+                            Exportar PDF
+                        </Link>
+                    </Button>
 
                     <Button
                         variant={'outline'}

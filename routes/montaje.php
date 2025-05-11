@@ -10,6 +10,7 @@ use App\Http\Controllers\Montaje\MontajeFuenteAlimentacionController;
 use App\Http\Controllers\Montaje\MontajePlacaBaseController;
 use App\Http\Controllers\Montaje\MontajeProcesadorController;
 use App\Http\Controllers\Montaje\MontajeDisipadorController;
+use App\Http\Controllers\Pdf\PdfController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -33,5 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('montaje/editar', [MontajeController::class, 'update'])->name('montaje.editar');
     Route::delete('montaje/eliminar', [MontajeController::class, 'destroy'])->name('montaje.eliminar');
     Route::get('usuario/montajes', [MontajeController::class, 'show'])->name('usuario.montajes');
+
+    Route::post('/montaje/generar-pdf', [MontajeController::class, 'generarPdf'])->name('montaje.generarPdf');
 
 });

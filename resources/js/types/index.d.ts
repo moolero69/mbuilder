@@ -104,6 +104,7 @@ export interface MemoriaRam {
     precio: number;
     created_at: Date;
     updated_at: Date;
+    cantidad?: number;
 }
 
 export interface DiscoDuro {

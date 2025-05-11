@@ -12,12 +12,15 @@ class AdminProcesadoresController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $porPagina = $request->input('mostrar_filas', 15);
+    
         return Inertia::render('admin/procesadores/tabla-procesadores', [
-            'procesadores' => Procesador::latest()->paginate(15)
+            'procesadores' => Procesador::latest()->paginate($porPagina)
         ]);
     }
+    
 
     /**
      * Show the form for creating a new resource.

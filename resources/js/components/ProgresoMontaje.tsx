@@ -72,6 +72,7 @@ export default function ProgresoMontaje({ componentes }: { componentes: string[]
                 {componentes.includes('memoriaRam') && memoriaRamGuardada && (
                     <div className="flex min-w-0 items-center justify-between from-red-500 via-orange-500 to-yellow-500 bg-clip-text duration-200 hover:bg-gradient-to-r hover:text-transparent">
                         <Link href={route('montaje.memoriaRam')} className="truncate">
+                            <span className="text-[var(--fucsia-neon)]">{memoriaRamGuardada.cantidad && `x${memoriaRamGuardada?.cantidad} `}</span>
                             {memoriaRamGuardada.nombre}
                         </Link>
                         <span className="ml-2 text-[var(--verde-neon)]">{`${memoriaRamGuardada.precio}€`}</span>

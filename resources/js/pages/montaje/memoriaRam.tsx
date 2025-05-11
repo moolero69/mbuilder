@@ -10,7 +10,6 @@ import { BreadcrumbItem, MemoriaRam } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ArrowBigDown, Box, Euro, Factory, Gauge, MemoryStick, Microchip, Minus, Move, Plus, Search, Wrench } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -76,6 +75,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
             componente: torreGuardada,
         },
     ];
+
     const progresoMontaje = [
         'procesador',
         'disipador',
@@ -92,8 +92,17 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
     const [esCompatible, setEsCompatible] = useState<boolean | null>(true);
 
     const [memoriaSeleccionada, setMemoriaSeleccionada] = useState<MemoriaRam | null>(memoriaRamGuardada!);
-    const [modoSeleccionarIgual, setModoSeleccionarIgual] = useState<boolean>(false);
     const [modoSeleccionarOtra, setModoSeleccionarOtra] = useState(false);
+    const [numeroMemorias, setNumeroMemorias] = useState<number>(memoriaSeleccionada ? memoriaSeleccionada!.cantidad! : 0);
+    const [primerPrecioMemoria, setPrimerPrecioMemoria] = useState<number | null>(
+        memoriaSeleccionada ? (memoriasRam.find((memoria) => memoria.id === memoriaSeleccionada.id)?.precio ?? null) : null,
+    );
+
+    useEffect(() => {
+        if (!numeroMemorias || primerPrecioMemoria === undefined) return;
+        memoriaRamGuardada!.cantidad = numeroMemorias;
+        memoriaRamGuardada!.precio = primerPrecioMemoria! * numeroMemorias;
+    }, [numeroMemorias]);
 
     const [memoriaActiva, setMemoriaActiva] = useState<MemoriaRam | null>(null);
 
@@ -177,18 +186,9 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
 
         const zocalosPlaca = placaBaseGuardada.zocalos_ram;
         const zocalosOcupados: number = modoSeleccionarOtra ? memoriaRamGuardada!.pack + memoriaSeleccionada.pack : memoriaSeleccionada.pack * 2;
-        console.log(zocalosOcupados);
 
         zocalosPlaca < zocalosOcupados ? setEsCompatible(false) : setEsCompatible(true);
     }
-
-    useEffect(() => {
-        if (modoSeleccionarIgual) {
-            comprobarCompatibilidad();
-        } else if (modoSeleccionarOtra && memoriaSeleccionada) {
-            comprobarCompatibilidad();
-        }
-    }, [modoSeleccionarIgual, modoSeleccionarOtra, memoriaSeleccionada]);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -197,6 +197,9 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
             const item = memoriasRam.find((p) => p.id === active.id);
             if (item) {
                 setMemoriaSeleccionada(item);
+                setNumeroMemorias(item.pack);
+                setPrimerPrecioMemoria(item.precio);
+                guardarMemoriaRam!(item);
             }
         }
         setMemoriaActiva(null);
@@ -449,6 +452,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                         id={memoria.id}
                                                         nombre={memoria.nombre}
                                                         icono={<MemoryStick />}
+                                                        textoSecundario={`${memoria.almacenamiento}GB`}
                                                         precio={memoria.precio}
                                                     />
                                                 </div>
@@ -603,14 +607,15 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                 <AreaSoltarItem
                                     botonEliminar={() => {
                                         setMemoriaSeleccionada(null);
-                                        setModoSeleccionarIgual(false);
-                                        setModoSeleccionarOtra(false);
                                         guardarMemoriaRam!(null);
                                     }}
                                     mostrarBoton={Boolean(memoriaSeleccionada)}
                                 >
                                     {!memoriaActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                            <span className="text-[var(--fucsia-neon)]">
+                                                {memoriaSeleccionada?.cantidad && `x${memoriaSeleccionada.cantidad} `}
+                                            </span>
                                             {memoriaSeleccionada?.nombre}
                                         </h1>
                                     )}
@@ -705,46 +710,17 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-4">
-                                        {/* BOTÓN AÑADIR MEMORIA */}
-                                        {!modoSeleccionarIgual && !modoSeleccionarOtra && (
-                                            <DropdownMenu.Root>
-                                                <DropdownMenu.Trigger asChild>
-                                                    <Button
-                                                        variant={'outline'}
-                                                        className={`fade-in relative rounded-lg border-[var(--azul-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--azul-neon)] shadow-[0_0_10px_var(--azul-neon)] transition-all duration-500 hover:bg-[var(--azul-neon)] hover:text-black hover:shadow-[0_0_20px_var(--azul-neon)] ${memoriaActiva && 'hidden'}`}
-                                                    >
-                                                        Añadir memoria extra
-                                                    </Button>
-                                                </DropdownMenu.Trigger>
-
-                                                <DropdownMenu.Portal>
-                                                    <DropdownMenu.Content
-                                                        side="bottom"
-                                                        align="center"
-                                                        className="z-50 mt-1 rounded-md border border-[var(--azul-neon)] bg-[#111] p-2 shadow-lg"
-                                                    >
-                                                        <DropdownMenu.Item
-                                                            className="cursor-pointer rounded-md px-4 py-2 text-sm text-white hover:bg-[var(--azul-neon)] hover:text-black"
-                                                            onClick={() => {
-                                                                setModoSeleccionarIgual(true);
-                                                                guardarMemoriaRamSecundaria!(memoriaSeleccionada);
-                                                            }}
-                                                        >
-                                                            Memoria igual
-                                                        </DropdownMenu.Item>
-                                                        <DropdownMenu.Item
-                                                            className="cursor-pointer rounded-md px-4 py-2 text-sm text-white hover:bg-[var(--azul-neon)] hover:text-black"
-                                                            onClick={() => {
-                                                                setModoSeleccionarOtra(true);
-                                                                guardarMemoriaRam!(memoriaSeleccionada);
-                                                                setMemoriaSeleccionada(null);
-                                                            }}
-                                                        >
-                                                            Seleccionar otra
-                                                        </DropdownMenu.Item>
-                                                    </DropdownMenu.Content>
-                                                </DropdownMenu.Portal>
-                                            </DropdownMenu.Root>
+                                        {/* BOTÓN AÑADIR MEMORIA EXTRA*/}
+                                        {numeroMemorias < placaBaseGuardada!.zocalos_ram && (
+                                            <Button
+                                                variant={'outline'}
+                                                className={`fade-in relative rounded-lg border-[var(--azul-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--azul-neon)] shadow-[0_0_10px_var(--azul-neon)] transition-all duration-500 hover:bg-[var(--azul-neon)] hover:text-black hover:shadow-[0_0_20px_var(--azul-neon)] ${memoriaActiva && 'hidden'}`}
+                                                onClick={() => {
+                                                    setNumeroMemorias((numero) => numero + memoriaSeleccionada.pack);
+                                                }}
+                                            >
+                                                Añadir memoria extra
+                                            </Button>
                                         )}
                                         {/* BOTÓN SIGUIENTE O INCOMPATIBLE */}
                                         {esCompatible ? (
@@ -752,14 +728,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                                 variant={'outline'}
                                                 className={`fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${memoriaActiva && 'hidden'}`}
                                                 onClick={() => {
-                                                    !modoSeleccionarIgual && !modoSeleccionarOtra && guardarMemoriaRam!(memoriaSeleccionada);
-
-                                                    if (modoSeleccionarIgual) {
-                                                        guardarMemoriaRam!(memoriaSeleccionada);
-                                                        guardarMemoriaRamSecundaria!(memoriaSeleccionada);
-                                                    }
-
-                                                    modoSeleccionarOtra && guardarMemoriaRamSecundaria!(memoriaSeleccionada);
+                                                    guardarMemoriaRam!(memoriaSeleccionada);
                                                 }}
                                                 asChild
                                             >

@@ -137,9 +137,12 @@ export default function editarMontajes() {
                                     )}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Memoria RAM Principal:</strong>{' '}
+                                    <strong className="text-[var(--azul-neon)]">Memoria/s RAM:</strong>{' '}
                                     {montajeAnterior?.memoria_ram ? (
-                                        montajeAnterior.memoria_ram.nombre
+                                        <span>
+                                            {montajeAnterior.memoria_ram.cantidad ? `x${montajeAnterior.memoria_ram.cantidad} ` : ''}
+                                            {montajeAnterior.memoria_ram.nombre}
+                                        </span>
                                     ) : (
                                         <span className="text-red-500">Sin memoria RAM Principal</span>
                                     )}
@@ -227,8 +230,8 @@ export default function editarMontajes() {
                                     {placaBaseGuardada ? placaBaseGuardada.nombre : <span className="text-red-500">Sin placa base</span>}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Memoria RAM:</strong>{' '}
-                                    {memoriaRamGuardada ? memoriaRamGuardada.nombre : <span className="text-red-500">Sin memoria RAM</span>}
+                                    <strong className="text-[var(--azul-neon)]">Memoria/s RAM:</strong>{' '}
+                                    {memoriaRamGuardada?.cantidad && `x${memoriaRamGuardada?.cantidad} `}{memoriaRamGuardada ? memoriaRamGuardada.nombre : <span className="text-red-500">Sin memoria RAM</span>}
                                 </li>
                                 {memoriaRamSecundariaGuardada && (
                                     <li>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Montaje\MontajeController;
+use App\Http\Controllers\Pdf\PdfController;
 use App\Http\Controllers\PruebasController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -19,7 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 
-require __DIR__ . '/settings.php';
+require __DIR__ . '/ajustes.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/montaje.php';

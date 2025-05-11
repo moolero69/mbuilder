@@ -16,18 +16,20 @@ const sidebarNavItems: NavItem[] = [
     },
     {
         title: 'Contraseña',
-        href: '/ajustes/contraseña',
-        icon: <KeyRound/>,
+        href: '/ajustes/contrasena',
+        icon: <KeyRound />,
     },
     {
-        title: 'Apariencia!!!??',
+        title: 'Apariencia',
         href: '/ajustes/apariencia',
-        icon: <SunMoon/>,
+        icon: <SunMoon />,
     },
 ];
 
 export default function AjustesLayout({ children }: PropsWithChildren) {
     const rutaActual = window.location.pathname;
+    const bytes = new TextEncoder().encode(rutaActual)
+    console.log(new TextDecoder().decode(bytes))
 
     return (
         <>
@@ -48,7 +50,7 @@ export default function AjustesLayout({ children }: PropsWithChildren) {
                                             `flex w-full items-center justify-start gap-3 rounded-md border border-transparent px-4 py-3 text-left font-['Orbitron'] text-base text-[var(--gris-neon)] transition-all duration-200 hover:border-[var(--gris-neon)] hover:bg-[var(--gris-neon)]/10`,
                                             {
                                                 'border-[var(--gris-neon)] bg-[var(--gris-neon)]/10 shadow-[0_0_8px_var(--gris-neon)/20]':
-                                                    rutaActual === item.href,
+                                                    rutaActual.replace('ñ', 'n') === item.href.replace('ñ', 'n'),
                                             },
                                         )}
                                     >

@@ -3,13 +3,49 @@
 namespace App\Http\Controllers\Montaje;
 
 use App\Http\Controllers\Controller;
+use App\Models\DiscoDuro;
+use App\Models\Disipador;
+use App\Models\FuenteAlimentacion;
+use App\Models\MemoriaRam;
 use App\Models\Montaje;
+use App\Models\PlacaBase;
+use App\Models\Procesador;
+use App\Models\TarjetaGrafica;
+use App\Models\Torre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class MontajeController extends Controller
 {
+    public function generarPdf(Request $request)
+    {
+        $procesador = Procesador::find($request->input('procesador_id'));
+        $disipador = Disipador::find($request->input('disipador_id'));
+        $placaBase = PlacaBase::find($request->input('placabase_id'));
+        $memoriaRam = MemoriaRam::find($request->input('memoria_ram_id'));
+        $discoDuro = DiscoDuro::find($request->input('discoduro_id'));
+        $discoDuroSecundario = DiscoDuro::find($request->input('discodurosecundario_id'));
+        $tarjetaGrafica = TarjetaGrafica::find($request->input('tarjeta_grafica_id'));
+        $fuenteAlimentacion = FuenteAlimentacion::find($request->input('fuente_alimentacion_id'));
+        $torre = Torre::find($request->input('torre_id'));
+
+        return Inertia::render('montaje/pdf/descargarPdf', [
+            'procesador' => $procesador,
+            'disipador' => $disipador,
+            'placaBase' => $placaBase,
+            'memoriaRam' => $memoriaRam,
+            'discoDuro' => $discoDuro,
+            'discoDuroSecundario' => $discoDuroSecundario,
+            'tarjetaGrafica' => $tarjetaGrafica,
+            'fuenteAlimentacion' => $fuenteAlimentacion,
+            'torre' => $torre,
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      */

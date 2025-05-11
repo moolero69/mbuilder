@@ -12,10 +12,12 @@ class AdminTorresController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $filas = $request->input('mostrar_filas', 15);
+    
         return Inertia::render('admin/torres/tabla-torres', [
-            'torres' => Torre::latest()->paginate(15)
+            'torres' => Torre::latest()->paginate($filas)
         ]);
     }
 

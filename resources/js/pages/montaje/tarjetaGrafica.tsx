@@ -154,7 +154,6 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
 
         const ratio = (passmarkCPU / passmarkGPU) * 100;
         cuelloDeBotella = ratio - 100;
-        console.log(cuelloDeBotella);
         setCuelloBotella(cuelloDeBotella <= 15);
     }
 

@@ -13,10 +13,12 @@ class AdminUsuariosController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $filas = $request->input('mostrar_filas', 15);
+    
         return Inertia::render('admin/usuarios/tabla-usuarios', [
-            'usuarios' => User::latest()->paginate(15)
+            'usuarios' => User::latest()->paginate($filas)
         ]);
     }
 

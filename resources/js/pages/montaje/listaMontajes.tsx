@@ -178,8 +178,8 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                                 {datos.placa_base?.nombre || <span className="text-red-500">Sin placa base</span>}
                                             </li>
                                             <li>
-                                                <strong className="text-[var(--azul-neon)]">Memoria RAM Principal:</strong>{' '}
-                                                {datos.memoria_ram?.nombre || <span className="text-red-500">Sin memoria RAM principal</span>}
+                                                <strong className="text-[var(--azul-neon)]">Memoria/s RAM:</strong>{' '}
+                                                {datos.memoria_ram?.cantidad && `x${datos.memoria_ram?.cantidad} `}{datos.memoria_ram?.nombre || <span className="text-red-500">Sin memoria RAM principal</span>}
                                             </li>
                                             {datos.memoria_ram_secundaria && (
                                                 <li>
@@ -253,6 +253,8 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                             >
                                                 Eliminar
                                             </Button>
+
+                                            <Link href={route('pdf.ver')}>Ver PDF</Link>
                                         </div>
                                     </div>
                                 );

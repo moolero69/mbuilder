@@ -12,12 +12,15 @@ class AdminDisipadoresController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $filas = $request->input('mostrar_filas', 15);
+    
         return Inertia::render('admin/disipadores/tabla-disipadores', [
-            'disipadores' => Disipador::latest()->paginate(15)
+            'disipadores' => Disipador::latest()->paginate($filas)
         ]);
     }
+    
 
     /**
      * Show the form for creating a new resource.
