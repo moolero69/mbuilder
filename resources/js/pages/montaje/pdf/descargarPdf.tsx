@@ -1,10 +1,8 @@
 import { DiscoDuro, Disipador, FuenteAlimentacion, MemoriaRam, PlacaBase, Procesador, TarjetaGrafica, Torre } from '@/types';
+import { router } from '@inertiajs/react';
 import { pdf } from '@react-pdf/renderer';
 import { useEffect } from 'react';
 import PdfMontaje from './pdfMontaje';
-import { router } from '@inertiajs/react'
-
-
 
 export default function DescargarPDF({
     procesador,
@@ -16,6 +14,11 @@ export default function DescargarPDF({
     tarjetaGrafica,
     fuenteAlimentacion,
     torre,
+    resumen,
+    nombre,
+    precioTotal,
+    consumoTotal,
+    numeroMemorias
 }: {
     procesador: Procesador;
     disipador: Disipador;
@@ -26,6 +29,11 @@ export default function DescargarPDF({
     tarjetaGrafica: TarjetaGrafica;
     fuenteAlimentacion: FuenteAlimentacion;
     torre: Torre;
+    resumen: string;
+    nombre?: string;
+    precioTotal: number;
+    consumoTotal: number;
+    numeroMemorias: number;
 }) {
     useEffect(() => {
         const generarPDF = async () => {
@@ -40,19 +48,22 @@ export default function DescargarPDF({
                     tarjetaGrafica={tarjetaGrafica}
                     fuenteAlimentacion={fuenteAlimentacion}
                     torre={torre}
+                    precioTotal={precioTotal}
+                    consumoTotal={consumoTotal}
+                    numeroMemorias={numeroMemorias}
                 />,
             ).toBlob();
 
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'montaje.pdf';
+            link.download = nombre ? `montaje-${nombre.replace(' ', '-')}` : 'montaje.pdf';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
 
-            router.visit('/montaje/resumen')
+            resumen === 'Si' ? router.visit('/montaje/resumen') : router.visit('/usuario/montajes');
         };
 
         generarPDF();

@@ -15,9 +15,6 @@ use App\Models\Torre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 
 class MontajeController extends Controller
 {
@@ -32,6 +29,11 @@ class MontajeController extends Controller
         $tarjetaGrafica = TarjetaGrafica::find($request->input('tarjeta_grafica_id'));
         $fuenteAlimentacion = FuenteAlimentacion::find($request->input('fuente_alimentacion_id'));
         $torre = Torre::find($request->input('torre_id'));
+        $resumen = $request->input('resumen');
+        $nombre = $request->input('nombre');
+        $precioTotal = $request->input('precio_total');
+        $consumoTotal = $request->input('consumo_total');
+        $numeroMemorias = $request->input('numero_memorias');
 
         return Inertia::render('montaje/pdf/descargarPdf', [
             'procesador' => $procesador,
@@ -43,6 +45,11 @@ class MontajeController extends Controller
             'tarjetaGrafica' => $tarjetaGrafica,
             'fuenteAlimentacion' => $fuenteAlimentacion,
             'torre' => $torre,
+            'resumen' => $resumen,
+            'nombre' => $nombre,
+            'precioTotal' => $precioTotal,
+            'consumoTotal' => $consumoTotal,
+            'numeroMemorias' => $numeroMemorias,
         ]);
     }
 

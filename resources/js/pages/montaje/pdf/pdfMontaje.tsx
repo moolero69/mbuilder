@@ -1,5 +1,5 @@
 import { DiscoDuro, Disipador, FuenteAlimentacion, MemoriaRam, PlacaBase, Procesador, TarjetaGrafica, Torre } from '@/types';
-import { Document, Font, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
+import { Document, Font, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 
 export default function PdfMontaje({
     procesador,
@@ -11,6 +11,9 @@ export default function PdfMontaje({
     tarjetaGrafica,
     fuenteAlimentacion,
     torre,
+    precioTotal,
+    consumoTotal,
+    numeroMemorias,
 }: {
     procesador: Procesador;
     disipador: Disipador;
@@ -21,11 +24,22 @@ export default function PdfMontaje({
     tarjetaGrafica: TarjetaGrafica;
     fuenteAlimentacion: FuenteAlimentacion;
     torre: Torre;
+    precioTotal: number;
+    consumoTotal: number;
+    numeroMemorias: number;
 }) {
     Font.register({ family: 'Orbitron', src: '/Orbitron.ttf' });
 
     const styles = StyleSheet.create({
-        page: { padding: 20, fontSize: 12, fontFamily: 'Helvetica' },
+        page: {
+            padding: 20,
+            fontSize: 12,
+            fontFamily: 'Helvetica',
+            backgroundColor: '#ccc',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+        },
         header: {
             fontSize: 22,
             marginBottom: 20,
@@ -35,13 +49,29 @@ export default function PdfMontaje({
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'column',
+            width: '350px',
+            marginLeft: '20%',
         },
-        titulo_principal: { fontFamily: 'Orbitron', fontSize: 30, marginBottom: 20, textAlign: 'center', fontWeight: '2000' },
+        titulo_principal: { fontFamily: 'Orbitron', fontSize: 30, marginBottom: 10, textAlign: 'center', fontWeight: '2000' },
+        logo: { width: '75%', height: '75%', marginBottom: 10 },
         titulo: { fontFamily: 'Orbitron', fontSize: 16, marginBottom: 10, textAlign: 'center' },
         section: { marginBottom: 20 },
         zebra1: { backgroundColor: '#f0f0f0', padding: 6 },
         zebra2: { backgroundColor: '#ffffff', padding: 6 },
         label: { fontWeight: 'bold' },
+        totales: {
+            fontSize: 22,
+            marginTop: 20,
+            textAlign: 'center',
+            fontFamily: 'Orbitron',
+            fontWeight: 'bold',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            gap: '25px',
+        },
     });
 
     const renderZebraRows = (data: [string, string | number][]) =>
@@ -58,7 +88,8 @@ export default function PdfMontaje({
         <Document>
             <Page size="A4" style={styles.page}>
                 <View style={styles.header}>
-                    <Text style={styles.titulo_principal}>MBUILDER</Text>
+                    {/* <Text style={styles.titulo_principal}>MBUILDER</Text> */}
+                    <Image src="/img/mbuilder-gris.png" />
                     <Text>Resumen del Montaje</Text>
                 </View>
                 <View style={styles.page}>
@@ -121,12 +152,27 @@ export default function PdfMontaje({
                             {renderZebraRows([
                                 ['Nombre', memoriaRam.nombre],
                                 ['Marca', memoriaRam.marca],
-                                ['Almacenamiento', `${memoriaRam.almacenamiento} GB`],
+                                [
+                                    'Almacenamiento',
+                                    !numeroMemorias
+                                        ? `${memoriaRam.almacenamiento} GB`
+                                        : `${memoriaRam.almacenamiento} GB x ${numeroMemorias} = ${memoriaRam.almacenamiento * numeroMemorias} GB`,
+                                ],
                                 ['Tipo', memoriaRam.tipo],
                                 ['Pack', `${memoriaRam.pack} módulos`],
                                 ['Frecuencia', `${memoriaRam.frecuencia} MHz`],
-                                ['Consumo', `${memoriaRam.consumo} W`],
-                                ['Precio', `${memoriaRam.precio} €`],
+                                [
+                                    'Consumo',
+                                    !numeroMemorias
+                                        ? `${memoriaRam.consumo} W`
+                                        : `${memoriaRam.consumo} W x ${numeroMemorias} = ${memoriaRam.consumo * numeroMemorias} W`,
+                                ],
+                                [
+                                    'Precio',
+                                    !numeroMemorias
+                                        ? `${memoriaRam.precio} €`
+                                        : `${memoriaRam.precio} € x ${numeroMemorias} = ${memoriaRam.precio * numeroMemorias} €`,
+                                ],
                             ])}
                         </View>
                     )}
@@ -211,6 +257,11 @@ export default function PdfMontaje({
                             ])}
                         </View>
                     )}
+                </View>
+
+                <View style={styles.totales}>
+                    <Text style={{ color: '#17c70e' }}>Precio = {precioTotal}€</Text>
+                    <Text style={{ color: '#a80ec7' }}>Consumo = {consumoTotal} W</Text>
                 </View>
             </Page>
         </Document>

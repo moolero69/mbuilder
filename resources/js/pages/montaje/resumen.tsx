@@ -96,6 +96,9 @@ export default function ResumenMontaje() {
         tarjeta_grafica_id: tarjetaGraficaGuardada?.id ?? null,
         fuente_alimentacion_id: fuenteAlimentacionGuardada?.id ?? null,
         torre_id: torreGuardada?.id ?? null,
+        resumen: 'Si',
+        precio_total: precioTotal,
+        consumo_total: consumoTotal,
     };
 
     const construirJsonMontaje = () => {

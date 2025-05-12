@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminPlacasBaseController;
 use App\Http\Controllers\Admin\AdminTarjetasGraficasController;
 use App\Http\Controllers\Admin\AdminTorresController;
 use App\Http\Controllers\Admin\AdminUsuariosController;
+use App\Http\Controllers\PruebasController;
 
 
 Route::middleware(['auth', 'verified', 'es_admin'])->group(function () {
@@ -82,4 +83,7 @@ Route::middleware(['auth', 'verified', 'es_admin'])->group(function () {
     Route::get('admin/usuarios/editar/{id}', [AdminUsuariosController::class, 'edit'])->name('admin.usuarios.editar');
     Route::put('admin/usuarios/editar/{id}', [AdminUsuariosController::class, 'update'])->name('admin.usuarios.actualizar');
     Route::delete('/admin/usuarios/eliminar/{id}', [AdminUsuariosController::class, 'destroy'])->name('admin.usuarios.eliminar');
+
+    Route::get('pruebas', PruebasController::class)->name('pruebas');
+
 });

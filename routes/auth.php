@@ -8,7 +8,10 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Auth;
 
 Route::middleware('guest')->group(function () {
     Route::get('registro', [RegisteredUserController::class, 'create'])
@@ -53,4 +56,44 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+});
+
+Route::get('/google-auth/redirect', function () {
+    return Socialite::driver('google')->redirect();
+})->name('auth.google');
+
+Route::get('/google-auth/callback', function () {
+    $user_google = Socialite::driver('google')->stateless()->user();
+
+    $user = User::updateOrCreate([
+        'email' => $user_google->email
+    ], [
+        'name' => $user_google->name,
+        'email' => $user_google->email
+    ]);
+
+    Auth::login($user);
+
+    return redirect('/');
+});
+
+Route::get('/github-auth/redirect', function () {
+    return Socialite::driver('github')->redirect();
+})->name('auth.github');
+
+Route::get('/github-auth/callback', function () {
+    $user_github = Socialite::driver('github')->stateless()->user();
+
+    // dd($user_github);
+
+    $user = User::updateOrCreate([
+        'email' => $user_github->email
+    ], [
+        'name' => $user_github->nickname,
+        'email' => $user_github->email
+    ]);
+
+    Auth::login($user);
+
+    return redirect('/');
 });

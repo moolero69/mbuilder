@@ -28,6 +28,7 @@ export default function editarMontajes() {
         tarjetaGraficaGuardada,
         fuenteAlimentacionGuardada,
         torreGuardada,
+        tipoMontaje
     } = useProgresoMontaje((state) => state);
 
     const nuevoPrecio =
@@ -90,6 +91,7 @@ export default function editarMontajes() {
         precio: nuevoPrecio,
         consumo: nuevoConsumo,
         nombre: nombreMontajeNuevo,
+        tipo_montaje: tipoMontaje
     };
 
     return (

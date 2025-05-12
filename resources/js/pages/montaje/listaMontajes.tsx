@@ -1,6 +1,5 @@
 import Header from '@/components/header-principal';
 import TooltipIncopatibilidadMonatje from '@/components/TooltipIncopatibilidad';
-import TooltipIncopatibilidad from '@/components/TooltipIncopatibilidad';
 import TooltipTipoMontaje from '@/components/TooltipTipoMontaje';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -71,32 +70,26 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
     }, [componenteSeleccionado]);
 
     useEffect(() => {
-        exito && toast.custom(
-            (t) => (
-                <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl bg-white/90 p-4 text-black shadow-lg">
-                    <span>
-                        <Check size={30} className="text-[var(--rojo-neon)]" />
-                    </span>
-                    <div className="flex w-full justify-center text-center text-xl">
-                        <p className="font-['exo_2']">{exito}</p>
+        exito &&
+            toast.custom(
+                (t) => (
+                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl bg-white/90 p-4 text-black shadow-lg">
+                        <span>
+                            <Check size={30} className="text-[var(--rojo-neon)]" />
+                        </span>
+                        <div className="flex w-full justify-center text-center text-xl">
+                            <p className="font-['exo_2']">{exito}</p>
+                        </div>
                     </div>
-                </div>
-            ),
-            { duration: 3500 },
-        );;
+                ),
+                { duration: 3500 },
+            );
     }, [exito]);
 
-    const { data, setData, delete: d } = useForm<MontajeForm>();
+    const { data, setData, delete: eliminar } = useForm<MontajeForm>();
 
     const eliminarMontaje = () => {
-        d(route('montaje.eliminar'), {
-            onSuccess: () => {
-                console.log('Eliminado.');
-            },
-            onError: (error: any) => {
-                console.error(error);
-            },
-        });
+        eliminar(route('montaje.eliminar'));
     };
 
     return (
@@ -125,12 +118,13 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                             </div>
                         </>
                     ) : (
-                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
+                        <div className="grid auto-rows-fr gap-6 md:grid-cols-2 lg:grid-cols-3">
                             {montajes.map((montaje) => {
                                 const datos = JSON.parse(montaje.datos);
 
                                 const componenteFaltante =
                                     !datos.procesador ||
+                                    !datos.disipador ||
                                     !datos.placa_base ||
                                     !datos.memoria_ram ||
                                     !datos.disco_duro ||
@@ -138,13 +132,29 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                     !datos.fuente_alimentacion ||
                                     !datos.torre;
 
+                                const idComponentes = {
+                                    procesador_id: datos.procesador?.id ?? null,
+                                    disipador_id: datos.disipador?.id ?? null,
+                                    placabase_id: datos.placa_base?.id ?? null,
+                                    memoria_ram_id: datos.memoria_ram?.id ?? null,
+                                    discoduro_id: datos.disco_duro?.id ?? null,
+                                    discodurosecundario_id: datos.disco_duro_secundario?.id ?? null,
+                                    tarjeta_grafica_id: datos.tarjeta_grafica?.id ?? null,
+                                    fuente_alimentacion_id: datos.fuente_alimentacion?.id ?? null,
+                                    torre_id: datos.torre?.id ?? null,
+                                    nombre: montaje.nombre,
+                                    precio_total: datos.otros?.precio,
+                                    consumo_total: datos.otros?.consumo,
+                                    numero_memorias: datos.memoria_ram?.cantidad,
+                                };
+
                                 return (
                                     <div
                                         key={montaje.id}
                                         className="colores-borde-glow flex h-full flex-col rounded-xl bg-gradient-to-b from-black to-[#0d0d0d] p-5 transition-all duration-300"
-                                        >
+                                    >
                                         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-between">
-                                            <div className='flex gap-3 justify-center items-center '>
+                                            <div className="flex items-center justify-center gap-3">
                                                 <h2 className="mb-3 font-['Orbitron'] text-2xl font-bold text-[var(--naranja-neon)] drop-shadow-[0_0_5px_var(--naranja-neon)]">
                                                     {montaje.nombre}
                                                 </h2>
@@ -152,12 +162,14 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                                 {datos.otros?.tipo_montaje === 'equilibrado' && <TooltipTipoMontaje tipo="equilibrado" />}
                                                 {datos.otros?.tipo_montaje === 'pro' && <TooltipTipoMontaje tipo="pro" />}
                                             </div>
-                                            {componenteFaltante && <TooltipIncopatibilidadMonatje mensaje="Posible incopatibilidad entre componentes" />}
+                                            {componenteFaltante && (
+                                                <TooltipIncopatibilidadMonatje mensaje="Posible incopatibilidad entre componentes" />
+                                            )}
                                         </div>
 
                                         <p className="mb-4 text-sm text-gray-400">Creado el {new Date(montaje.created_at).toLocaleDateString()}</p>
 
-                                        <ul className="space-y-1 text-sm mb-4">
+                                        <ul className="mb-4 space-y-1 text-sm">
                                             <li>
                                                 <strong className="text-[var(--azul-neon)]">Procesador:</strong>{' '}
                                                 {datos.procesador?.nombre || <span className="text-red-500">Sin procesador</span>}
@@ -179,7 +191,8 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                             </li>
                                             <li>
                                                 <strong className="text-[var(--azul-neon)]">Memoria/s RAM:</strong>{' '}
-                                                {datos.memoria_ram?.cantidad && `x${datos.memoria_ram?.cantidad} `}{datos.memoria_ram?.nombre || <span className="text-red-500">Sin memoria RAM principal</span>}
+                                                {datos.memoria_ram?.cantidad && `x${datos.memoria_ram?.cantidad} `}
+                                                {datos.memoria_ram?.nombre || <span className="text-red-500">Sin memoria RAM principal</span>}
                                             </li>
                                             {datos.memoria_ram_secundaria && (
                                                 <li>
@@ -225,7 +238,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                             </li>
                                         </ul>
 
-                                        <div className="flex flex-col gap-2 sm:flex-row sm:justify-between mt-auto">
+                                        <div className="mt-auto flex flex-col gap-2 sm:flex-row sm:justify-between">
                                             <Button
                                                 variant="outline"
                                                 className="w-full border-[var(--azul-neon)] font-['Orbitron'] text-[var(--azul-neon)] shadow-[0_0_8px_var(--azul-neon)] transition-all duration-500 hover:bg-[var(--azul-neon)] hover:text-black hover:shadow-[0_0_16px_var(--azul-neon)] sm:w-auto"
@@ -254,7 +267,15 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                                 Eliminar
                                             </Button>
 
-                                            <Link href={route('pdf.ver')}>Ver PDF</Link>
+                                            <Button
+                                                variant="outline"
+                                                className="w-full border-[var(--verde-neon)] font-['Orbitron'] text-[var(--verde-neon)] shadow-[0_0_8px_var(--verde-neon)] transition-all duration-500 hover:bg-[var(--verde-neon)] hover:text-black hover:shadow-[0_0_16px_var(--verde-neon)] sm:w-auto hover:cursor-pointer"
+                                                asChild
+                                            >
+                                                <Link href={route('montaje.generarPdf')} data={idComponentes} method="post">
+                                                    Exportar PDF
+                                                </Link>
+                                            </Button>
                                         </div>
                                     </div>
                                 );
