@@ -63,7 +63,7 @@ export default function DescargarPDF({
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
 
-            resumen === 'Si' ? router.visit('/montaje/resumen') : router.visit('/usuario/montajes');
+            resumen === 'Si' ? router.visit(route('montaje.resumen')) : router.visit(route('usuario.montajes'));
         };
 
         generarPDF();

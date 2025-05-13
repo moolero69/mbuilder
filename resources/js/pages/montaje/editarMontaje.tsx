@@ -1,3 +1,4 @@
+import { hayComponentes } from '@/components/funciones/funciones';
 import Header from '@/components/header-principal';
 import { Button } from '@/components/ui/button';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
@@ -12,6 +13,11 @@ type MontajeForm = {
 };
 
 export default function editarMontajes() {
+    const sinComponentes = hayComponentes();
+    if (sinComponentes) {
+        window.location.href = '/';
+    }
+
     const nombreMontajeAnterior: any = sessionStorage.getItem('nombreMontajeEditar');
     const nombreMontajeNuevo: any = sessionStorage.getItem('nuevoNombreEditar');
     const idMontaje = sessionStorage.getItem('idMontajeEditar');
@@ -28,7 +34,7 @@ export default function editarMontajes() {
         tarjetaGraficaGuardada,
         fuenteAlimentacionGuardada,
         torreGuardada,
-        tipoMontaje
+        tipoMontaje,
     } = useProgresoMontaje((state) => state);
 
     const nuevoPrecio =
@@ -91,7 +97,7 @@ export default function editarMontajes() {
         precio: nuevoPrecio,
         consumo: nuevoConsumo,
         nombre: nombreMontajeNuevo,
-        tipo_montaje: tipoMontaje
+        tipo_montaje: tipoMontaje,
     };
 
     return (
@@ -205,6 +211,16 @@ export default function editarMontajes() {
                                         )}
                                     </strong>
                                 </li>
+                                <li>
+                                    <strong className="text-xl text-[var(--rosa-neon)]">
+                                        Consumo:{' '}
+                                        {montajeAnterior?.otros?.potencia !== undefined ? (
+                                            `${montajeAnterior.otros.potencia} W`
+                                        ) : (
+                                            <span className="text-red-500">0 W</span>
+                                        )}
+                                    </strong>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -233,7 +249,8 @@ export default function editarMontajes() {
                                 </li>
                                 <li>
                                     <strong className="text-[var(--azul-neon)]">Memoria/s RAM:</strong>{' '}
-                                    {memoriaRamGuardada?.cantidad && `x${memoriaRamGuardada?.cantidad} `}{memoriaRamGuardada ? memoriaRamGuardada.nombre : <span className="text-red-500">Sin memoria RAM</span>}
+                                    {memoriaRamGuardada?.cantidad && `x${memoriaRamGuardada?.cantidad} `}
+                                    {memoriaRamGuardada ? memoriaRamGuardada.nombre : <span className="text-red-500">Sin memoria RAM</span>}
                                 </li>
                                 {memoriaRamSecundariaGuardada && (
                                     <li>
@@ -246,11 +263,11 @@ export default function editarMontajes() {
                                     </li>
                                 )}
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Disco Duro:</strong>{' '}
+                                    <strong className="text-[var(--azul-neon)]">Disco Duro Principal:</strong>{' '}
                                     {discoDuroGuardado ? discoDuroGuardado.nombre : <span className="text-red-500">Sin disco duro</span>}
                                 </li>
                                 <li>
-                                    <strong className="text-[var(--azul-neon)]">Disco Duro:</strong>{' '}
+                                    <strong className="text-[var(--azul-neon)]">Disco Duro Secundario:</strong>{' '}
                                     {discoDuroSecundarioGuardado ? (
                                         discoDuroSecundarioGuardado.nombre
                                     ) : (
@@ -276,6 +293,11 @@ export default function editarMontajes() {
                                 <li>
                                     <strong className="text-xl text-[var(--verde-neon)]">
                                         Precio: {nuevoPrecio !== undefined ? `${nuevoPrecio}€` : <span className="text-red-500">0€</span>}
+                                    </strong>
+                                </li>
+                                <li>
+                                    <strong className="text-xl text-[var(--rosa-neon)]">
+                                        Consumo: {nuevoConsumo !== undefined ? `${nuevoConsumo} W` : <span className="text-red-500">0 W</span>}
                                     </strong>
                                 </li>
                             </ul>

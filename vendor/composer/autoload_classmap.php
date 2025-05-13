@@ -55,6 +55,7 @@ return array(
     'App\\Models\\DiscoDuro' => $baseDir . '/app/Models/DiscoDuro.php',
     'App\\Models\\Disipador' => $baseDir . '/app/Models/Disipador.php',
     'App\\Models\\FuenteAlimentacion' => $baseDir . '/app/Models/FuenteAlimentacion.php',
+    'App\\Models\\LinkCompartido' => $baseDir . '/app/Models/LinkCompartido.php',
     'App\\Models\\MemoriaRam' => $baseDir . '/app/Models/MemoriaRam.php',
     'App\\Models\\Montaje' => $baseDir . '/app/Models/Montaje.php',
     'App\\Models\\PlacaBase' => $baseDir . '/app/Models/PlacaBase.php',

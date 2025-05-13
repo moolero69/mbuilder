@@ -16,6 +16,7 @@ export default function EditarTorre({ torre }: { torre: Torre }) {
         longitud_maxima_gpu: torre.longitud_maxima_gpu,
         refrigeracion_liquida: torre.refrigeracion_liquida,
         precio: torre.precio,
+        link_imagen: torre.link_imagen
     });
 
     const submit: FormEventHandler = (e) => {
@@ -71,6 +72,12 @@ export default function EditarTorre({ torre }: { torre: Torre }) {
                             onChange={(e) => setData('refrigeracion_liquida', e.target.value)}
                         />
                         <InputError message={errors.refrigeracion_liquida} />
+                    </div>
+
+                    <div>
+                        <Label htmlFor="refrigeracion_liquida">Link imagen</Label>
+                        <Input id="link_imagen" value={data.link_imagen} onChange={(e) => setData('link_imagen', e.target.value)} />
+                        <InputError message={errors.link_imagen} />
                     </div>
 
                     <div>

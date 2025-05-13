@@ -227,9 +227,9 @@ class ComposerStaticInit6d580901de64f9d577d8c139cea61306
         ),
         'phpDocumentor\\Reflection\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
         ),
         'Whoops\\' => 
         array (
@@ -710,6 +710,7 @@ class ComposerStaticInit6d580901de64f9d577d8c139cea61306
         'App\\Models\\DiscoDuro' => __DIR__ . '/../..' . '/app/Models/DiscoDuro.php',
         'App\\Models\\Disipador' => __DIR__ . '/../..' . '/app/Models/Disipador.php',
         'App\\Models\\FuenteAlimentacion' => __DIR__ . '/../..' . '/app/Models/FuenteAlimentacion.php',
+        'App\\Models\\LinkCompartido' => __DIR__ . '/../..' . '/app/Models/LinkCompartido.php',
         'App\\Models\\MemoriaRam' => __DIR__ . '/../..' . '/app/Models/MemoriaRam.php',
         'App\\Models\\Montaje' => __DIR__ . '/../..' . '/app/Models/Montaje.php',
         'App\\Models\\PlacaBase' => __DIR__ . '/../..' . '/app/Models/PlacaBase.php',

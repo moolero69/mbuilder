@@ -15,6 +15,8 @@ use App\Models\Torre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
+use App\Models\LinkCompartido;
 
 class MontajeController extends Controller
 {
@@ -52,6 +54,30 @@ class MontajeController extends Controller
             'numeroMemorias' => $numeroMemorias,
         ]);
     }
+
+    public function compartir(Request $request)
+    {
+        $datosMontaje = $request->input('datos');
+
+        $hash = Str::random(30);
+
+        $link = LinkCompartido::create([
+            'hash' => $hash,
+            'datos_montaje' => $datosMontaje,
+        ]);
+
+        return redirect()->route('montaje.resumen')->with('link', route('montaje.compartido', $hash));
+    }
+
+    public function verMontajeCompartido($hash)
+    {
+        $link = LinkCompartido::where('hash', $hash)->firstOrFail();
+
+        return Inertia::render('links/guardarDatosLink', [
+            'datosMontaje' => $link->datos_montaje,
+        ]);
+    }
+
 
     /**
      * Display a listing of the resource.

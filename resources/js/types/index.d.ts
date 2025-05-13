@@ -159,6 +159,7 @@ export interface Torre {
     longitud_maxima_gpu: number;
     refrigeracion_liquida: string;
     precio: number;
+    link_imagen: string;
     created_at: Date;
     updated_at: Date;
 }

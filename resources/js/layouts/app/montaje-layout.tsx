@@ -1,12 +1,21 @@
 import { Breadcrumbs } from '@/components/breadcrumbs';
+import { hayComponentes } from '@/components/funciones/funciones';
 import Header from '@/components/header-principal';
 import ProgresoMontaje from '@/components/ProgresoMontaje';
 import { MontajeLayoutProps } from '@/types';
 import { Pencil } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function MontajeLayout({ sidebar, main, breadcrums, progresoMontaje}: MontajeLayoutProps) {
     const [montajeEditado, setMontajeEditado] = useState((sessionStorage.getItem("nombreMontajeEditar") || null))
+
+    useEffect(() => {
+        const sinComponentes = hayComponentes();
+        if (sinComponentes) {
+            window.location.href = '/'
+        }
+    }, []);
+    
     return (
         <>
             <Header />

@@ -151,7 +151,8 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                 return (
                                     <div
                                         key={montaje.id}
-                                        className="colores-borde-glow flex h-full flex-col rounded-xl bg-gradient-to-b from-black to-[#0d0d0d] p-5 transition-all duration-300"
+                                        className="colores-borde-glow flex h-full flex-col rounded-xl bg-gradient-to-l from-[#1a1a1a] via-[#121212] to-[#0a0a0a] p-5 transition-all duration-300"
+
                                     >
                                         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-between">
                                             <div className="flex items-center justify-center gap-3">
@@ -240,7 +241,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                                 </li>
                                             </ul>
                                             <img
-                                                src="https://aerocool.io/wp-content/uploads/2019/02/Tor-Product-Photo-Gallery-9-1042x589.png"
+                                                src={datos.torre?.link_imagen}
                                                 alt=""
                                                 className='h-[250px] w-[500px] overflow-hidden mb-8 ml-4'
                                                 draggable='false'

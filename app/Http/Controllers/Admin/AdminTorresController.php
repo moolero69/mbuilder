@@ -42,6 +42,7 @@ class AdminTorresController extends Controller
             'longitud_maxima_gpu' => 'required|integer',
             'refrigeracion_liquida' => 'required|string|max:255',
             'precio' => 'required|numeric|min:0',
+            'link_imagen' => 'required'
         ]);
 
         Torre::create($validar);
@@ -80,6 +81,7 @@ class AdminTorresController extends Controller
             'longitud_maxima_gpu' => 'required|integer',
             'refrigeracion_liquida' => 'required|string|max:255',
             'precio' => 'required|numeric',
+            'link_imagen' => 'required'
         ]);
     
         $torre = Torre::findOrFail($id);

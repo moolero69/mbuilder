@@ -19,7 +19,8 @@ class Torre extends Model
         "soporte_RGB",
         "longitud_maxima_gpu",
         "refrigeracion_liquida",
-        "precio"
+        "precio",
+        "link_imagen"
     ];
 
     protected static function boot()

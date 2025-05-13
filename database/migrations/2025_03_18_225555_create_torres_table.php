@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('longitud_maxima_gpu');
             $table->string('refrigeracion_liquida');
             $table->decimal('precio', 8, 2);
+            $table->string('link_imagen')->nullable();
             $table->timestamps();
         });
     }

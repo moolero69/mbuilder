@@ -76,6 +76,7 @@ export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
                                 <SidebarMenuButton className="h-[75px]" asChild>
                                     <Link href="/">
                                         <AppLogo />
+                                        
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>

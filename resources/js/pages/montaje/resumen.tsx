@@ -1,9 +1,10 @@
+import { hayComponentes } from '@/components/funciones/funciones';
 import Header from '@/components/header-principal';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Label } from '@radix-ui/react-label';
 import { Separator } from '@radix-ui/react-separator';
 import { Check } from 'lucide-react';
@@ -16,8 +17,20 @@ type MontajeForm = {
 };
 
 export default function ResumenMontaje() {
+    const sinComponentes = hayComponentes();
+    if (sinComponentes) {
+        window.location.href = '/';
+    }
+
+    const { props }: any = usePage();
+    const link = props.flash?.link;
+
     const [dialogoNombreAbierto, setDialogoNombreAbierto] = useState(false);
+    const [dialogoLinkAbierto, setDialogoLinkAbierto] = useState(false);
+    const [copiado, setCopiado] = useState(false);
+
     const [montajeGuardado, setMontajeGuardado] = useState(false);
+    const [montajeCompartido, setMontajeCompartido] = useState(false);
 
     const {
         procesadorGuardado,
@@ -84,6 +97,7 @@ export default function ResumenMontaje() {
         consumo: consumoTotal,
         nombre: data.nombre,
         tipo_montaje: tipoMontaje,
+        numero_memorias: memoriaRamGuardada!.cantidad,
     };
 
     const idComponentes = {
@@ -99,6 +113,19 @@ export default function ResumenMontaje() {
         resumen: 'Si',
         precio_total: precioTotal,
         consumo_total: consumoTotal,
+    };
+
+    const componentesSeleccionados = {
+        procesador: procesadorGuardado! ?? null,
+        disipador: disipadorGuardado! ?? null,
+        placabase: placaBaseGuardada! ?? null,
+        memoria_ram: memoriaRamGuardada! ?? null,
+        discoduro: discoDuroGuardado! ?? null,
+        discodurosecundario: discoDuroSecundarioGuardado! ?? null,
+        tarjeta_grafica: tarjetaGraficaGuardada! ?? null,
+        fuente_alimentacion: fuenteAlimentacionGuardada! ?? null,
+        torre: torreGuardada! ?? null,
+        otros: otros,
     };
 
     const construirJsonMontaje = () => {
@@ -417,25 +444,37 @@ export default function ResumenMontaje() {
                 <div className="mt-8 flex flex-col items-center justify-center gap-4 md:flex-row">
                     <Button
                         variant={'outline'}
-                        className="hover: h-13 cursor-pointer rounded-lg border border-[var(--verde-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--verde-neon)] transition-colors duration-1000 hover:bg-[var(--verde-neon)] hover:text-black"
+                        className="rounded-lg border border-[var(--verde-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--verde-neon)] transition-colors duration-1000 hover:cursor-pointer hover:bg-[var(--verde-neon)] hover:text-black"
                         onClick={() => setDialogoNombreAbierto(true)}
                         disabled={montajeGuardado}
                     >
                         Guardar montaje en mi perfil
                     </Button>
 
-                    <button
-                        className="rounded-lg border border-[var(--azul-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--azul-neon)] transition-colors duration-1000 hover:bg-[var(--azul-neon)] hover:text-black"
-                        // onClick={handleCompartirMontaje}
+                    <Button
+                        className="rounded-lg border border-[var(--naranja-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--naranja-neon)] transition-colors duration-1000 hover:cursor-pointer hover:bg-[var(--naranja-neon)] hover:text-black"
+                        asChild
+                        onClick={() => {
+                            setMontajeCompartido(true);
+                            setDialogoLinkAbierto(true);
+                        }}
+                        disabled={montajeCompartido}
                     >
-                        Compartir montaje
-                    </button>
+                        <Link
+                            href={route('montaje.compartir')}
+                            data={{ datos: JSON.stringify(componentesSeleccionados) }}
+                            method="post"
+                            preserveScroll
+                        >
+                            Compartir Montaje
+                        </Link>
+                    </Button>
 
                     <Button
-                        className="rounded-lg border border-[var(--azul-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--azul-neon)] transition-colors duration-1000 hover:bg-[var(--azul-neon)] hover:text-black"
+                        className="rounded-lg border border-[var(--azul-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--azul-neon)] transition-colors duration-1000 hover:cursor-pointer hover:bg-[var(--azul-neon)] hover:text-black"
                         asChild
                     >
-                        <Link href={route('montaje.generarPdf')} data={idComponentes} method="post">
+                        <Link href={route('montaje.generarPdf')} data={idComponentes} method="post" preserveScroll>
                             Exportar PDF
                         </Link>
                     </Button>
@@ -480,6 +519,55 @@ export default function ResumenMontaje() {
                             disabled={data.nombre.length === 0}
                         >
                             Guardar montaje
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+            <Dialog open={dialogoLinkAbierto} onOpenChange={setDialogoLinkAbierto}>
+                <DialogContent className="border-[var(--verde-neon)] bg-[#0d0d0d] text-white shadow-[0_0_15px_var(--verde-neon)] sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Montaje compartido</DialogTitle>
+                        <DialogDescription>Este es el enlace para compartir tu montaje.</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-1 items-center gap-4">
+                            <Input
+                                id="enlace-compartido"
+                                readOnly
+                                value={link}
+                                className="w-full"
+                                onClick={(e) => (e.target as HTMLInputElement).select()}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            onClick={() => {
+                                const input = document.getElementById('enlace-compartido') as HTMLInputElement;
+
+                                if (navigator.clipboard && navigator.clipboard.writeText) {
+                                    navigator.clipboard
+                                        .writeText(link)
+                                        .then(() => {
+                                            setCopiado(true);
+                                            setTimeout(() => setCopiado(false), 2000);
+                                        })
+                                        .catch(() => {
+                                            // fallback en caso de error
+                                            input.select();
+                                            document.execCommand('copy');
+                                            setCopiado(true);
+                                            setTimeout(() => setCopiado(false), 2000);
+                                        });
+                                } else {
+                                    input.select();
+                                    document.execCommand('copy');
+                                    setCopiado(true);
+                                    setTimeout(() => setCopiado(false), 2000);
+                                }
+                            }}
+                        >
+                            {copiado ? '¡Copiado!' : 'Copiar link'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

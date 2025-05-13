@@ -15,6 +15,7 @@ export default function CrearTorre() {
         longitud_maxima_gpu: 0,
         refrigeracion_liquida: '',
         precio: 0,
+        link_imagen: ''
     });
 
     const submit: FormEventHandler = (e) => {
@@ -70,6 +71,16 @@ export default function CrearTorre() {
                             onChange={(e) => setData('refrigeracion_liquida', e.target.value)}
                         />
                         <InputError message={errors.refrigeracion_liquida} />
+                    </div>
+
+                    <div>
+                        <Label htmlFor="refrigeracion_liquida">Link imagen</Label>
+                        <Input
+                            id="link_imagen"
+                            value={data.link_imagen}
+                            onChange={(e) => setData('link_imagen', e.target.value)}
+                        />
+                        <InputError message={errors.link_imagen} />
                     </div>
 
                     <div>

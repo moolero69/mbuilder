@@ -614,7 +614,7 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                     {!memoriaActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
                                             <span className="text-[var(--fucsia-neon)]">
-                                                {memoriaSeleccionada?.cantidad && `x${memoriaSeleccionada.cantidad} `}
+                                                {numeroMemorias > 0 && `x${numeroMemorias} `}
                                             </span>
                                             {memoriaSeleccionada?.nombre}
                                         </h1>
