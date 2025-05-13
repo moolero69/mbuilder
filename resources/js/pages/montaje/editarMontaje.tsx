@@ -73,7 +73,7 @@ export default function editarMontajes() {
             nombre: nombreMontajeNuevo,
             datos: {
                 procesador: procesadorGuardado || null,
-                disipador: discoDuroGuardado || null,
+                disipador: disipadorGuardado || null,
                 placa_base: placaBaseGuardada || null,
                 memoria_ram: memoriaRamGuardada || null,
                 memoria_ram_secundaria: memoriaRamSecundariaGuardada || null,

@@ -20,6 +20,7 @@ export default function Pruebas() {
         discoDuroGuardado,
         discoDuroSecundarioGuardado,
         tipoMontaje,
+        disipadorGuardado
     } = useProgresoMontaje((state) => state);
 
     return (
@@ -59,6 +60,10 @@ export default function Pruebas() {
                 <h1>{discoDuroSecundarioGuardado?.nombre || 'Sin disco secundario'}</h1>
                 <h1>Tipo: {tipoMontaje || 'Sin tipo montaje'}</h1>
                 <h1> {procesadorGuardado?.nombre || 'Sin procesador'}</h1>
+                <h1> {procesadorGuardado?.nombre || 'Sin procesador'}</h1>
+                <h1>Disipador?: {disipadorGuardado?.nombre || 'Sin disipador'}</h1>
+                <h1>{disipadorGuardado?.socket || 'Sin sockets de disipador'}</h1>
+
 
                 <h1 className="font-['Orbitron'] text-5xl font-extrabold tracking-widest text-black drop-shadow-[5px_5px_6px_black] transition duration-500 hover:drop-shadow-[5px_5px_6px_black]">
                     MBUILDER

@@ -22,14 +22,13 @@ export default function VerifyEmail({ status }: { status?: string }) {
         >
             <Head title="Verificación de correo" />
 
-            {status === 'verification-link-sent' && (
+            {status === 'link-enviado' && (
                 <div className="mb-4 text-center text-sm font-medium text-green-600">
-                    Se ha enviado un nuevo enlace de verificación a la dirección de correo electrónico que proporcionaste durante el registro.
+                    Se ha enviado un nuevo enlace de verificación a tu dirección de correo electrónico.
                 </div>
             )}
 
-            <Button disabled={processing} variant="secondary" onClick={()=>window.location.reload()}>
-                {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+            <Button disabled={processing} variant="secondary" onClick={() => window.location.reload()}>
                 ¿Ya verificado?
             </Button>
 

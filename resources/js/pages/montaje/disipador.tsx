@@ -138,7 +138,7 @@ export default function MontajeDisipador({ disipadores }: { disipadores: Disipad
                     <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
                         <span>
                             <Wrench size={30} className="text-[var(--rojo-neon)]" />
-                            {}
+                            { }
                         </span>
                         <div className="flex w-full justify-center text-center text-xl">
                             <p className="font-['exo_2']">Arrastra tu disipador</p>

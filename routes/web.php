@@ -6,12 +6,9 @@ use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 
-
 Route::get('/', function () {
     return Inertia::render('pagina-inicio');
 })->name('home');
-
-
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

@@ -99,7 +99,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
             {dialogoEliminar && <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs"></div>}
             <div className="relative min-h-[calc(100dvh-120px)] w-full text-white">
                 {/* Vídeo de fondo */}
-                <video autoPlay muted loop playsInline className="absolute inset-0 z-0 h-full w-full object-cover opacity-15">
+                <video autoPlay muted loop playsInline className="absolute inset-0 z-0 h-full w-full object-cover opacity-30">
                     <source src="/vid/video-principal.mp4" type="video/mp4" />
                 </video>
 
@@ -169,74 +169,83 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
 
                                         <p className="mb-4 text-sm text-gray-400">Creado el {new Date(montaje.created_at).toLocaleDateString()}</p>
 
-                                        <ul className="mb-4 space-y-1 text-sm">
-                                            <li>
-                                                <strong className="text-[var(--azul-neon)]">Procesador:</strong>{' '}
-                                                {datos.procesador?.nombre || <span className="text-red-500">Sin procesador</span>}
-                                            </li>
-                                            <li>
-                                                <strong className="text-[var(--azul-neon)]">Disipador:</strong>{' '}
-                                                {datos.disipador?.nombre ? (
-                                                    datos.disipador.nombre
-                                                ) : datos.procesador?.disipador_incluido === 'Si' ? (
-                                                    <span className="text-yellow-400">Incluido con el procesador</span>
-                                                ) : (
-                                                    <span className="text-red-500">Sin disipador</span>
-                                                )}
-                                            </li>
 
-                                            <li>
-                                                <strong className="text-[var(--azul-neon)]">Placa Base:</strong>{' '}
-                                                {datos.placa_base?.nombre || <span className="text-red-500">Sin placa base</span>}
-                                            </li>
-                                            <li>
-                                                <strong className="text-[var(--azul-neon)]">Memoria/s RAM:</strong>{' '}
-                                                {datos.memoria_ram?.cantidad && `x${datos.memoria_ram?.cantidad} `}
-                                                {datos.memoria_ram?.nombre || <span className="text-red-500">Sin memoria RAM principal</span>}
-                                            </li>
-                                            {datos.memoria_ram_secundaria && (
+                                        <div className='flex fle-row justify-between items-center'>
+                                            <ul className="mb-4 space-y-1 text-sm min-w-[300px]">
                                                 <li>
-                                                    <strong className="text-[var(--azul-neon)]">Memoria RAM secundaria:</strong>{' '}
-                                                    {datos.memoria_ram_secundaria?.nombre || (
-                                                        <span className="text-red-500">Sin memoria RAM secundaria</span>
+                                                    <strong className="text-[var(--azul-neon)]">Procesador:</strong>{' '}
+                                                    {datos.procesador?.nombre || <span className="text-red-500">Sin procesador</span>}
+                                                </li>
+                                                <li>
+                                                    <strong className="text-[var(--azul-neon)]">Disipador:</strong>{' '}
+                                                    {datos.disipador?.nombre ? (
+                                                        datos.disipador.nombre
+                                                    ) : datos.procesador?.disipador_incluido === 'Si' ? (
+                                                        <span className="text-yellow-400">Incluido con el procesador</span>
+                                                    ) : (
+                                                        <span className="text-red-500">Sin disipador</span>
                                                     )}
                                                 </li>
-                                            )}
-                                            <li>
-                                                <strong className="text-[var(--azul-neon)]">Disco Duro Principal:</strong>{' '}
-                                                {datos.disco_duro?.nombre || <span className="text-red-500">Sin disco duro principal</span>}
-                                            </li>
-                                            {datos.disco_duro_secundario && (
+
                                                 <li>
-                                                    <strong className="text-[var(--azul-neon)]">Disco Duro Secundario:</strong>{' '}
-                                                    {datos.disco_duro_secundario?.nombre || (
-                                                        <span className="text-red-500">Sin disco duro secundario</span>
-                                                    )}
+                                                    <strong className="text-[var(--azul-neon)]">Placa Base:</strong>{' '}
+                                                    {datos.placa_base?.nombre || <span className="text-red-500">Sin placa base</span>}
                                                 </li>
-                                            )}
-                                            <li>
-                                                <strong className="text-[var(--azul-neon)]">Gráfica:</strong>{' '}
-                                                {datos.tarjeta_grafica?.nombre || <span className="text-red-500">Sin gráfica</span>}
-                                            </li>
-                                            <li>
-                                                <strong className="text-[var(--azul-neon)]">Fuente:</strong>{' '}
-                                                {datos.fuente_alimentacion?.nombre || <span className="text-red-500">Sin fuente</span>}
-                                            </li>
-                                            <li>
-                                                <strong className="text-[var(--azul-neon)]">Torre:</strong>{' '}
-                                                {datos.torre?.nombre || <span className="text-red-500">Sin torre</span>}
-                                            </li>
-                                            <li>
-                                                <strong className="text-xl text-[var(--verde-neon)]">
-                                                    Precio: {datos.otros?.precio.toFixed(2) || '???'}€
-                                                </strong>{' '}
-                                            </li>
-                                            <li>
-                                                <strong className="text-xl text-[var(--rosa-neon)]">
-                                                    Consumo: {datos.otros?.consumo || '???'}W
-                                                </strong>{' '}
-                                            </li>
-                                        </ul>
+                                                <li>
+                                                    <strong className="text-[var(--azul-neon)]">Memoria/s RAM:</strong>{' '}
+                                                    {datos.memoria_ram?.cantidad && `x${datos.memoria_ram?.cantidad} `}
+                                                    {datos.memoria_ram?.nombre || <span className="text-red-500">Sin memoria RAM principal</span>}
+                                                </li>
+                                                {datos.memoria_ram_secundaria && (
+                                                    <li>
+                                                        <strong className="text-[var(--azul-neon)]">Memoria RAM secundaria:</strong>{' '}
+                                                        {datos.memoria_ram_secundaria?.nombre || (
+                                                            <span className="text-red-500">Sin memoria RAM secundaria</span>
+                                                        )}
+                                                    </li>
+                                                )}
+                                                <li>
+                                                    <strong className="text-[var(--azul-neon)]">Disco Duro Principal:</strong>{' '}
+                                                    {datos.disco_duro?.nombre || <span className="text-red-500">Sin disco duro principal</span>}
+                                                </li>
+                                                {datos.disco_duro_secundario && (
+                                                    <li>
+                                                        <strong className="text-[var(--azul-neon)]">Disco Duro Secundario:</strong>{' '}
+                                                        {datos.disco_duro_secundario?.nombre || (
+                                                            <span className="text-red-500">Sin disco duro secundario</span>
+                                                        )}
+                                                    </li>
+                                                )}
+                                                <li>
+                                                    <strong className="text-[var(--azul-neon)]">Gráfica:</strong>{' '}
+                                                    {datos.tarjeta_grafica?.nombre || <span className="text-red-500">Sin gráfica</span>}
+                                                </li>
+                                                <li>
+                                                    <strong className="text-[var(--azul-neon)]">Fuente:</strong>{' '}
+                                                    {datos.fuente_alimentacion?.nombre || <span className="text-red-500">Sin fuente</span>}
+                                                </li>
+                                                <li>
+                                                    <strong className="text-[var(--azul-neon)]">Torre:</strong>{' '}
+                                                    {datos.torre?.nombre || <span className="text-red-500">Sin torre</span>}
+                                                </li>
+                                                <li>
+                                                    <strong className="text-xl text-[var(--verde-neon)]">
+                                                        Precio: {datos.otros?.precio.toFixed(2) || '???'}€
+                                                    </strong>{' '}
+                                                </li>
+                                                <li>
+                                                    <strong className="text-xl text-[var(--rosa-neon)]">
+                                                        Consumo: {datos.otros?.consumo || '???'}W
+                                                    </strong>{' '}
+                                                </li>
+                                            </ul>
+                                            <img
+                                                src="https://aerocool.io/wp-content/uploads/2019/02/Tor-Product-Photo-Gallery-9-1042x589.png"
+                                                alt=""
+                                                className='h-[250px] w-[500px] overflow-hidden mb-8 ml-4'
+                                                draggable='false'
+                                            />
+                                        </div>
 
                                         <div className="mt-auto flex flex-col gap-2 sm:flex-row sm:justify-between">
                                             <Button
@@ -255,6 +264,16 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
 
                                             <Button
                                                 variant="outline"
+                                                className="w-full border-[var(--verde-neon)] font-['Orbitron'] text-[var(--verde-neon)] shadow-[0_0_8px_var(--verde-neon)] transition-all duration-500 hover:bg-[var(--verde-neon)] hover:text-black hover:shadow-[0_0_16px_var(--verde-neon)] sm:w-auto hover:cursor-pointer"
+                                                asChild
+                                            >
+                                                <Link href={route('montaje.generarPdf')} data={idComponentes} method="post">
+                                                    Exportar PDF
+                                                </Link>
+                                            </Button>
+
+                                            <Button
+                                                variant="outline"
                                                 className="w-auto border-[var(--rojo-neon)] font-['Orbitron'] text-[var(--rojo-neon)] shadow-[0_0_8px_var(--rojo-neon)] transition-all duration-500 hover:cursor-pointer hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_16px_var(--rojo-neon)]"
                                                 onClick={() => {
                                                     setDialogoEliminar(true);
@@ -265,16 +284,6 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                                 }}
                                             >
                                                 Eliminar
-                                            </Button>
-
-                                            <Button
-                                                variant="outline"
-                                                className="w-full border-[var(--verde-neon)] font-['Orbitron'] text-[var(--verde-neon)] shadow-[0_0_8px_var(--verde-neon)] transition-all duration-500 hover:bg-[var(--verde-neon)] hover:text-black hover:shadow-[0_0_16px_var(--verde-neon)] sm:w-auto hover:cursor-pointer"
-                                                asChild
-                                            >
-                                                <Link href={route('montaje.generarPdf')} data={idComponentes} method="post">
-                                                    Exportar PDF
-                                                </Link>
                                             </Button>
                                         </div>
                                     </div>

@@ -28,11 +28,13 @@ const Header: React.FC = () => {
                     </Link>
                 </div>
 
-                <div className="relative z-10">
-                    <Button variant={'outline'} className="border-[var(--rosa-neon)] transition hover:bg-[var(--rosa-neon)]/10" asChild>
-                        <Link href={route('pruebas')}>Pruebas</Link>
-                    </Button>
-                </div>
+                {(auth.user && auth.user.es_admin) === 'Si' &&
+                    <div className="relative z-10">
+                        <Button variant={'outline'} className="border-[var(--rosa-neon)] transition hover:bg-[var(--rosa-neon)]/10" asChild>
+                            <Link href={route('pruebas')}>Pruebas</Link>
+                        </Button>
+                    </div>
+                }
 
                 <nav className="relative z-10">
                     <ul className="flex items-center space-x-6">

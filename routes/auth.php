@@ -30,10 +30,10 @@ Route::middleware('guest')->group(function () {
     Route::post('contraseña-olvidada', [PasswordResetLinkController::class, 'store'])
         ->name('password.email');
 
-    Route::get('restablecer-contraseña/{token}', [NewPasswordController::class, 'create'])
+    Route::get('restablecer-contrasena/{token}', [NewPasswordController::class, 'create'])
         ->name('password.reset');
 
-    Route::post('restablecer-contraseña', [NewPasswordController::class, 'store'])
+    Route::post('restablecer-contrasena', [NewPasswordController::class, 'store'])
         ->name('password.store');
 });
 

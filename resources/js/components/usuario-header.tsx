@@ -34,9 +34,6 @@ export default function UsuarioHeader() {
                     <DropdownMenuItem className='hover:cursor-pointer' asChild>
                         <Link href={route('perfil.editar')}>Ajustes</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Billing <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                    </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-[var(--rojo-neon)]">

@@ -171,7 +171,7 @@ export default function PdfMontaje({
                                     'Precio',
                                     !numeroMemorias
                                         ? `${memoriaRam.precio} €`
-                                        : `${memoriaRam.precio} € x ${numeroMemorias} = ${memoriaRam.precio * numeroMemorias} €`,
+                                        : `${memoriaRam.precio} € x ${numeroMemorias} = ${(memoriaRam.precio * numeroMemorias).toFixed(2)} €`,
                                 ],
                             ])}
                         </View>

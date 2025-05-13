@@ -10,14 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AjustesLayout from '@/layouts/settings/ajustes-layout';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        titulo: 'Password settings',
-        href: '/settings/password',
-    },
-];
-
-export default function Password() {
+export default function Password({ tiene_contraseña, contra }: { tiene_contraseña: boolean, contra: string }) {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
 
@@ -53,6 +46,10 @@ export default function Password() {
 
             <AjustesLayout>
                 <div className="space-y-6">
+                    {!tiene_contraseña &&
+                        <h1 className='text-[var(--amarillo-neon)]'>Has iniciado sesión con un servicio de terceros, con lo cual no puedes cambiar la contraseña.</h1>
+                    }
+                    
                     <HeadingSmall title="Actualizar contraseña" description="Recuerda poner una contraseña larga y aleatoria para una mayor seguridad." />
 
                     <form onSubmit={updatePassword} className="space-y-6">
@@ -68,6 +65,7 @@ export default function Password() {
                                 className="mt-1 block w-full"
                                 autoComplete="current-password"
                                 placeholder="Contraseña actual"
+                                disabled={!tiene_contraseña}
                             />
 
                             <InputError message={errors.current_password} />
@@ -85,6 +83,7 @@ export default function Password() {
                                 className="mt-1 block w-full"
                                 autoComplete="new-password"
                                 placeholder="Nueva contraseña"
+                                disabled={!tiene_contraseña}
                             />
 
                             <InputError message={errors.password} />
@@ -101,13 +100,14 @@ export default function Password() {
                                 className="mt-1 block w-full"
                                 autoComplete="new-password"
                                 placeholder="Confirmar contraseña"
+                                disabled={!tiene_contraseña}
                             />
 
                             <InputError message={errors.password_confirmation} />
                         </div>
 
                         <div className="flex items-center gap-4">
-                            <Button disabled={processing}>Guardar contraseña</Button>
+                            <Button disabled={processing || !tiene_contraseña}>Guardar contraseña</Button>
 
                             <Transition
                                 show={recentlySuccessful}
@@ -115,6 +115,7 @@ export default function Password() {
                                 enterFrom="opacity-0"
                                 leave="transition ease-in-out"
                                 leaveTo="opacity-0"
+
                             >
                                 <p className="text-sm text-neutral-600">Guardada!</p>
                             </Transition>

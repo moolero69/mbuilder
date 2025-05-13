@@ -18,9 +18,11 @@ class PasswordController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $usuario = auth()->user();
         return Inertia::render('settings/contraseña', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),
+            'tiene_contraseña' => !empty($usuario->password),
         ]);
     }
 

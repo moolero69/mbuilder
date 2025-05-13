@@ -126,7 +126,7 @@ class MontajeController extends Controller
         $montaje->datos = json_encode($request->input('datos'));
         $montaje->save();
 
-        return redirect()->route('usuario.montajes');
+        return redirect()->route('usuario.montajes')->with('success', 'Montaje actualizado.');
     }
 
     /**
