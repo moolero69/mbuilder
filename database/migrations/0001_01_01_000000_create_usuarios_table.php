@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->rememberToken();
             $table->string('es_admin')->nullable();
+            $table->string('es_pro')->nullable();
             $table->timestamps();
         });
 

@@ -20,4 +20,5 @@ require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/montaje.php';
 require __DIR__ . '/linksCompartidos.php';
+require __DIR__ . '/stripe.php';
 

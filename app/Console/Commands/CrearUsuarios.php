@@ -19,6 +19,7 @@ class CrearUsuarios extends Command
             'email' => 'admin@mbuilder.com',
             'password' => Hash::make('adminlaravel'),
             'es_admin' => 'Si',
+            'es_pro' => 'Si'
         ]);
 
         User::create([

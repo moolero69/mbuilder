@@ -11,6 +11,7 @@ import {
 import { DatosCompartidos } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Crown } from 'lucide-react';
 
 export default function UsuarioHeader() {
     const page = usePage<DatosCompartidos>();
@@ -24,20 +25,35 @@ export default function UsuarioHeader() {
                         <AvatarImage src="/img/avatar.png" className="h-[40px] w-[40px]" />
                         <AvatarFallback className="text-[var(--verde-neon)]">MB</AvatarFallback>
                     </Avatar>
-                    <h2 className="font-['Orbitron'] text-sm text-[var(--naranja-neon)]"> {auth.user.name}</h2>
+                    <div className="relative flex items-center justify-center">
+                        <span className="font-['Orbitron'] text-sm text-[var(--naranja-neon)]">{auth.user.name}</span>
+                        {auth.user.es_pro && (
+                            <Crown
+                                className="absolute -top-2 right-[-14px] h-4 w-4 text-[var(--amarillo-neon)] rotate-35"
+                                strokeWidth={2}
+                            />
+                        )}
+                    </div>
                 </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 border border-[var(--verde-neon)] bg-[#0d0d0d] colores-borde-glow">
                 <DropdownMenuLabel className="font-['Orbitron'] text-[var(--verde-neon)]">Mi cuenta</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                {!auth.user.es_pro && (
+                    <>
+                        <DropdownMenuItem className='hover:cursor-pointer text-[var(--amarillo-neon)]' asChild>
+                            <Link href={route('usuario.suscribirse')}>Hazte premium</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                    </>
+                )}
                 <DropdownMenuGroup>
                     <DropdownMenuItem className='hover:cursor-pointer' asChild>
                         <Link href={route('perfil.editar')}>Ajustes</Link>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-[var(--rojo-neon)]">
-                    {' '}
+                <DropdownMenuItem className="text-[var(--rojo-neon)] w-full" asChild>
                     <Link
                         href={route('logout')}
                         method="post"

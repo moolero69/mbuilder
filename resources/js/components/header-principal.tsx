@@ -5,6 +5,7 @@ import React from 'react';
 import { limpiarComponentes } from './funciones/funciones';
 import { Button } from './ui/button';
 import UsuarioHeader from './usuario-header';
+import { Crown } from 'lucide-react';
 
 const Header: React.FC = () => {
     const page = usePage<DatosCompartidos>();
@@ -21,10 +22,16 @@ const Header: React.FC = () => {
                             sessionStorage.clear();
                             limpiarComponentes();
                         }}
+                        className="relative flex items-center"
                     >
-                        <h1 className="font-['Orbitron'] text-5xl font-extrabold tracking-widest text-white drop-shadow-[5px_5px_6px_var(--azul-neon)] transition duration-500 hover:drop-shadow-[5px_5px_6px_var(--rojo-neon)]">
+                        <span className="font-['Orbitron'] text-5xl font-extrabold tracking-widest text-white drop-shadow-[5px_5px_6px_var(--azul-neon)] transition duration-500 hover:drop-shadow-[5px_5px_6px_var(--rojo-neon)]">
                             MBUILDER
-                        </h1>
+                        </span>
+                        {(auth.user && auth.user.es_pro) && (
+                            <span className="absolute -top-2 -right-12 rainbow-text font-['Orbitron'] text-lg font-bold rotate-12">
+                                PRO
+                            </span>
+                        )}
                     </Link>
                 </div>
 
@@ -39,31 +46,35 @@ const Header: React.FC = () => {
                 <nav className="relative z-10">
                     <ul className="flex items-center space-x-6">
                         {auth.user ? (
-                            <div className="flex items-center gap-5 px-2 py-1">
-                                {auth.user.es_admin === 'Si' && (
+                            <>
+                                <div className="flex items-center gap-5 px-2 py-1">
+                                    {auth.user.es_admin === 'Si' && (
+                                        <Button
+                                            variant={'link'}
+                                            className="text-[var(--azul-neon)] hover:text-white"
+                                            onClick={() => {
+                                                limpiarComponentes();
+                                            }}
+                                            asChild
+                                        >
+                                            <Link href={route('admin.procesadores')}>Admin</Link>
+                                        </Button>
+                                    )}
+
                                     <Button
                                         variant={'link'}
-                                        className="text-[var(--azul-neon)] hover:text-white"
+                                        className="text-[var(--verde-neon)] hover:text-white"
                                         onClick={() => {
                                             limpiarComponentes();
                                         }}
                                         asChild
                                     >
-                                        <Link href={route('admin.procesadores')}>Admin</Link>
+                                        <Link href={route('usuario.montajes')}>Mis montajes</Link>
                                     </Button>
-                                )}
-                                <Button
-                                    variant={'link'}
-                                    className="text-[var(--verde-neon)] hover:text-white"
-                                    onClick={() => {
-                                        limpiarComponentes();
-                                    }}
-                                    asChild
-                                >
-                                    <Link href={route('usuario.montajes')}>Mis montajes</Link>
-                                </Button>
-                                <UsuarioHeader />
-                            </div>
+
+                                    <UsuarioHeader />
+                                </div>
+                            </>
                         ) : (
                             <>
                                 <Button
@@ -84,6 +95,7 @@ const Header: React.FC = () => {
                         )}
                     </ul>
                 </nav>
+
             </header>
         </>
     );
