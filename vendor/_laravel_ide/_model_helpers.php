@@ -1906,6 +1906,7 @@ namespace App\Models {
      * @property int $user_id
      * @property int $id
      * @property-read \App\Models\User $user
+     * @property-read \App\Models\User $usuario
      * @method static \Illuminate\Database\Eloquent\Builder<Montaje>|Montaje whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Montaje>|Montaje whereUserId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Montaje>|Montaje whereNombre($value)
@@ -3186,7 +3187,7 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
-     * @property string $link_imagen
+     * @property string|null $link_imagen
      * @property float $precio
      * @property string $refrigeracion_liquida
      * @property int $longitud_maxima_gpu
@@ -3505,6 +3506,7 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string|null $es_pro
      * @property string|null $es_admin
      * @property string|null $remember_token
      * @property string|null $password
@@ -3523,6 +3525,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePassword($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRememberToken($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereEsAdmin($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereEsPro($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User newModelQuery()

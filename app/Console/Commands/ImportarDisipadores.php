@@ -36,7 +36,7 @@ class ImportarDisipadores extends Command
             ]);
         }
 
-        $this->info('Importación completada con éxito.');
+        $this->info('Disipadores importados con éxito.');
     }
 }
 

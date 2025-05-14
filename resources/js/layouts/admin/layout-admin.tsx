@@ -1,4 +1,4 @@
-import { Box, CircuitBoard, Cpu, MemoryStick, PcCase, Power, User, Wind } from 'lucide-react';
+import { Box, CircuitBoard, Cpu, MemoryStick, PcCase, Power, User, Wind, Wrench } from 'lucide-react';
 
 import AppLogo from '@/components/app-logo';
 import {
@@ -76,7 +76,6 @@ export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
                                 <SidebarMenuButton className="h-[75px]" asChild>
                                     <Link href="/">
                                         <AppLogo />
-                                        
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
@@ -85,7 +84,7 @@ export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
 
                     <SidebarContent className="flex-1 overflow-y-auto">
                         <SidebarGroup>
-                            <SidebarGroupLabel>Componentes</SidebarGroupLabel>
+                            <SidebarGroupLabel>Inventario</SidebarGroupLabel>
                             <SidebarGroupContent>
                                 <SidebarMenu>
                                     {componentes.map((item) => (
@@ -103,7 +102,7 @@ export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
                                     ))}
                                 </SidebarMenu>
                             </SidebarGroupContent>
-                            <SidebarGroupLabel className='mt-4'>Usuarios</SidebarGroupLabel>
+                            <SidebarGroupLabel className="mt-4">Usuarios</SidebarGroupLabel>
                             <SidebarGroupContent>
                                 <SidebarMenu>
                                     <SidebarMenuItem>
@@ -114,6 +113,15 @@ export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
                                             <a href={'/admin/usuarios'} className="flex items-center gap-2 font-['Orbitron']">
                                                 <User />
                                                 <span>Usuarios</span>
+                                            </a>
+                                        </SidebarMenuButton>
+                                        <SidebarMenuButton
+                                            asChild
+                                            className={`${rutaActual.startsWith('/admin/montajes') ? 'colores-borde-glow rounded-xl border-2' : ''} my-2 h-[42px] text-lg`}
+                                        >
+                                            <a href={'/admin/montajes'} className="flex items-center gap-2 font-['Orbitron']">
+                                                <Wrench />
+                                                <span>Montajes</span>
                                             </a>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>

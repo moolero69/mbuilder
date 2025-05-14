@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 use App\Models\LinkCompartido;
+use Illuminate\Auth\Notifications\EmailAsistencia;
 
 class MontajeController extends Controller
 {
@@ -78,6 +79,14 @@ class MontajeController extends Controller
         ]);
     }
 
+    public function solicitarAsistencia()
+    {
+        $usuario = Auth::user();
+
+        $usuario->notify(new EmailAsistencia());
+
+        return back()->with('success', '¡Solicitud de asistencia enviada con éxito!');
+    }
 
     /**
      * Display a listing of the resource.

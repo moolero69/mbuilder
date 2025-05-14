@@ -28,7 +28,7 @@ const Header: React.FC = () => {
                             MBUILDER
                         </span>
                         {(auth.user && auth.user.es_pro) && (
-                            <span className="absolute -top-2 -right-12 rainbow-text font-['Orbitron'] text-lg font-bold rotate-12">
+                            <span className="absolute -top-2 -right-12 rainbow-text font-['Orbitron'] text-lg font-bold rotate-24">
                                 PRO
                             </span>
                         )}

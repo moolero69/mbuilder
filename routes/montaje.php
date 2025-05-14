@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('montaje/tipo-montaje', function () {return Inertia::render('montaje/tipoMontaje');})->name('montaje.tipo');
+    Route::get('montaje/tipo-montaje', function () {
+        return Inertia::render('montaje/tipoMontaje');
+    })->name('montaje.tipo');
     Route::get('montaje/procesador', MontajeProcesadorController::class)->name('montaje.procesador');
     Route::get('montaje/disipador', MontajeDisipadorController::class)->name('montaje.disipador');
     Route::get('montaje/placaBase', MontajePlacaBaseController::class)->name('montaje.placaBase');
@@ -37,4 +39,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/montaje/generar-pdf', [MontajeController::class, 'generarPdf'])->name('montaje.generarPdf');
 
+    Route::get('/usuario/asistencia', [MontajeController::class, 'solicitarAsistencia'])->middleware('es_pro')->name('usuario.asistencia');
 });

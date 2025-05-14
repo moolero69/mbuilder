@@ -36,6 +36,6 @@ class ImportarFuentesAlimentacion extends Command
             ]);
         }
 
-        $this->info('Importación completada con éxito.');
+        $this->info('Fuentes importadas con éxito.');
     }
 }

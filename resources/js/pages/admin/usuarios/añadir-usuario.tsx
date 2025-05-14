@@ -1,5 +1,6 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AdminLayout from '@/layouts/admin/layout-admin';
@@ -42,13 +43,15 @@ export default function CrearUsuario() {
                         <InputError message={errors.password} />
                     </div>
 
-                    <div className="mt-6 flex items-center gap-3 flex-col">
-                        <Label htmlFor="es_admin">¿Administrador?</Label>
-                        <input
+                    <div className="mt-6 flex flex-col items-center gap-3">
+                        <Label htmlFor="es_admin" className="text-white">
+                            Administrador
+                        </Label>
+                        <Checkbox
                             id="es_admin"
-                            type="checkbox"
                             checked={data.es_admin === 'Si'}
-                            onChange={(e) => setData('es_admin', e.target.checked ? 'Si' : null)}
+                            onCheckedChange={(checked) => setData('es_admin', checked ? 'Si' : null)}
+                            className='border-1 border-white'
                         />
                         <InputError message={errors.es_admin} />
                     </div>

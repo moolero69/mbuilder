@@ -67,7 +67,6 @@ class AdminUsuariosController extends Controller
      */
     public function edit(string $id)
     {
-
         return inertia('admin/usuarios/editar-usuario', [
             'usuario' => User::findOrFail($id) // busca el usuario por su id o lanza 404,
         ]);

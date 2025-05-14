@@ -111,10 +111,17 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
 
                     {montajes.length == 0 ? (
                         <>
-                            <div className="flex h-[512px] w-full items-center justify-center">
+                            <div className="flex h-[512px] w-full items-center justify-center flex-col gap-15">
                                 <h1 className="text-center font-['Orbitron'] text-5xl font-bold text-[var(--naranja-neon)] drop-shadow-[0_0_10px_var(--naranja-neon)]">
                                     No tienes montajes guardados
                                 </h1>
+                                <Button
+                                className='text-3xl underline  hover:text-[var(--fucsia-neon)] duration-300'
+                                variant='link'
+                                asChild
+                                >
+                                    <Link href={route('montaje.tipo')}>Comienza tu primer montaje</Link>
+                                </Button>
                             </div>
                         </>
                     ) : (

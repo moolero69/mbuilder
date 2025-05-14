@@ -1,5 +1,6 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AdminLayout from '@/layouts/admin/layout-admin';
@@ -48,15 +49,14 @@ export default function EditarUsuario({ usuario }: { usuario: any }) {
                     </div>
 
                     <div className="mt-6 flex flex-col items-center gap-4">
-                        <Label htmlFor="es_admin">¿Administrador?</Label>
-                        <input
+                        <Label htmlFor="es_admin" className="text-white">
+                            Administrador
+                        </Label>
+                        <Checkbox
                             id="es_admin"
-                            type="checkbox"
                             checked={data.es_admin === 'Si'}
-                            onChange={(e) => {
-                                const checkAdmin = e.target.checked ? 'Si' : '';
-                                setData('es_admin', checkAdmin);
-                            }}
+                            onCheckedChange={(checked) => setData('es_admin', checked ? 'Si' : null)}
+                            className="border-1 border-white"
                         />
                         <InputError message={errors.es_admin} />
                     </div>

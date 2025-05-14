@@ -22,4 +22,9 @@ class Montaje extends Model
     {
         return $this->belongsTo(User::class); // Indica que un montaje pertenece a un usuario
     }
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

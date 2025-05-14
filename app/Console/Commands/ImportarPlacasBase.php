@@ -40,6 +40,6 @@ class ImportarPlacasBase extends Command
             ]);
         }
 
-        $this->info('Importación completada con éxito.');
+        $this->info('Placas base importadas con éxito.');
     }
 }

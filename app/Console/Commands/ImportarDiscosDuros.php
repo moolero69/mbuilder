@@ -39,7 +39,7 @@ class ImportarDiscosDuros extends Command
             ]);
         }
 
-        $this->info('Importación completada con éxito.');
+        $this->info('Discos duros importados con éxito.');
     }
 }
 

@@ -44,6 +44,6 @@ class ImportarProcesadores extends Command
             ]);
         }
 
-        $this->info('Importación completada con éxito.');
+        $this->info('Procesadores importados con éxito.');
     }
 }

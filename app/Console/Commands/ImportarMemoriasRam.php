@@ -38,6 +38,6 @@ class ImportarMemoriasRam extends Command
             ]);
         }
 
-        $this->info('Importación completada con éxito.');
+        $this->info('Memorias RAM importadas con éxito.');
     }
 }

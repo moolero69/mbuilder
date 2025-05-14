@@ -40,6 +40,6 @@ class ImportarTarjetasGraficas extends Command
             ]);
         }
 
-        $this->info('Importación completada con éxito.');
+        $this->info('Tarjetas graficas importadas con éxito.');
     }
 }

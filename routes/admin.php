@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminDiscosDurosController;
 use App\Http\Controllers\Admin\AdminDisipadoresController;
 use App\Http\Controllers\Admin\AdminFuentesAlimentacionController;
 use App\Http\Controllers\Admin\AdminMemoriasRamController;
+use App\Http\Controllers\Admin\AdminMontajesController;
 use App\Http\Controllers\Admin\AdminPlacasBaseController;
 use App\Http\Controllers\Admin\AdminTarjetasGraficasController;
 use App\Http\Controllers\Admin\AdminTorresController;
@@ -83,6 +84,10 @@ Route::middleware(['auth', 'verified', 'es_admin'])->group(function () {
     Route::get('admin/usuarios/editar/{id}', [AdminUsuariosController::class, 'edit'])->name('admin.usuarios.editar');
     Route::put('admin/usuarios/editar/{id}', [AdminUsuariosController::class, 'update'])->name('admin.usuarios.actualizar');
     Route::delete('/admin/usuarios/eliminar/{id}', [AdminUsuariosController::class, 'destroy'])->name('admin.usuarios.eliminar');
+
+    Route::get('admin/montajes', [AdminMontajesController::class, 'index'])->name('admin.montajes');
+    Route::get('admin/montajes/ver/{id}', [AdminMontajesController::class, 'show'])->name('admin.montajes.ver');
+    Route::delete('/admin/montajes/eliminar/{id}', [AdminMontajesController::class, 'destroy'])->name('admin.montajes.eliminar');
 
     Route::get('pruebas', PruebasController::class)->name('pruebas');
 
