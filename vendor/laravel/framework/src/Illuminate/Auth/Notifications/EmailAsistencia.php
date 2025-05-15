@@ -20,7 +20,7 @@ class EmailAsistencia extends Notification
         return (new MailMessage)
             ->subject('Solicitud de asistencia')
             ->greeting('Hola, '.$notifiable->name)
-            ->line('Hemos recibido tu solicitud de asistencia en MBuilder.')
+            ->line('Hemos recibido tu solicitud de asistencia en mbuilder.')
             ->line('Un técnico se pondrá en contacto contigo lo antes posible.')
             ->line('Tu número de asistencia es: **' . $codigo . '**');
     }

@@ -16,7 +16,7 @@ type ProfileForm = {
     email: string;
 };
 
-export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
+export default function Profile({ verificarEmail, estado }: { verificarEmail: boolean; estado?: string }) {
     const { auth } = usePage<DatosCompartidos>().props;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
@@ -73,7 +73,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 <InputError className="mt-2" message={errors.email} />
                             </div>
 
-                            {mustVerifyEmail && auth.user.email_verified_at === null && (
+                            {verificarEmail && auth.user.email_verified_at === null && (
                                 <div>
                                     <p className="text-muted-foreground -mt-4 text-sm">
                                         Tu dirección de correo no está verificada.{' '}
@@ -87,7 +87,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                         </Link>
                                     </p>
 
-                                    {status === 'verification-link-sent' && (
+                                    {estado === 'link-enviado' && (
                                         <div className="mt-2 text-sm font-medium text-green-600">
                                             Un nuevo enlace de verificación ha sido enviado a tu dirección de correo electrónico.
                                         </div>

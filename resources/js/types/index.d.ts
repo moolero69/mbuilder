@@ -181,6 +181,12 @@ export interface MontajeLayoutProps {
     progresoMontaje?: Array;
 }
 
+export interface MedidorLayoutProps {
+    sidebarIzquierdo: ReactNode;
+    sidebarDerecho: ReactNode;
+    main: ReactNode;
+}
+
 export interface Montaje {
     id: number;
     nombre: string;

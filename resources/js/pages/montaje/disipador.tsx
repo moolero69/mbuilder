@@ -4,7 +4,7 @@ import { ItemArrastrable } from '@/components/ItemArrastrable';
 import { TooltipIncopatibilidadComponente } from '@/components/TooltipIncopatibilidad';
 import { Button } from '@/components/ui/button';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
-import MontajeLayout from '@/layouts/app/montaje-layout';
+import MontajeLayout from '@/layouts/montaje/montaje-layout';
 import { BreadcrumbItem, Disipador } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';

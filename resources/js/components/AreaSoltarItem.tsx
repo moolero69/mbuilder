@@ -9,7 +9,7 @@ export function AreaSoltarItem({
 }: {
     children?: ReactNode;
     botonEliminar: () => void;
-    mostrarBoton: boolean;
+    mostrarBoton?: boolean;
 }) {
     const { setNodeRef, isOver } = useDroppable({
         id: 'dropzone', // ID único para la zona donde soltar

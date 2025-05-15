@@ -3,9 +3,9 @@ import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { KeyRound, SunMoon, UserRoundPen } from 'lucide-react';
+import { DatosCompartidos, type NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
+import { Crown, KeyRound, SunMoon, UserRoundPen } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
 
 const sidebarNavItems: NavItem[] = [
@@ -28,15 +28,19 @@ const sidebarNavItems: NavItem[] = [
 
 export default function AjustesLayout({ children }: PropsWithChildren) {
     const rutaActual = window.location.pathname;
-    const bytes = new TextEncoder().encode(rutaActual)
-    console.log(new TextDecoder().decode(bytes))
+
+    const page = usePage<DatosCompartidos>();
+    const { auth } = page.props;
 
     return (
         <>
             <Header />
             <div className="flex min-h-screen items-start justify-center bg-gradient-to-b from-black to-[#0d0d0d] px-4 py-10">
                 <div className="w-full max-w-6xl rounded-xl border border-[var(--morado-neon)] bg-[#0d0d0d]/70 p-10 shadow-[0_0_15px_var(--morado-neon)]">
-                    <Heading title="⚙️ Ajustes de Cuenta" description="Configura tu perfil, preferencias y opciones avanzadas" />
+                    <div className='flex justify-between items-center w-full'>
+                        <Heading title="⚙️ Ajustes de Cuenta" description="Configura tu perfil, preferencias y opciones avanzadas" />
+                        {auth.user.es_pro && <span className='flex font-["Orbitron"] text-[var(--amarillo-neon)] text-xl gap-3 font-extrabold'><Crown/> USUARIO PRO <Crown/> </span>}
+                    </div>
                     <div className="mt-10 flex flex-col gap-12 lg:flex-row">
                         <aside className="w-full max-w-xs rounded-lg border border-[var(--gris-neon)] bg-gradient-to-br from-[#0a0a0a] via-[#121212] to-[#1a1a1a] p-6 shadow-[0_0_10px_var(--gris-neon)/30]">
                             <nav className="flex flex-col gap-3">

@@ -3,6 +3,7 @@ import { limpiarComponentes } from '@/components/funciones/funciones';
 import Header from '@/components/header-principal';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
 import { DatosCompartidos } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { Check, Headset } from 'lucide-react';
@@ -47,18 +48,39 @@ export default function Principal() {
 
                 {/* Contenido principal */}
                 <section className="relative z-20 flex min-h-dvh flex-col items-center justify-center px-6 text-center">
-                    <img src="img/logo-512px.png" alt="logo mbuilder" className="m-5 bg-white" />
-                    <h2 className="mb-4 text-5xl font-extrabold text-[var(--verde-neon)] drop-shadow-xl">Construye tu PC ideal</h2>
-                    <p className="max-w-2xl text-lg text-gray-400">
-                        Descubre la mejor combinación de componentes para optimizar rendimiento, compatibilidad y eficiencia.
-                    </p>
-                    <Button
-                        className="mt-6 rounded-3xl bg-[var(--verde-neon)] p-8 py-3 font-bold text-black"
-                        asChild
-                        onClick={() => limpiarComponentes()}
-                    >
-                        <Link href={route('montaje.tipo')}>Vamos</Link>
-                    </Button>
+                    <div className='flex w-full'>
+                        {/* CONFIGURADOR */}
+                        <div className='flex flex-col justify-center items-center w-[50%] border-r colores-borde'>
+                            <img src="img/logo-512px.png" alt="logo mbuilder" className="m-5 bg-white" />
+                            <h2 className="mb-4 text-5xl font-extrabold text-[var(--verde-neon)] drop-shadow-xl">Construye tu PC ideal</h2>
+                            <p className="max-w-2xl text-lg text-gray-400">
+                                Descubre la mejor combinación de componentes para optimizar rendimiento, compatibilidad y eficiencia.
+                            </p>
+                            <Button
+                                className="mt-6 rounded-3xl bg-[var(--verde-neon)] p-8 py-3 font-bold text-black"
+                                asChild
+                                onClick={() => limpiarComponentes()}
+                            >
+                                <Link href={route('montaje.tipo')}>Vamos</Link>
+                            </Button>
+                        </div>
+
+                        {/* MEDIDOR */}
+                        <div className='flex flex-col justify-center items-center w-[50%]'>
+                            <img src="img/logo-512px.png" alt="logo mbuilder" className="m-5 bg-white" />
+                            <h2 className="mb-4 text-5xl font-extrabold text-[var(--rojo-neon)] drop-shadow-xl">Medidor de Cuello de Botella</h2>
+                            <p className="max-w-2xl text-lg text-gray-400">
+                                Analiza si tu procesador limita a tu tarjeta gráfica o si tu gráfica va sobrada respecto al procesador.
+                                Asegúrate de tener el mejor equilibrio entre potencia y rendimiento.
+                            </p>
+                            <Button
+                                className="mt-6 rounded-3xl bg-[var(--rojo-neon)] p-8 py-3 font-bold text-black"
+                                asChild
+                            >
+                                <Link href={route('medidor.index')}>Analizar</Link>
+                            </Button>
+                        </div>
+                    </div>
 
                     <section className="grid grid-cols-1 gap-6 px-6 py-12 text-center md:grid-cols-3">
                         <div className="rounded-lg border border-[var(--verde-neon)] p-6 shadow-lg">
@@ -88,7 +110,7 @@ export default function Principal() {
                                 <Headset className="h-6 w-6" />
                             </button>
                         </DialogTrigger>
-                        <DialogContent className="z-60 bg-neutral-900 text-white">
+                        <DialogContent className="z-60 bg-neutral-900 text-white border-1 colores-borde-glow">
                             <DialogHeader>
                                 <div className="flex items-center justify-center gap-3">
                                     <Headset />

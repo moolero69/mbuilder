@@ -21,4 +21,4 @@ require __DIR__ . '/admin.php';
 require __DIR__ . '/montaje.php';
 require __DIR__ . '/linksCompartidos.php';
 require __DIR__ . '/stripe.php';
-
+require __DIR__ . '/medidor.php';

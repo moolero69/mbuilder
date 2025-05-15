@@ -5,7 +5,7 @@ import { TooltipIncopatibilidadComponente } from '@/components/TooltipIncopatibi
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
-import MontajeLayout from '@/layouts/app/montaje-layout';
+import MontajeLayout from '@/layouts/montaje/montaje-layout';
 import { BreadcrumbItem, MemoriaRam } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
