@@ -1,19 +1,16 @@
-import Medidorlayout from "@/layouts/medidor/medidor-layout";
-import { Procesador, TarjetaGrafica } from "@/types";
-import { Head, Link } from "@inertiajs/react";
-import { ArrowBigDown, Cpu, MemoryStick, Minus, Move, Plus, Search, Trash, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { Button } from "@/components/ui/button";
-import { ItemArrastrable } from "@/components/ItemArrastrable";
-import { Separator } from "@radix-ui/react-separator";
+import { AreaSoltarItem } from '@/components/AreaSoltarItem';
+import { ItemArrastrable } from '@/components/ItemArrastrable';
+import { Button } from '@/components/ui/button';
+import Medidorlayout from '@/layouts/medidor/medidor-layout';
+import { Procesador, TarjetaGrafica } from '@/types';
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core';
-import { AreaSoltarItem } from "@/components/AreaSoltarItem";
+import { Head, Link } from '@inertiajs/react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
+import { Separator } from '@radix-ui/react-separator';
+import { ArrowBigDown, Cpu, Factory, Gamepad2, Gauge, MemoryStick, Microchip, Minus, Move, Plus, Search, Trash2, Zap } from 'lucide-react';
+import { useState } from 'react';
 
-
-
-export default function MedidorCuelloBotella({ procesadores, graficas }: { procesadores: Procesador[], graficas: TarjetaGrafica[] }) {
-
+export default function MedidorCuelloBotella({ procesadores, graficas }: { procesadores: Procesador[]; graficas: TarjetaGrafica[] }) {
     const [isDragging, setIsDragging] = useState(false);
 
     const [busquedaProcesadores, setBusquedaProcesadores] = useState('');
@@ -25,14 +22,13 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
     const [procesadorAgarrado, setProcesadorAgarrado] = useState<boolean>(false);
     const [graficaAgarrada, setGraficaAgarrada] = useState<boolean>(false);
 
-
     const [procesadorActivo, setProcesadorActivo] = useState<Procesador | null>(null);
     const [graficaActiva, setGraficaActiva] = useState<TarjetaGrafica | null>(null);
 
     const [componenteActivo, setComponenteActivo] = useState<TarjetaGrafica | Procesador | null>(null);
 
-
-
+    const [cuelloDeBotella, setCuelloDeBotella] = useState<number | null>(null);
+    const [mensaje, setMensaje] = useState<string | null>(null);
 
     const [pIntelDesplegado, setPIntelDesplegado] = useState(false);
     const [pAmdDesplegado, setPAmdDesplegado] = useState(false);
@@ -41,6 +37,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
     const [gIntelDesplegado, setGIntelDesplegado] = useState(false);
     const [gAmdDesplegado, setGAmdDesplegado] = useState(false);
 
+    const [componenteLimitante, setComponenteLimitante] = useState<string>('');
 
     const procesadoresAmd = (() => {
         const p = procesadores.filter((p) => p.marca === 'AMD' && p.nombre.toLowerCase().includes(busquedaProcesadores.toLowerCase()));
@@ -66,7 +63,6 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
         const g = graficas?.filter((g) => g.marca === 'AMD' && g.nombre.toLowerCase().includes(busquedaGraficas.toLowerCase()));
         return g?.length ? g : null;
     })();
-
 
     const desplegarProc = () => {
         setPIntelDesplegado(true);
@@ -101,7 +97,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
         if (over?.id === 'dropzone') {
             if (esProcesador) {
                 item = procesadores.find((p) => p.id === active.id);
-                item && setProcesadorSeleccionado(item)
+                item && setProcesadorSeleccionado(item);
             } else if (esGrafica) {
                 item = graficas.find((g) => g.id === active.id);
                 item && setGraficaSeleccionada(item);
@@ -121,11 +117,11 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
         const esGrafica = Boolean(graficas.find((g) => g.id === active.id));
 
         if (esProcesador) {
-            item = procesadores.find((p) => p.id === active.id)
+            item = procesadores.find((p) => p.id === active.id);
             setComponenteActivo(item!);
             setProcesadorAgarrado(true);
         } else if (esGrafica) {
-            item = graficas.find((g) => g.id === active.id)
+            item = graficas.find((g) => g.id === active.id);
             setComponenteActivo(item!);
             setGraficaAgarrada(true);
         }
@@ -133,19 +129,34 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
         setIsDragging(true);
     };
 
-    useEffect(() => {
-        componenteActivo && console.log('Componente activo: ', componenteActivo)
-    }, [componenteActivo])
+    function calcularCuelloDeBotella() {
+        if (!procesadorSeleccionado?.passmark || !graficaSeleccionada?.passmark) {
+            return null;
+        }
 
+        const passmarkCPU = procesadorSeleccionado.passmark;
+        const passmarkGPU = graficaSeleccionada.passmark;
+
+        const porcentaje = 100 - (passmarkCPU / passmarkGPU) * 100;
+        const cuelloBotellaFinal = Math.round(Math.abs(porcentaje) * 100) / 100;
+
+        setCuelloDeBotella(cuelloBotellaFinal);
+
+        if (porcentaje > 0) {
+            setComponenteLimitante('GPU'); // El procesador es mejor que la gráfica
+        } else if (porcentaje < 0) {
+            setComponenteLimitante('CPU'); // La gráfica es mejor que el procesador
+        } else {
+            setComponenteLimitante('Ninguno');
+        }
+    }
 
     return (
         <>
             <Head title="Medidor de Cuello de Botella" />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {/* Blur de fondo al arrastrar */}
-                {(isDragging) && (
-                    <div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>
-                )}
+                {isDragging && <div className={`fixed inset-0 bg-black/50 backdrop-blur-lg ${isDragging ? 'z-10' : 'z-50'}`}></div>}
                 <Medidorlayout
                     sidebarIzquierdo={
                         <div className="w-full space-y-4">
@@ -189,6 +200,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         nombre={procesadoresIntel[0].nombre}
                                                         icono={<Cpu />}
                                                         precio={procesadoresIntel[0].precio}
+                                                        habilitar={!cuelloDeBotella}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -198,6 +210,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         nombre={procesadoresIntel[1].nombre}
                                                         icono={<Cpu />}
                                                         precio={procesadoresIntel[1].precio}
+                                                        habilitar={!cuelloDeBotella}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -207,6 +220,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         nombre={procesadoresIntel[2].nombre}
                                                         icono={<Cpu />}
                                                         precio={procesadoresIntel[2].precio}
+                                                        habilitar={!cuelloDeBotella}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -222,6 +236,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         nombre={procesador.nombre}
                                                         icono={<Cpu />}
                                                         precio={procesador.precio}
+                                                        habilitar={!cuelloDeBotella}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -253,6 +268,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         nombre={procesadoresAmd[0].nombre}
                                                         icono={<Cpu />}
                                                         precio={procesadoresAmd[0].precio}
+                                                        habilitar={!cuelloDeBotella}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -262,6 +278,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         nombre={procesadoresAmd[1].nombre}
                                                         icono={<Cpu />}
                                                         precio={procesadoresAmd[1].precio}
+                                                        habilitar={!cuelloDeBotella}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -271,6 +288,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         nombre={procesadoresAmd[2].nombre}
                                                         icono={<Cpu />}
                                                         precio={procesadoresAmd[2].precio}
+                                                        habilitar={!cuelloDeBotella}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -287,6 +305,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         nombre={procesador.nombre}
                                                         icono={<Cpu />}
                                                         precio={procesador.precio}
+                                                        habilitar={!cuelloDeBotella}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -303,7 +322,6 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                     </div>
                                 </>
                             )}
-
                         </div>
                     }
                     sidebarDerecho={
@@ -349,6 +367,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                             nombre={graficasNvidia[0].nombre}
                                                             icono={<MemoryStick />}
                                                             precio={graficasNvidia[0].precio}
+                                                            habilitar={!cuelloDeBotella}
                                                         />
                                                     </div>
                                                     <Separator className="border-[1px] border-gray-600" />
@@ -362,6 +381,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                             nombre={graficasNvidia[1].nombre}
                                                             icono={<MemoryStick />}
                                                             precio={graficasNvidia[1].precio}
+                                                            habilitar={!cuelloDeBotella}
                                                         />
                                                     </div>
                                                     <Separator className="border-[1px] border-gray-600" />
@@ -375,6 +395,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                             nombre={graficasNvidia[2].nombre}
                                                             icono={<MemoryStick />}
                                                             precio={graficasNvidia[2].precio}
+                                                            habilitar={!cuelloDeBotella}
                                                         />
                                                     </div>
                                                     <Separator className="border-[1px] border-gray-600" />
@@ -391,6 +412,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         nombre={grafica.nombre}
                                                         icono={<MemoryStick />}
                                                         precio={grafica.precio}
+                                                        habilitar={!cuelloDeBotella}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -423,6 +445,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                             nombre={graficasAmd[0].nombre}
                                                             icono={<MemoryStick />}
                                                             precio={graficasAmd[0].precio}
+                                                            habilitar={!cuelloDeBotella}
                                                         />
                                                     </div>
                                                     <Separator className="border-[1px] border-gray-600" />
@@ -436,6 +459,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                             nombre={graficasAmd[1].nombre}
                                                             icono={<MemoryStick />}
                                                             precio={graficasAmd[1].precio}
+                                                            habilitar={!cuelloDeBotella}
                                                         />
                                                     </div>
                                                     <Separator className="border-[1px] border-gray-600" />
@@ -449,6 +473,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                             nombre={graficasAmd[2].nombre}
                                                             icono={<MemoryStick />}
                                                             precio={graficasAmd[2].precio}
+                                                            habilitar={!cuelloDeBotella}
                                                         />
                                                     </div>
                                                     <Separator className="border-[1px] border-gray-600" />
@@ -465,6 +490,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         nombre={grafica.nombre}
                                                         icono={<MemoryStick />}
                                                         precio={grafica.precio}
+                                                        habilitar={!cuelloDeBotella}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -497,6 +523,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                             nombre={graficasIntel[0].nombre}
                                                             icono={<MemoryStick />}
                                                             precio={graficasIntel[0].precio}
+                                                            habilitar={!cuelloDeBotella}
                                                         />
                                                     </div>
                                                     <Separator className="border-[1px] border-gray-600" />
@@ -510,6 +537,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                             nombre={graficasIntel[1].nombre}
                                                             icono={<MemoryStick />}
                                                             precio={graficasIntel[1].precio}
+                                                            habilitar={!cuelloDeBotella}
                                                         />
                                                     </div>
                                                     <Separator className="border-[1px] border-gray-600" />
@@ -523,6 +551,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                             nombre={graficasIntel[2].nombre}
                                                             icono={<MemoryStick />}
                                                             precio={graficasIntel[2].precio}
+                                                            habilitar={!cuelloDeBotella}
                                                         />
                                                     </div>
                                                     <Separator className="border-[1px] border-gray-600" />
@@ -539,6 +568,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         nombre={grafica.nombre}
                                                         icono={<MemoryStick />}
                                                         precio={grafica.precio}
+                                                        habilitar={!cuelloDeBotella}
                                                     />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
@@ -558,7 +588,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                     main={
                         <div className="flex h-full flex-col items-center gap-3 bg-black/10 text-white">
                             {componenteActivo && (
-                                <div className="fade-down z-10 flex flex-col items-center gap-2 text-white">
+                                <div className="fade-down absolute z-10 flex flex-col items-center gap-2 text-white">
                                     <h1 className="relative z-20 bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-6xl font-extrabold tracking-wider text-transparent">
                                         Arrastra tu {procesadorAgarrado ? 'procesador' : 'gráfica'} aquí
                                     </h1>
@@ -567,9 +597,10 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                             )}
 
                             {/* Zona de drop con efecto cyberpunk */}
-                            {componenteActivo &&
+                            {componenteActivo && (
                                 <div
-                                    className={`relative z-20 h-[80px] w-[50%] border-2 ${componenteActivo && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}>
+                                    className={`absolute z-20 mt-60 h-[70px] w-[50%] border-2 ${componenteActivo && 'border-dashed'} border-[var(--rojo-neon)] bg-black/40`}
+                                >
                                     <AreaSoltarItem
                                         botonEliminar={() => {
                                             setProcesadorSeleccionado(null);
@@ -582,54 +613,266 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                         )}
                                     </AreaSoltarItem>
                                 </div>
-                            }
+                            )}
 
                             {/* TARJETAS COMPONENTES */}
-                            <div className="h-full w-full flex justify-center items-center">
-                                <div className="flex h-[75%] w-full bg-gray-100/10">
-                                    {/* Procesador */}
-                                    <div className="relative flex flex-col h-full w-[50%] justify-center items-center border-r colores-borde">
-                                        <h1 className="bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-4xl font-extrabold tracking-wider text-transparent">Procesador</h1>
-                                        <h1 className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-2xl font-semibold text-transparent">
-                                            {procesadorSeleccionado?.nombre || 'No seleccionado'}
-                                        </h1>
-                                        {procesadorSeleccionado &&
-                                            <Trash2
-                                                size={32}
-                                                className="absolute bottom-2 right-2 opacity-70 text-[var(--rojo-neon)] cursor-pointer"
-                                                onClick={() => setProcesadorSeleccionado(null)}
-                                            />
-                                        }
-                                    </div>
+                            <div className="flex h-full w-full items-center justify-center">
+                                <div className="flex h-full w-full bg-gray-100/10">
+                                    {!cuelloDeBotella ? (
+                                        <>
+                                            {/* Procesador */}
+                                            <div className="colores-borde relative flex h-full w-[50%] flex-col items-center justify-center border-r border-[var(--verde-neon)]">
+                                                <h1 className="bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-4xl font-extrabold tracking-wider text-transparent">
+                                                    Procesador
+                                                </h1>
+                                                <div className="flex items-center justify-center gap-3">
+                                                    {procesadorSeleccionado && <Cpu size={40} className="text-[var(--verde-neon)]" />}
+                                                    <h2 className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-2xl font-semibold text-transparent">
+                                                        {procesadorSeleccionado?.nombre || 'No seleccionado'}
+                                                    </h2>
+                                                </div>
 
-                                    {/* Gráfica */}
-                                    <div className="relative flex flex-col h-full w-[50%] justify-center items-center">
-                                        <h1 className="bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-4xl font-extrabold tracking-wider text-transparent">Gráfica</h1>
-                                        <h1 className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-2xl font-semibold text-transparent">
-                                            {graficaSeleccionada?.nombre || 'No seleccionada'}
-                                        </h1>
-                                        {graficaSeleccionada &&
-                                            <Trash2
-                                                size={32}
-                                                className="absolute bottom-2 right-2 opacity-70 text-[var(--rojo-neon)] cursor-pointer"
-                                                onClick={() => setGraficaSeleccionada(null)}
-                                            />
-                                        }
-                                    </div>
+                                                {/*PROPS DEL PROCESADOR*/}
+                                                {procesadorSeleccionado && (
+                                                    <div
+                                                        className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-1 md:grid-cols-2"
+                                                        key={procesadorSeleccionado?.id}
+                                                    >
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                            <Factory size={38} className="text-[var(--rojo-neon)]" />
+                                                            <div>
+                                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                                                    Marca
+                                                                </h2>
+                                                                <p className="text-lg text-gray-300">{procesadorSeleccionado?.marca}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                            <MemoryStick size={38} className="text-[var(--rojo-neon)]" />
+                                                            <div>
+                                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                                                    Socket
+                                                                </h2>
+                                                                <p className="text-lg text-gray-300">{procesadorSeleccionado?.socket}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                            <Zap size={38} className="text-[var(--rojo-neon)]" />
+                                                            <div>
+                                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                                                    Consumo
+                                                                </h2>
+                                                                <p className="text-lg text-gray-300">{procesadorSeleccionado?.consumo}W</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                            <Gauge size={38} className="text-[var(--rojo-neon)]" />
+                                                            <div>
+                                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-xl font-bold text-transparent">
+                                                                    Frecuencia
+                                                                </h2>
+                                                                <p className="text-base text-gray-300">
+                                                                    {procesadorSeleccionado?.frecuencia_base}GHz /{' '}
+                                                                    {procesadorSeleccionado?.frecuencia_turbo}GHz
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {procesadorSeleccionado && (
+                                                    <div>
+                                                        <h2 className="mb-2 bg-gradient-to-r from-green-300 via-green-400 to-green-600 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                                            Precio
+                                                        </h2>
+                                                        <p className="text-lg text-green-300">{procesadorSeleccionado.precio}€</p>
+                                                    </div>
+                                                )}
+                                                {procesadorSeleccionado && (
+                                                    <Trash2
+                                                        size={32}
+                                                        className="absolute right-2 bottom-2 cursor-pointer text-[var(--rojo-neon)] opacity-70"
+                                                        onClick={() => setProcesadorSeleccionado(null)}
+                                                    />
+                                                )}
+                                            </div>
+
+                                            {/* Gráfica */}
+                                            <div className="relative flex h-full w-[50%] flex-col items-center justify-center">
+                                                <h1 className="bg-gray-900 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text p-4 text-center font-['orbitron'] text-4xl font-extrabold tracking-wider text-transparent">
+                                                    Gráfica
+                                                </h1>
+                                                <div className="flex items-center justify-center gap-3">
+                                                    {graficaSeleccionada && <MemoryStick size={40} className="text-[var(--verde-neon)]" />}
+                                                    <h2 className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-2xl font-semibold text-transparent">
+                                                        {graficaSeleccionada?.nombre || 'No seleccionada'}
+                                                    </h2>
+                                                </div>
+
+                                                {/*PROPS DE LA GRAFICA*/}
+                                                {graficaSeleccionada && (
+                                                    <div
+                                                        className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-1 md:grid-cols-2"
+                                                        key={graficaSeleccionada?.id}
+                                                    >
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                            <Factory size={38} className="text-[var(--rojo-neon)]" />
+                                                            <div>
+                                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                                                    Marca
+                                                                </h2>
+                                                                <p className="text-lg text-gray-300">{graficaSeleccionada?.marca}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                            <Gamepad2 size={48} className="text-[var(--rojo-neon)]" />
+                                                            <div>
+                                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                                                    Serie
+                                                                </h2>
+                                                                <p className="text-lg text-gray-300">{graficaSeleccionada.serie}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                            <Microchip size={48} className="text-[var(--rojo-neon)]" />
+                                                            <div>
+                                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                                                    Memoria
+                                                                </h2>
+                                                                <p className="text-lg text-gray-300">{graficaSeleccionada.memoria} GB</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                            <Zap size={38} className="text-[var(--rojo-neon)]" />
+                                                            <div>
+                                                                <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                                                    Consumo
+                                                                </h2>
+                                                                <p className="text-lg text-gray-300">{graficaSeleccionada?.consumo}W</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {graficaSeleccionada && (
+                                                    <div>
+                                                        <h2 className="mb-2 bg-gradient-to-r from-green-300 via-green-400 to-green-600 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
+                                                            Precio
+                                                        </h2>
+                                                        <p className="text-lg text-green-300">{graficaSeleccionada.precio}€</p>
+                                                    </div>
+                                                )}
+
+                                                {graficaSeleccionada && (
+                                                    <Trash2
+                                                        size={32}
+                                                        className="absolute right-2 bottom-2 cursor-pointer text-[var(--rojo-neon)] opacity-70"
+                                                        onClick={() => setGraficaSeleccionada(null)}
+                                                    />
+                                                )}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        // MOSTRAR CUELLO DE BOTELLA
+                                        <div className="flex h-full w-full items-center justify-center">
+                                            <div className="colores-borde flex h-full w-full flex-col items-center justify-center gap-6 border-b bg-black/30 p-8 shadow-2xl">
+                                                <img src="gif/gif-aguja.gif" alt="Medidor" className="ml-20 w-[512px] invert" />
+
+                                                <div className="flex w-full justify-between px-6">
+                                                    <div className="flex items-center gap-3">
+                                                        <Cpu className="text-[var(--verde-neon)]" size={40} />
+                                                        <span className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-3xl font-bold text-transparent">
+                                                            {procesadorSeleccionado?.nombre}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center gap-3">
+                                                        <MemoryStick className="text-[var(--verde-neon)]" size={40} />
+                                                        <span className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text font-['exo_2'] text-3xl font-bold text-transparent">
+                                                            {graficaSeleccionada?.nombre}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="mt-6 flex flex-col items-center">
+                                                    {(() => {
+                                                        let colorTexto = '';
+                                                        let mensaje = '';
+
+                                                        if (cuelloDeBotella < 10) {
+                                                            colorTexto = 'text-green-400';
+                                                            mensaje = 'Rendimiento equilibrado. ¡Buena combinación!';
+                                                        } else if (cuelloDeBotella < 20) {
+                                                            colorTexto = 'text-yellow-400';
+                                                            mensaje = 'Ligero cuello de botella. Rendimiento aceptable.';
+                                                        } else if (cuelloDeBotella < 35) {
+                                                            colorTexto = 'text-orange-400';
+                                                            mensaje = 'Desbalance notable. Considera revisar la configuración.';
+                                                        } else {
+                                                            colorTexto = 'text-red-500';
+                                                            mensaje = 'Alto cuello de botella. Esta combinación no es óptima.';
+                                                        }
+
+                                                        return (
+                                                            <>
+                                                                <span
+                                                                    className={`fade-down m-4 font-['orbitron'] text-5xl font-extrabold ${colorTexto}`}
+                                                                >
+                                                                    Cuello de botella: {cuelloDeBotella}%
+                                                                </span>
+                                                                {componenteLimitante && (
+                                                                    <>
+                                                                        <span className="fade-down mt-3 rounded bg-[var(--rojo-neon)] px-5 py-2 text-lg font-bold text-black shadow-md">
+                                                                            Limita: {componenteLimitante}
+                                                                        </span>
+                                                                        <span
+                                                                            className={`fade-left mt-3 text-center font-['exo_2'] text-xl font-semibold text-white`}
+                                                                        >
+                                                                            {mensaje}
+                                                                        </span>
+                                                                    </>
+                                                                )}
+                                                            </>
+                                                        );
+                                                    })()}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
-                            <Button
-                                variant={'outline'}
-                                className={`mb-15 fade-in rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${componenteActivo && 'hidden'}`}
-                                onClick={() => {
-                                    // guardarProcesador!(procesadorSeleccionado);
-                                }}
-                                asChild
-                            >
-                                <Link href={route('home')}>Siguiente</Link>
-                            </Button>
-
+                            {!cuelloDeBotella ? (
+                                <Button
+                                    variant={'outline'}
+                                    className={`fade-in mt-3 mb-10 rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${(componenteActivo || cuelloDeBotella) && 'hidden'} hover:cursor-pointer`}
+                                    disabled={!procesadorSeleccionado || !graficaSeleccionada}
+                                    onClick={() => {
+                                        calcularCuelloDeBotella();
+                                    }}
+                                >
+                                    Medir cuello de botella
+                                </Button>
+                            ) : (
+                                <div className="flex gap-3">
+                                    <Button
+                                        variant={'outline'}
+                                        className={`fade-in mt-3 mb-10 rounded-lg border-[var(--naranja-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--naranja-neon)] shadow-[0_0_10px_var(--naranja-neon)] transition-all duration-500 hover:bg-[var(--naranja-neon)] hover:text-black hover:shadow-[0_0_20px_var(--naranja-neon)] ${componenteActivo && 'hidden'} hover:cursor-pointer`}
+                                        onClick={() => {
+                                            setProcesadorSeleccionado(null);
+                                            setGraficaSeleccionada(null);
+                                            setCuelloDeBotella(null);
+                                        }}
+                                    >
+                                        Medir otros componentes
+                                    </Button>
+                                    <Button
+                                        variant={'outline'}
+                                        className={`fade-in mt-3 mb-10 rounded-lg border-[var(--rojo-neon)] px-8 py-4 font-['Orbitron'] text-lg font-bold text-[var(--rojo-neon)] shadow-[0_0_10px_var(--rojo-neon)] transition-all duration-500 hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_20px_var(--rojo-neon)] ${componenteActivo && 'hidden'} hover:cursor-pointer`}
+                                        asChild
+                                    >
+                                        <Link href={route('home')}>Salir</Link>
+                                    </Button>
+                                </div>
+                            )}
                         </div>
                     }
                 />
@@ -638,11 +881,13 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                         <ItemArrastrable
                             id={componenteActivo.id}
                             nombre={componenteActivo.nombre}
-                            icono={<Cpu />}
-                            iconoSecundario={<Move />} />
+                            icono={procesadorAgarrado ? <Cpu /> : <MemoryStick />}
+                            iconoSecundario={<Move />}
+                            habilitar={!cuelloDeBotella}
+                        />
                     ) : null}
                 </DragOverlay>
             </DndContext>
         </>
-    )
+    );
 }

@@ -172,6 +172,7 @@ export interface ItemArrastrableProps {
     iconoSecundario?: ReactNode;
     textoSecundario?: string;
     precio?: number;
+    habilitar?: boolean;
 }
 
 export interface MontajeLayoutProps {
