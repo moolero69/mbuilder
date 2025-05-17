@@ -824,7 +824,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                                             Limita: {componenteLimitante}
                                                                         </span>
                                                                         <span
-                                                                            className={`fade-left mt-3 text-center font-['exo_2'] text-xl font-semibold text-white`}
+                                                                            className={`animate-[fadeInLeft_3s] mt-3 text-center font-['exo_2'] text-xl font-semibold text-white`}
                                                                         >
                                                                             {mensaje}
                                                                         </span>
