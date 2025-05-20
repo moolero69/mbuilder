@@ -9,6 +9,8 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Check } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { QRCodeCanvas } from 'qrcode.react';
+import { Input } from '@/components/ui/input';
 
 type MontajeForm = {
     id: number;
@@ -17,6 +19,11 @@ type MontajeForm = {
 export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
     const { props }: any = usePage();
     const exito = props.flash?.success;
+    const link = props.flash?.link;
+
+    useEffect(() => {
+        link && setDialogoLinkAbierto(true);
+    }, [link])
 
     const [componenteSeleccionado, setComponenteSeleccionado] = useState<ComponentesMontaje>();
     const [dialogoEliminar, setDialogoEliminar] = useState(false);
@@ -92,6 +99,10 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
         eliminar(route('montaje.eliminar'));
     };
 
+    const [dialogoNombreAbierto, setDialogoNombreAbierto] = useState(false);
+    const [dialogoLinkAbierto, setDialogoLinkAbierto] = useState(false);
+    const [linkCopiado, setLinkCopiado] = useState(false);
+
     return (
         <>
             <Head title="Mis Montajes" />
@@ -116,9 +127,9 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                     No tienes montajes guardados
                                 </h1>
                                 <Button
-                                className='text-3xl underline  hover:text-[var(--fucsia-neon)] duration-300'
-                                variant='link'
-                                asChild
+                                    className='text-3xl underline  hover:text-[var(--fucsia-neon)] duration-300'
+                                    variant='link'
+                                    asChild
                                 >
                                     <Link href={route('montaje.tipo')}>Comienza tu primer montaje</Link>
                                 </Button>
@@ -282,6 +293,16 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
 
                                             <Button
                                                 variant="outline"
+                                                className="w-full border-[var(--amarillo-neon)] font-['Orbitron'] text-[var(--amarillo-neon)] shadow-[0_0_8px_var(--amarillo-neon)] transition-all duration-500 hover:bg-[var(--amarillo-neon)] hover:text-black hover:shadow-[0_0_16px_var(--amarillo-neon)] sm:w-auto hover:cursor-pointer"
+                                                asChild
+                                            >
+                                                <Link href={route('montaje.ver.link', montaje.id)} method='post'>
+                                                    Compartir
+                                                </Link>
+                                            </Button>
+
+                                            <Button
+                                                variant="outline"
                                                 className="w-auto border-[var(--rojo-neon)] font-['Orbitron'] text-[var(--rojo-neon)] shadow-[0_0_8px_var(--rojo-neon)] transition-all duration-500 hover:cursor-pointer hover:bg-[var(--rojo-neon)] hover:text-black hover:shadow-[0_0_16px_var(--rojo-neon)]"
                                                 onClick={() => {
                                                     setDialogoEliminar(true);
@@ -327,6 +348,61 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                         >
                             Eliminar
                         </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={dialogoLinkAbierto} onOpenChange={setDialogoLinkAbierto}>
+                <DialogContent className="border-[var(--verde-neon)] bg-[#0d0d0d] text-white shadow-[0_0_15px_var(--verde-neon)] sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Montaje compartido</DialogTitle>
+                        <DialogDescription>Este es el enlace para compartir tu montaje.</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-1 items-center gap-4">
+                            <Input
+                                id="enlace-compartido"
+                                readOnly
+                                value={link}
+                                className="w-full"
+                                onClick={(e) => (e.target as HTMLInputElement).select()}
+                            />
+                        </div>
+                    </div>
+
+                    <DialogFooter>
+                        <div className='flex w-full justify-between'>
+                            {link && <QRCodeCanvas value={link} size={150} />}
+                            <Button
+                                variant='secondary'
+                                onClick={() => {
+                                    const input = document.getElementById('enlace-compartido') as HTMLInputElement;
+
+                                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                                        navigator.clipboard
+                                            .writeText(link)
+                                            .then(() => {
+                                                setLinkCopiado(true);
+                                                setTimeout(() => setLinkCopiado(false), 2000);
+                                            })
+                                            .catch(() => {
+                                                // fallback en caso de error
+                                                input.select();
+                                                document.execCommand('copy');
+                                                setLinkCopiado(true);
+                                                setTimeout(() => setLinkCopiado(false), 2000);
+                                            });
+                                    } else {
+                                        input.select();
+                                        document.execCommand('copy');
+                                        setLinkCopiado(true);
+                                        setTimeout(() => setLinkCopiado(false), 2000);
+                                    }
+                                }}
+                            >
+                                {linkCopiado ? '¡Copiado!' : 'Copiar link'}
+                            </Button>
+                        </div>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

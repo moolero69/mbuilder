@@ -27,4 +27,9 @@ class Montaje extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function linkCompartido()
+{
+    return $this->hasOne(LinkCompartido::class);
+}
 }

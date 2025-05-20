@@ -56,20 +56,17 @@ class MontajeController extends Controller
         ]);
     }
 
-    public function compartir(Request $request)
+    public function verLinkCompartido($montajeId)
     {
-        $datosMontaje = $request->input('datos');
+        $montaje = Montaje::where('id', $montajeId)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
-        $hash = Str::random(30);
+        $link = LinkCompartido::where('montaje_id', $montajeId)->first();
 
-        $link = LinkCompartido::create([
-            'hash' => $hash,
-            'datos_montaje' => $datosMontaje,
-        ]);
+        $url = route('montaje.compartido', ['hash' => $link->hash]);
 
-        $url = route('montaje.compartido', ['hash' => $hash]);
-
-        return redirect()->route('montaje.resumen')->with('link', $url);
+        return back()->with('link', $url);
     }
 
     public function verMontajeCompartido($hash)
@@ -116,11 +113,23 @@ class MontajeController extends Controller
             'datos' => 'required|array',
         ]);
 
+        $hash = Str::random(30);
+
         $montaje = new Montaje();
         $montaje->user_id = Auth::id(); // Comprobar que el usuario esta autenticado
         $montaje->nombre = $request->input('nombre');
         $montaje->datos = json_encode($request->input('datos'));
         $montaje->save();
+
+        $link = LinkCompartido::create([
+            'hash' => $hash,
+            'datos_montaje' => $montaje->datos,
+            'montaje_id' => $montaje->id,
+        ]);
+
+        $url = route('montaje.compartido', ['hash' => $hash]);
+
+        return redirect()->route('montaje.resumen')->with('link', $url);
     }
 
     /**

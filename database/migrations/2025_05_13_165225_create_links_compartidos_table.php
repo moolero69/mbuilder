@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('hash')->unique();
             $table->json('datos_montaje')->nullable();
+            $table->unsignedBigInteger('montaje_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('montaje_id')->references('id')->on('montajes')->onDelete('cascade');
         });
     }
     

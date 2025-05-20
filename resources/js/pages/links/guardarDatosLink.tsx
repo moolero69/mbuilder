@@ -19,10 +19,10 @@ export default function guardarDatosLink({ datosMontaje }: { datosMontaje: any }
     const guardarDatos = async (datosFormateados: any) => {
         await guardarProcesador!(datosFormateados.procesador);
         await guardarDisipador!(datosFormateados.disipador);
-        await guardarPlacaBase!(datosFormateados.placabase);
+        await guardarPlacaBase!(datosFormateados.placa_base);
         await guardarMemoriaRam!(datosFormateados.memoria_ram);
-        await guardarDiscoDuro!(datosFormateados.discoduro);
-        await guardarDiscoDuroSecundario!(datosFormateados.discodurosecundario);
+        await guardarDiscoDuro!(datosFormateados.disco_duro);
+        await guardarDiscoDuroSecundario!(datosFormateados.disco_duro_secundario);
         await guardarTarjetaGrafica!(datosFormateados.tarjeta_grafica);
         await guardarFuenteAlimentacion!(datosFormateados.fuente_alimentacion);
         await guardarTorre!(datosFormateados.torre);

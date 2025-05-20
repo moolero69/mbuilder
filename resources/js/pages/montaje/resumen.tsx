@@ -11,6 +11,7 @@ import { Check } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { QRCodeCanvas } from 'qrcode.react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 type MontajeForm = {
     nombre: string;
@@ -456,24 +457,23 @@ export default function ResumenMontaje() {
                         Guardar montaje en mi perfil
                     </Button>
 
-                    {!montajeCompartido ?
-                        <Button
-                            className="rounded-lg border border-[var(--naranja-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--naranja-neon)] transition-colors duration-1000 hover:cursor-pointer hover:bg-[var(--naranja-neon)] hover:text-black"
-                            asChild
-                            onClick={() => {
-                                setMontajeCompartido(true);
-                                setDialogoLinkAbierto(true);
-                            }}
-                        >
-                            <Link
-                                href={route('montaje.compartir')}
-                                data={{ datos: JSON.stringify(componentesSeleccionados) }}
-                                method="post"
-                                preserveScroll
-                            >
-                                Compartir Montaje
-                            </Link>
-                        </Button>
+                    {!montajeGuardado ?
+                        <>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            className="rounded-lg border border-[var(--naranja-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--naranja-neon)] hover:bg-black"
+                                        >
+                                            Compartir Montaje
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent className='text-sm'>
+                                        <p>Debes guardar tu montaje antes de poder compartirlo</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        </>
                         :
                         <Button
                             className="rounded-lg border border-[var(--naranja-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--naranja-neon)] transition-colors duration-1000 hover:cursor-pointer hover:bg-[var(--naranja-neon)] hover:text-black"
@@ -539,6 +539,7 @@ export default function ResumenMontaje() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
             <Dialog open={dialogoLinkAbierto} onOpenChange={setDialogoLinkAbierto}>
                 <DialogContent className="border-[var(--verde-neon)] bg-[#0d0d0d] text-white shadow-[0_0_15px_var(--verde-neon)] sm:max-w-[425px]">
                     <DialogHeader>
@@ -562,7 +563,7 @@ export default function ResumenMontaje() {
                             {link && <QRCodeCanvas value={link} size={150} />}
 
                             <Button
-                            variant='secondary'
+                                variant='secondary'
                                 onClick={() => {
                                     const input = document.getElementById('enlace-compartido') as HTMLInputElement;
 
@@ -590,7 +591,6 @@ export default function ResumenMontaje() {
                             >
                                 {linkCopiado ? '¡Copiado!' : 'Copiar link'}
                             </Button>
-
                         </div>
                     </DialogFooter>
                 </DialogContent>
