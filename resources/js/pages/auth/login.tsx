@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
@@ -16,12 +16,7 @@ type LoginForm = {
     remember: boolean;
 };
 
-interface LoginProps {
-    status?: string;
-    canResetPassword: boolean;
-}
-
-export default function Login({ status, canResetPassword }: LoginProps) {
+export default function Login() {
     const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
         email: '',
         password: '',
@@ -36,7 +31,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
     };
 
     return (
-        <AuthLayout title="Accede a tu cuenta de mbuilder" description="Introduce tu email y contraseña para acceder">
+        <AuthLayout titulo="Accede a tu cuenta de mbuilder" descripcion="Introduce tu email y contraseña para acceder">
             <Head title="Log in" />
 
             <form
@@ -64,20 +59,19 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     </div>
 
                     <div className="grid gap-2">
-                        <div className="flex items-center">
+                        <div className="flex w-full justify-between items-center gap-15">
                             <Label htmlFor="password" className="text-[var(--verde-neon)]">
                                 Contraseña
                             </Label>
-                            {canResetPassword && (
-                                <TextLink
-                                    href={route('password.request')}
-                                    className="ml-auto text-sm text-[var(--cian-neon)] hover:underline"
-                                    tabIndex={5}
-                                >
-                                    ¿Contraseña olvidada?
-                                </TextLink>
-                            )}
+
+                            <Link
+                                href={route('password.request')}
+                                className="text-sm text-[var(--cian-neon)] hover:underline"
+                            >
+                                ¿Contraseña olvidada?
+                            </Link>
                         </div>
+
                         <Input
                             id="password"
                             type="password"
@@ -138,7 +132,6 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 </div>
             </form>
 
-            {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
         </AuthLayout>
     );
 }

@@ -10,13 +10,26 @@ export default function TipoMontaje() {
         <>
             <Head title="Tipo de montaje" />
             <Header />
-            <div className="flex h-[calc(100dvh-120px)] items-center justify-center bg-zinc-950 px-6 py-12 text-white">
+
+            {/* Vídeo de fondo en pantalla completa */}
+            <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="fixed top-0 left-0 z-0 h-full w-full object-cover opacity-20"
+            >
+                <source src="/vid/video-principal.mp4" type="video/mp4" />
+            </video>
+
+            <div className="relative z-10 flex min-h-[calc(100dvh-120px)] flex-col items-center justify-center overflow-auto px-6 py-12 text-white">
                 <div>
                     <h1 className="mb-16 text-center font-['Orbitron'] text-5xl font-bold text-[var(--azul-neon)] drop-shadow-[0_0_12px_var(--azul-neon)]">
                         ⚡ Elige tu tipo de montaje ⚡
                     </h1>
 
-                    <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 md:grid-cols-3">
+                    {/* Grid responsive */}
+                    <div className="mx-auto grid max-w-7xl gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:mt-8">
                         {/* Modo Eco */}
                         <div className="rounded-2xl border-[2px] border-[var(--verde-neon)] bg-zinc-900 p-8 shadow-[0_0_15px_var(--verde-neon)] transition hover:scale-[1.02]">
                             <div className="flex flex-col items-center space-y-6">
@@ -70,3 +83,5 @@ export default function TipoMontaje() {
         </>
     );
 }
+
+

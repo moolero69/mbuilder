@@ -92,16 +92,20 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
     const [esCompatible, setEsCompatible] = useState<boolean | null>(true);
 
     const [memoriaSeleccionada, setMemoriaSeleccionada] = useState<MemoriaRam | null>(memoriaRamGuardada!);
-    const [modoSeleccionarOtra, setModoSeleccionarOtra] = useState(false);
+
     const [numeroMemorias, setNumeroMemorias] = useState<number>(memoriaSeleccionada ? memoriaSeleccionada!.cantidad! : 0);
     const [primerPrecioMemoria, setPrimerPrecioMemoria] = useState<number | null>(
         memoriaSeleccionada ? (memoriasRam.find((memoria) => memoria.id === memoriaSeleccionada.id)?.precio ?? null) : null,
+    );
+    const [primerConsumoMemoria, setPrimerConsumoMemoria] = useState<number | null>(
+        memoriaSeleccionada ? (memoriasRam.find((memoria) => memoria.id === memoriaSeleccionada.id)?.consumo ?? null) : null,
     );
 
     useEffect(() => {
         if (!numeroMemorias || primerPrecioMemoria === undefined) return;
         memoriaRamGuardada!.cantidad = numeroMemorias;
         memoriaRamGuardada!.precio = primerPrecioMemoria! * numeroMemorias;
+        memoriaRamGuardada!.consumo = primerConsumoMemoria! * numeroMemorias;
     }, [numeroMemorias]);
 
     const [memoriaActiva, setMemoriaActiva] = useState<MemoriaRam | null>(null);
@@ -185,10 +189,13 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
         if (!placaBaseGuardada || !memoriaSeleccionada) return;
 
         const zocalosPlaca = placaBaseGuardada.zocalos_ram;
-        const zocalosOcupados: number = modoSeleccionarOtra ? memoriaRamGuardada!.pack + memoriaSeleccionada.pack : memoriaSeleccionada.pack * 2;
 
-        zocalosPlaca < zocalosOcupados ? setEsCompatible(false) : setEsCompatible(true);
+        numeroMemorias > zocalosPlaca ? setEsCompatible(false) : setEsCompatible(true);
     }
+
+    useEffect(() => {
+        memoriaSeleccionada && comprobarCompatibilidad();
+    }, [memoriaSeleccionada]);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -308,9 +315,9 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {memoriasCorsair.map((memoria) => (
-                                            <div key={memoria.id} className="w-full">
+                                            <div key={memoria.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={memoria.id}
@@ -376,9 +383,9 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {memoriasCrucial.map((memoria) => (
-                                            <div key={memoria.id} className="w-full">
+                                            <div key={memoria.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={memoria.id}
@@ -444,9 +451,9 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {memoriasKingston.map((memoria) => (
-                                            <div key={memoria.id} className="w-full">
+                                            <div key={memoria.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={memoria.id}
@@ -502,9 +509,9 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {memoriasGskill.map((memoria) => (
-                                            <div key={memoria.id} className="w-full">
+                                            <div key={memoria.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={memoria.id}
@@ -560,9 +567,9 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {memoriasAdata.map((memoria) => (
-                                            <div key={memoria.id} className="w-full">
+                                            <div key={memoria.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={memoria.id}
@@ -608,14 +615,13 @@ export default function MontajeMemoriaRam({ memoriasRam }: { memoriasRam: Memori
                                     botonEliminar={() => {
                                         setMemoriaSeleccionada(null);
                                         guardarMemoriaRam!(null);
+                                        setNumeroMemorias(0);
                                     }}
                                     mostrarBoton={Boolean(memoriaSeleccionada)}
                                 >
                                     {!memoriaActiva && (
                                         <h1 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
-                                            <span className="text-[var(--fucsia-neon)]">
-                                                {numeroMemorias > 0 && `x${numeroMemorias} `}
-                                            </span>
+                                            <span className="text-[var(--fucsia-neon)]">{numeroMemorias > 0 && `x${numeroMemorias} `}</span>
                                             {memoriaSeleccionada?.nombre}
                                         </h1>
                                     )}

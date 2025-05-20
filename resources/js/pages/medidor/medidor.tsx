@@ -7,10 +7,28 @@ import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
 import { Separator } from '@radix-ui/react-separator';
-import { ArrowBigDown, Cpu, Factory, Gamepad2, Gauge, MemoryStick, Microchip, Minus, Move, Plus, Search, Trash2, Zap } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowBigDown, Cpu, Factory, Gamepad2, Gauge, MemoryStick, Microchip, Minus, Move, Plus, Search, Trash2, Zap, Wrench } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export default function MedidorCuelloBotella({ procesadores, graficas }: { procesadores: Procesador[]; graficas: TarjetaGrafica[] }) {
+    useEffect(() => {
+        toast.custom(
+            (t) => (
+                <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
+                    <span>
+                        <Wrench size={30} className="text-[var(--rojo-neon)]" />
+                        {}
+                    </span>
+                    <div className="flex w-full justify-center text-center text-xl">
+                        <p className="font-['exo_2']">Arrastra tus componentes</p>
+                    </div>
+                </div>
+            ),
+            { duration: 2750 },
+        );
+    }, []);
+
     const [isDragging, setIsDragging] = useState(false);
 
     const [busquedaProcesadores, setBusquedaProcesadores] = useState('');
@@ -227,9 +245,9 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {procesadoresIntel.map((procesador) => (
-                                            <div key={procesador.id} className="w-full">
+                                            <div key={procesador.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={procesador.id}
@@ -296,9 +314,9 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                         </>
                                     )}
 
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {procesadoresAmd.map((procesador) => (
-                                            <div key={procesador.id} className="w-full">
+                                            <div key={procesador.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={procesador.id}
@@ -403,9 +421,9 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                             )}
                                         </div>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {graficasNvidia.map((grafica) => (
-                                            <div key={grafica.id} className="w-full">
+                                            <div key={grafica.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={grafica.id}
@@ -481,9 +499,9 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                             )}
                                         </div>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {graficasAmd.map((grafica) => (
-                                            <div key={grafica.id} className="w-full">
+                                            <div key={grafica.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={grafica.id}
@@ -559,9 +577,9 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                             )}
                                         </div>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {graficasIntel.map((grafica) => (
-                                            <div key={grafica.id} className="w-full">
+                                            <div key={grafica.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={grafica.id}
@@ -824,7 +842,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                                             Limita: {componenteLimitante}
                                                                         </span>
                                                                         <span
-                                                                            className={`animate-[fadeInLeft_3s] mt-3 text-center font-['exo_2'] text-xl font-semibold text-white`}
+                                                                            className={`mt-3 animate-[fadeInLeft_3s] text-center font-['exo_2'] text-xl font-semibold text-white`}
                                                                         >
                                                                             {mensaje}
                                                                         </span>

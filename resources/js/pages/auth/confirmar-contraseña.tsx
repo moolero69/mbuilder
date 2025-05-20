@@ -24,8 +24,8 @@ export default function ConfirmarContrasena() {
 
     return (
         <AuthLayout
-            title="Confirma tu contraseña"
-            description="Esta es una zona segura de la aplicación. Por favor, confirma tu contraseña antes de continuar."
+            titulo="Confirma tu contraseña"
+            descripcion="Esta es una zona segura de la aplicación. Por favor, confirma tu contraseña antes de continuar."
         >
             <Head title="Confirmar contraseña" />
 

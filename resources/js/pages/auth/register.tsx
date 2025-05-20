@@ -32,7 +32,7 @@ export default function Register() {
     };
 
     return (
-        <AuthLayout title="Crea tu cuenta de mbuilder" description="Introduce los detalles debajo">
+        <AuthLayout titulo="Crea tu cuenta de mbuilder" descripcion="Introduce los detalles debajo">
             <Head title="Registro" />
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6 bg-black/80 border border-[var(--azul-neon)] rounded-xl p-6 shadow-[0_0_30px_var(--azul-neon)]">

@@ -28,7 +28,9 @@ export default function PdfMontaje({
     consumoTotal: number;
     numeroMemorias: number;
 }) {
-    Font.register({ family: 'Orbitron', src: '/Orbitron.ttf' });
+    Font.register({ family: 'Orbitron', src: '/fonts/Orbitron.ttf' });
+    Font.register({ family: 'DynaPuff', src: '/fonts/DynaPuff.ttf' });
+
 
     const styles = StyleSheet.create({
         page: {
@@ -63,7 +65,7 @@ export default function PdfMontaje({
             fontSize: 22,
             marginTop: 20,
             textAlign: 'center',
-            fontFamily: 'Orbitron',
+            fontFamily: 'DynaPuff',
             fontWeight: 'bold',
             display: 'flex',
             flexDirection: 'row',
@@ -74,7 +76,7 @@ export default function PdfMontaje({
         },
     });
 
-    const renderZebraRows = (data: [string, string | number][]) =>
+    const renderFilasTabla = (data: [string, string | number][]) =>
         data.map(([label, value], i) => (
             <View key={label} style={i % 2 === 0 ? styles.zebra1 : styles.zebra2}>
                 <Text>
@@ -96,7 +98,7 @@ export default function PdfMontaje({
                     {procesador && (
                         <View style={styles.section}>
                             <Text style={styles.titulo}>Procesador</Text>
-                            {renderZebraRows([
+                            {renderFilasTabla([
                                 ['Nombre', procesador.nombre],
                                 ['Marca', procesador.marca],
                                 ['Socket', procesador.socket],
@@ -117,7 +119,7 @@ export default function PdfMontaje({
                     {disipador && (
                         <View style={styles.section}>
                             <Text style={styles.titulo}>Disipador</Text>
-                            {renderZebraRows([
+                            {renderFilasTabla([
                                 ['Nombre', disipador.nombre],
                                 ['Marca', disipador.marca],
                                 ['Sockets', disipador.socket],
@@ -131,7 +133,7 @@ export default function PdfMontaje({
                     {placaBase && (
                         <View style={styles.section}>
                             <Text style={styles.titulo}>Placa Base</Text>
-                            {renderZebraRows([
+                            {renderFilasTabla([
                                 ['Nombre', placaBase.nombre],
                                 ['Marca', placaBase.marca],
                                 ['Socket', placaBase.socket],
@@ -149,7 +151,7 @@ export default function PdfMontaje({
                     {memoriaRam && (
                         <View style={styles.section}>
                             <Text style={styles.titulo}>Memoria RAM</Text>
-                            {renderZebraRows([
+                            {renderFilasTabla([
                                 ['Nombre', memoriaRam.nombre],
                                 ['Marca', memoriaRam.marca],
                                 [
@@ -180,7 +182,7 @@ export default function PdfMontaje({
                     {discoDuro && (
                         <View style={styles.section}>
                             <Text style={styles.titulo}>Disco Duro Principal</Text>
-                            {renderZebraRows([
+                            {renderFilasTabla([
                                 ['Nombre', discoDuro.nombre],
                                 ['Marca', discoDuro.marca],
                                 ['Tecnología', discoDuro.tecnologia],
@@ -197,7 +199,7 @@ export default function PdfMontaje({
                     {discoDuroSecundario && (
                         <View style={styles.section}>
                             <Text style={styles.titulo}>Disco Duro Secundario</Text>
-                            {renderZebraRows([
+                            {renderFilasTabla([
                                 ['Nombre', discoDuroSecundario.nombre],
                                 ['Marca', discoDuroSecundario.marca],
                                 ['Tecnología', discoDuroSecundario.tecnologia],
@@ -214,7 +216,7 @@ export default function PdfMontaje({
                     {tarjetaGrafica && (
                         <View style={styles.section}>
                             <Text style={styles.titulo}>Tarjeta Gráfica</Text>
-                            {renderZebraRows([
+                            {renderFilasTabla([
                                 ['Nombre', tarjetaGrafica.nombre],
                                 ['Marca', tarjetaGrafica.marca],
                                 ['Tipo', tarjetaGrafica.tipo],
@@ -232,7 +234,7 @@ export default function PdfMontaje({
                     {fuenteAlimentacion && (
                         <View style={styles.section}>
                             <Text style={styles.titulo}>Fuente de Alimentación</Text>
-                            {renderZebraRows([
+                            {renderFilasTabla([
                                 ['Nombre', fuenteAlimentacion.nombre],
                                 ['Marca', fuenteAlimentacion.marca],
                                 ['Certificación', fuenteAlimentacion.certificacion],
@@ -246,7 +248,7 @@ export default function PdfMontaje({
                     {torre && (
                         <View style={styles.section}>
                             <Text style={styles.titulo}>Torre</Text>
-                            {renderZebraRows([
+                            {renderFilasTabla([
                                 ['Nombre', torre.nombre],
                                 ['Marca', torre.marca],
                                 ['Factor Forma', torre.factor_forma],
@@ -260,8 +262,8 @@ export default function PdfMontaje({
                 </View>
 
                 <View style={styles.totales}>
-                    <Text style={{ color: '#17c70e' }}>Precio = {precioTotal}€</Text>
-                    <Text style={{ color: '#a80ec7' }}>Consumo = {consumoTotal} W</Text>
+                    <Text>Precio = {precioTotal}€</Text>
+                    <Text>Consumo = {consumoTotal} W</Text>
                 </View>
             </Page>
         </Document>

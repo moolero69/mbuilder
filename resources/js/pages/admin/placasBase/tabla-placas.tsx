@@ -4,16 +4,17 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AdminLayout from '@/layouts/admin/layout-admin';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function TablaPlacasBase({ placasBase }: { placasBase: any }) {
     const { props }: any = usePage();
-    const exito = props.flash?.success;
+    let exito = props.flash?.success;
     const { delete: eliminar } = useForm();
 
     useEffect(() => {
         exito && toast.success(exito);
+        exito = null;
     }, [exito]);
 
     const cambiarFilasPorPagina = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -28,6 +29,11 @@ export default function TablaPlacasBase({ placasBase }: { placasBase: any }) {
             },
         );
     };
+
+    // Estados para el diálogo de confirmación eliminar
+    const [dialogoEliminar, setDialogoEliminar] = useState<boolean>(false);
+    const [nombreEliminar, setNombreEliminar] = useState<string>('');
+    const [idEliminar, setIdEliminar] = useState<number>();
 
     return (
         <AdminLayout titulo="Placas Base">
@@ -96,7 +102,11 @@ export default function TablaPlacasBase({ placasBase }: { placasBase: any }) {
                                     <ContextMenuContent>
                                         <ContextMenuItem
                                             className="text-red-600 focus:text-red-600"
-                                            onClick={() => eliminar(route('admin.placasBase.eliminar', placa.id))}
+                                            onClick={() => {
+                                                setDialogoEliminar(true);
+                                                setNombreEliminar(placa.nombre);
+                                                setIdEliminar(placa.id);
+                                            }}
                                         >
                                             Eliminar
                                         </ContextMenuItem>
@@ -109,6 +119,53 @@ export default function TablaPlacasBase({ placasBase }: { placasBase: any }) {
 
                 <PaginacionComponentes links={placasBase.links} />
             </section>
+
+            {/* Modal personalizado para confirmar eliminación */}
+            {dialogoEliminar && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+                    aria-modal="true"
+                    role="dialog"
+                    aria-labelledby="modal-titulo"
+                    aria-describedby="modal-descripcion"
+                >
+                    <div className="bg-[#0d0d0d] rounded-md border border-[var(--rojo-neon)] p-6 max-w-md w-full text-white shadow-[0_0_15px_var(--rojo-neon)]">
+                        <header className="mb-4">
+                            <h2
+                                id="modal-titulo"
+                                className="text-[var(--rojo-neon)] drop-shadow-[0_0_8px_var(--rojo-neon)] text-xl font-semibold"
+                            >
+                                ¿Eliminar componente?
+                            </h2>
+                        </header>
+                        <section id="modal-descripcion" className="text-gray-400 mb-6">
+                            <p>
+                                ¿Estás seguro de que quieres eliminar{' '}
+                                <span className="text-white font-bold">{nombreEliminar}</span>?
+                            </p>
+                            <p>Esta acción no se puede deshacer.</p>
+                        </section>
+                        <footer className="flex justify-end gap-2">
+                            <Button
+                                variant="ghost"
+                                onClick={() => setDialogoEliminar(false)}
+                                className="border border-gray-600 text-white hover:cursor-pointer hover:bg-gray-800"
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setDialogoEliminar(false);
+                                    eliminar(route('admin.placasBase.eliminar', idEliminar));
+                                }}
+                                className="bg-[var(--rojo-neon)] text-black hover:cursor-pointer hover:bg-red-600"
+                            >
+                                Eliminar
+                            </Button>
+                        </footer>
+                    </div>
+                </div>
+            )}
         </AdminLayout>
     );
 }

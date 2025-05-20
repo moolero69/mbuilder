@@ -286,9 +286,9 @@ export default function MontajeDisipador({ disipadores }: { disipadores: Disipad
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {disipadoresCorsair.map((disipador) => (
-                                            <div key={disipador.id} className="w-full">
+                                            <div key={disipador.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={disipador.id}
@@ -340,9 +340,9 @@ export default function MontajeDisipador({ disipadores }: { disipadores: Disipad
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {disipadoresBeQuiet.map((disipador) => (
-                                            <div key={disipador.id} className="w-full">
+                                            <div key={disipador.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={disipador.id}
@@ -394,9 +394,9 @@ export default function MontajeDisipador({ disipadores }: { disipadores: Disipad
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {disipadoresCoolerMaster.map((disipador) => (
-                                            <div key={disipador.id} className="w-full">
+                                            <div key={disipador.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={disipador.id}
@@ -448,9 +448,9 @@ export default function MontajeDisipador({ disipadores }: { disipadores: Disipad
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {disipadoresDeepCool.map((disipador) => (
-                                            <div key={disipador.id} className="w-full">
+                                            <div key={disipador.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={disipador.id}
@@ -502,9 +502,9 @@ export default function MontajeDisipador({ disipadores }: { disipadores: Disipad
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {disipadoresNzxt.map((disipador) => (
-                                            <div key={disipador.id} className="w-full">
+                                            <div key={disipador.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={disipador.id}

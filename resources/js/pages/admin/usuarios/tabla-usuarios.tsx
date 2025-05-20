@@ -4,19 +4,20 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AdminLayout from '@/layouts/admin/layout-admin';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function TablaUsuarios({ usuarios }: { usuarios: any }) {
     const { props }: any = usePage();
-    const exito = props.flash?.success;
+    let exito = props.flash?.success;
     const { delete: eliminar } = useForm();
 
     useEffect(() => {
         exito && toast.success(exito);
+        exito = null;
     }, [exito]);
 
-    const cambiarFilasPorPagina = (e: any) => {
+    const cambiarFilasPorPagina = (e: React.ChangeEvent<HTMLSelectElement>) => {
         router.get(
             route('admin.usuarios'),
             {
@@ -28,6 +29,10 @@ export default function TablaUsuarios({ usuarios }: { usuarios: any }) {
             },
         );
     };
+
+    const [dialogoEliminar, setDialogoEliminar] = useState<boolean>(false);
+    const [nombreEliminar, setNombreEliminar] = useState<string>('');
+    const [idEliminar, setIdEliminar] = useState<number>();
 
     return (
         <AdminLayout titulo="Usuarios">
@@ -72,17 +77,23 @@ export default function TablaUsuarios({ usuarios }: { usuarios: any }) {
                                     <ContextMenuTrigger asChild>
                                         <TableRow
                                             className="cursor-pointer odd:bg-gray-500/30 hover:bg-white/60 hover:text-black"
-                                            onClick={() => (window.location.href = route('admin.usuarios.editar', usuario.id))}
+                                            onClick={() =>
+                                                (window.location.href = route('admin.usuarios.editar', usuario.id))
+                                            }
                                         >
                                             <TableCell>{usuario.name}</TableCell>
                                             <TableCell>{usuario.email}</TableCell>
-                                            <TableCell>{usuario.es_admin ? 'Si' : 'No'}</TableCell>
+                                            <TableCell>{usuario.es_admin ? 'Sí' : 'No'}</TableCell>
                                         </TableRow>
                                     </ContextMenuTrigger>
                                     <ContextMenuContent>
                                         <ContextMenuItem
                                             className="text-red-600 focus:text-red-600"
-                                            onClick={() => eliminar(route('admin.usuarios.eliminar', usuario.id))}
+                                            onClick={() => {
+                                                setDialogoEliminar(true);
+                                                setNombreEliminar(usuario.name);
+                                                setIdEliminar(usuario.id);
+                                            }}
                                         >
                                             Eliminar
                                         </ContextMenuItem>
@@ -95,6 +106,52 @@ export default function TablaUsuarios({ usuarios }: { usuarios: any }) {
 
                 <PaginacionComponentes links={usuarios.links} />
             </section>
+
+            {dialogoEliminar && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+                    aria-modal="true"
+                    role="dialog"
+                    aria-labelledby="modal-titulo"
+                    aria-describedby="modal-descripcion"
+                >
+                    <div className="bg-[#0d0d0d] rounded-md border border-[var(--rojo-neon)] p-6 max-w-md w-full text-white shadow-[0_0_15px_var(--rojo-neon)]">
+                        <header className="mb-4">
+                            <h2
+                                id="modal-titulo"
+                                className="text-[var(--rojo-neon)] drop-shadow-[0_0_8px_var(--rojo-neon)] text-xl font-semibold"
+                            >
+                                ¿Eliminar usuario?
+                            </h2>
+                        </header>
+                        <section id="modal-descripcion" className="text-gray-400 mb-6">
+                            <p>
+                                ¿Estás seguro de que quieres eliminar{' '}
+                                <span className="text-white font-bold">{nombreEliminar}</span>?
+                            </p>
+                            <p>Esta acción no se puede deshacer.</p>
+                        </section>
+                        <footer className="flex justify-end gap-2">
+                            <Button
+                                variant="ghost"
+                                onClick={() => setDialogoEliminar(false)}
+                                className="border border-gray-600 text-white hover:cursor-pointer hover:bg-gray-800"
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setDialogoEliminar(false);
+                                    eliminar(route('admin.usuarios.eliminar', idEliminar));
+                                }}
+                                className="bg-[var(--rojo-neon)] text-black hover:cursor-pointer hover:bg-red-600"
+                            >
+                                Eliminar
+                            </Button>
+                        </footer>
+                    </div>
+                </div>
+            )}
         </AdminLayout>
     );
 }

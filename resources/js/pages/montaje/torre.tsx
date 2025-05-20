@@ -350,9 +350,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresCorsair.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
@@ -391,9 +391,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresNox.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
@@ -432,9 +432,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresCoolerMaster.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
@@ -473,9 +473,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresAeroCool.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
@@ -514,9 +514,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresDeepCool.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
@@ -555,9 +555,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresFractal.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
@@ -596,9 +596,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresNfortec.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
@@ -637,9 +637,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresLianLi.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
@@ -678,9 +678,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresMars.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
@@ -719,9 +719,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresNzxt.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
@@ -760,9 +760,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresPhanteks.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
@@ -801,9 +801,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresSharkoon.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>
@@ -842,9 +842,9 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {torresThermalTake.map((torre) => (
-                                            <div key={torre.id} className="w-full">
+                                            <div key={torre.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={torre.id} nombre={torre.nombre} icono={<PcCase />} precio={torre.precio} />
                                                 </div>

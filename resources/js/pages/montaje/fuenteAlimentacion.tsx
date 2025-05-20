@@ -279,9 +279,9 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                             )}
                                         </div>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {fuentesCorsair.map((fuente) => (
-                                            <div key={fuente.id} className="w-full">
+                                            <div key={fuente.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={fuente.id}
@@ -337,9 +337,9 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                             )}
                                         </div>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {fuentesEvga.map((fuente) => (
-                                            <div key={fuente.id} className="w-full">
+                                            <div key={fuente.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={fuente.id}
@@ -395,9 +395,9 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                             )}
                                         </div>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {fuentesBequiet.map((fuente) => (
-                                            <div key={fuente.id} className="w-full">
+                                            <div key={fuente.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={fuente.id}
@@ -453,9 +453,9 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                             )}
                                         </div>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {fuentesThermaltake.map((fuente) => (
-                                            <div key={fuente.id} className="w-full">
+                                            <div key={fuente.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable id={fuente.id} nombre={fuente.nombre} icono={<Power />} precio={fuente.precio} />
                                                 </div>

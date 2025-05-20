@@ -1,5 +1,5 @@
 import { FormEventHandler } from 'react';
-import { useForm, Head } from '@inertiajs/react';
+import { useForm, Head, router } from '@inertiajs/react';
 import AdminLayout from '@/layouts/admin/layout-admin';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -90,7 +90,8 @@ export default function CrearPlacaBase() {
                         <InputError message={errors.precio} />
                     </div>
 
-                    <div className="col-span-2 flex justify-center mt-4">
+                    <div className="col-span-2 flex justify-center mt-4 gap-4">
+                        <Button onClick={(e) => { router.visit(route('admin.placasbase')); e.preventDefault() }} variant='link'>Volver</Button>
                         <Button disabled={processing}>Guardar placa base</Button>
                     </div>
                 </form>

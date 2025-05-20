@@ -1,149 +1,113 @@
-import { Box, CircuitBoard, Cpu, MemoryStick, PcCase, Power, User, Wind, Wrench } from 'lucide-react';
-
-import AppLogo from '@/components/app-logo';
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarProvider,
-} from '@/components/ui/sidebar';
-import UsuarioHeader from '@/components/usuario-header';
-import { AdminLayoutProps } from '@/types';
+    Box,
+    CircuitBoard,
+    Cpu,
+    MemoryStick,
+    PcCase,
+    Power,
+    User,
+    Wind,
+    Wrench,
+    Menu,
+    X,
+} from 'lucide-react';
+import { useState } from 'react';
 import { Link } from '@inertiajs/react';
 import { Toaster } from 'sonner';
+import AppLogo from '@/components/app-logo';
+import UsuarioHeader from '@/components/usuario-header';
+import { AdminLayoutProps } from '@/types';
 
 const componentes = [
-    {
-        title: 'Procesadores',
-        url: '/admin/procesadores',
-        icon: Cpu,
-    },
-    {
-        title: 'Disipadores',
-        url: '/admin/disipadores',
-        icon: Wind,
-    },
-    {
-        title: 'Placas Base',
-        url: '/admin/placasBase',
-        icon: CircuitBoard,
-    },
-    {
-        title: 'Memorias RAM',
-        url: '/admin/memoriasRam',
-        icon: MemoryStick,
-    },
-    {
-        title: 'Discos Duros',
-        url: '/admin/discosDuros',
-        icon: Box,
-    },
-    {
-        title: 'Tarjetas Gráficas',
-        url: '/admin/tarjetasGraficas',
-        icon: MemoryStick,
-    },
-    {
-        title: 'Fuentes de Alimentación',
-        url: '/admin/fuentesAlimentacion',
-        icon: Power,
-    },
-    {
-        title: 'Torres',
-        url: '/admin/torres',
-        icon: PcCase,
-    },
+    { title: 'Procesadores', url: '/admin/procesadores', icon: Cpu },
+    { title: 'Disipadores', url: '/admin/disipadores', icon: Wind },
+    { title: 'Placas Base', url: '/admin/placasBase', icon: CircuitBoard },
+    { title: 'Memorias RAM', url: '/admin/memoriasRam', icon: MemoryStick },
+    { title: 'Discos Duros', url: '/admin/discosDuros', icon: Box },
+    { title: 'Tarjetas Gráficas', url: '/admin/tarjetasGraficas', icon: MemoryStick },
+    { title: 'Fuentes de Alimentación', url: '/admin/fuentesAlimentacion', icon: Power },
+    { title: 'Torres', url: '/admin/torres', icon: PcCase },
 ];
 
 export default function AdminLayout({ children, titulo }: AdminLayoutProps) {
     const rutaActual = window.location.pathname;
+    const [sidebarAbierto, setSidebarAbierto] = useState(false);
 
     return (
-        <div className="flex h-dvh">
+        <div className="h-screen w-full overflow-hidden bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-700">
             <Toaster position="bottom-center" />
-            <SidebarProvider>
-                <Sidebar className="colores-borde h-full border-r">
-                    <SidebarHeader>
-                        <SidebarMenu>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton className="h-[75px]" asChild>
-                                    <Link href="/">
-                                        <AppLogo />
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        </SidebarMenu>
-                    </SidebarHeader>
 
-                    <SidebarContent className="flex-1 overflow-y-auto">
-                        <SidebarGroup>
-                            <SidebarGroupLabel>Inventario</SidebarGroupLabel>
-                            <SidebarGroupContent>
-                                <SidebarMenu>
-                                    {componentes.map((item) => (
-                                        <SidebarMenuItem key={item.title}>
-                                            <SidebarMenuButton
-                                                asChild
-                                                className={`${rutaActual.startsWith(item.url) ? 'colores-borde-glow rounded-xl border-2' : ''} my-2 h-[42px] text-lg`}
-                                            >
-                                                <a href={item.url} className="flex items-center gap-2 font-['Orbitron']">
-                                                    <item.icon />
-                                                    <span>{item.title}</span>
-                                                </a>
-                                            </SidebarMenuButton>
-                                        </SidebarMenuItem>
-                                    ))}
-                                </SidebarMenu>
-                            </SidebarGroupContent>
-                            <SidebarGroupLabel className="mt-4">Usuarios</SidebarGroupLabel>
-                            <SidebarGroupContent>
-                                <SidebarMenu>
-                                    <SidebarMenuItem>
-                                        <SidebarMenuButton
-                                            asChild
-                                            className={`${rutaActual.startsWith('/admin/usuarios') ? 'colores-borde-glow rounded-xl border-2' : ''} my-2 h-[42px] text-lg`}
-                                        >
-                                            <a href={'/admin/usuarios'} className="flex items-center gap-2 font-['Orbitron']">
-                                                <User />
-                                                <span>Usuarios</span>
-                                            </a>
-                                        </SidebarMenuButton>
-                                        <SidebarMenuButton
-                                            asChild
-                                            className={`${rutaActual.startsWith('/admin/montajes') ? 'colores-borde-glow rounded-xl border-2' : ''} my-2 h-[42px] text-lg`}
-                                        >
-                                            <a href={'/admin/montajes'} className="flex items-center gap-2 font-['Orbitron']">
-                                                <Wrench />
-                                                <span>Montajes</span>
-                                            </a>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                </SidebarMenu>
-                            </SidebarGroupContent>
-                        </SidebarGroup>
-                    </SidebarContent>
+            {/* Botón para pantallas pequeñas */}
+            <button
+                className="absolute left-2 top-2 z-50 rounded p-2 text-white md:hidden"
+                onClick={() => setSidebarAbierto(!sidebarAbierto)}
+            >
+                {sidebarAbierto ? <X /> : <Menu />}
+            </button>
 
-                    <SidebarFooter>
+            <div className="flex h-full w-full">
+                {/* SIDEBAR */}
+                <div
+                    className={`z-40 h-full bg-black text-white transition-transform duration-300 md:static md:w-[325px] fixed top-0 left-0 w-[55%] ${sidebarAbierto ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+                >
+                    <div className="h-[75px] flex items-center justify-center border-b border-gray-700">
+                        <Link href="/">
+                            <AppLogo />
+                        </Link>
+                    </div>
+
+                    <div className="p-4">
+                        <h2 className="mb-2 font-bold">Inventario</h2>
+                        {componentes.map((item) => (
+                            <a
+                                key={item.title}
+                                href={item.url}
+                                className={`my-1 flex items-center gap-2 rounded px-2 py-2 font-['Orbitron'] hover:bg-gray-800 ${rutaActual.startsWith(item.url)
+                                    ? 'bg-gray-800 border-l-4 border-green-400'
+                                    : ''
+                                    }`}
+                            >
+                                <item.icon size={18} />
+                                {item.title}
+                            </a>
+                        ))}
+
+                        <h2 className="mt-6 mb-2 font-bold">Usuarios</h2>
+                        <a
+                            href="/admin/usuarios"
+                            className={`my-1 flex items-center gap-2 rounded px-2 py-2 font-['Orbitron'] hover:bg-gray-800 ${rutaActual.startsWith('/admin/usuarios')
+                                ? 'bg-gray-800 border-l-4 border-green-400'
+                                : ''
+                                }`}
+                        >
+                            <User size={18} />
+                            Usuarios
+                        </a>
+                        <a
+                            href="/admin/montajes"
+                            className={`my-1 flex items-center gap-2 rounded px-2 py-2 font-['Orbitron'] hover:bg-gray-800 ${rutaActual.startsWith('/admin/montajes')
+                                ? 'bg-gray-800 border-l-4 border-green-400'
+                                : ''
+                                }`}
+                        >
+                            <Wrench size={18} />
+                            Montajes
+                        </a>
+                    </div>
+
+                    {/* <div className="absolute bottom-4 w-full px-4">
                         <UsuarioHeader />
-                    </SidebarFooter>
-                </Sidebar>
-            </SidebarProvider>
-
-            <main className="absolute ml-[257px] flex h-full w-[calc(100dvw-257px)] flex-col justify-center bg-[linear-gradient(135deg,#0d0d0d,#1a1a1a,#262626)] p-2">
-                <span className="flex h-[60px] items-center justify-center font-['Orbitron'] text-3xl font-extrabold text-white drop-shadow-[4px_3px_4px_var(--verde-neon)]">
-                    {titulo}
-                </span>
-                <div className="max-h-[calc(100dvh-60px)] flex-1 overflow-auto [&_input]:border-[var(--verde-neon)] [&_input]:focus:border-[#00ff9c]">
-                    {children}
+                    </div> */}
                 </div>
-            </main>
+
+                {/* CONTENIDO */}
+                <main className="flex-1 overflow-auto bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-700 p-4 text-white [&_input]:border-[var(--verde-neon)] [&_input]:focus:border-[#00ff9c]">
+                    <h1 className="mb-4 text-center font-['Orbitron'] text-3xl font-bold text-green-400 drop-shadow-lg">
+                        {titulo}
+                    </h1>
+                    <div className="min-w-fit min-h-fit">{children}</div>
+                </main>
+            </div>
         </div>
     );
 }

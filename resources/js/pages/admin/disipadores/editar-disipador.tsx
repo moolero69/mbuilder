@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AdminLayout from '@/layouts/admin/layout-admin';
 import { Disipador } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 
 export default function EditarDisipador({ disipador }: { disipador: Disipador }) {
@@ -82,7 +82,8 @@ export default function EditarDisipador({ disipador }: { disipador: Disipador })
                         <InputError message={errors.precio} />
                     </div>
 
-                    <div className="col-span-2 mt-4 flex justify-center">
+                    <div className="col-span-2 flex justify-center mt-4 gap-4">
+                        <Button onClick={(e) => { router.visit(route('admin.disipadores')); e.preventDefault() }} variant='link'>Volver</Button>
                         <Button disabled={processing}>Editar disipador</Button>
                     </div>
                 </form>

@@ -315,9 +315,9 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {discosCrucial.map((disco) => (
-                                            <div key={disco.id} className="w-full">
+                                            <div key={disco.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={disco.id}
@@ -373,9 +373,9 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {discosKingston.map((disco) => (
-                                            <div key={disco.id} className="w-full">
+                                            <div key={disco.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={disco.id}
@@ -431,9 +431,9 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {discosSamsung.map((disco) => (
-                                            <div key={disco.id} className="w-full">
+                                            <div key={disco.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={disco.id}
@@ -489,9 +489,9 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {discosSeagate.map((disco) => (
-                                            <div key={disco.id} className="w-full">
+                                            <div key={disco.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={disco.id}
@@ -547,9 +547,9 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {discosWd.map((disco) => (
-                                            <div key={disco.id} className="w-full">
+                                            <div key={disco.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={disco.id}
@@ -605,9 +605,9 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {discosToshiba.map((disco) => (
-                                            <div key={disco.id} className="w-full">
+                                            <div key={disco.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={disco.id}

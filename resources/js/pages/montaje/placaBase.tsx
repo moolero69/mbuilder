@@ -293,9 +293,9 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {placasBaseAsrock.map((placa) => (
-                                            <div key={placa.id} className="w-full">
+                                            <div key={placa.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={placa.id}
@@ -369,9 +369,9 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {placasBaseAsus.map((placa) => (
-                                            <div key={placa.id} className="w-full">
+                                            <div key={placa.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={placa.id}
@@ -445,9 +445,9 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {placasBaseMsi.map((placa) => (
-                                            <div key={placa.id} className="w-full">
+                                            <div key={placa.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={placa.id}
@@ -508,9 +508,9 @@ export default function MontajePlacaBase({ placasBase }: { placasBase: PlacaBase
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {placasBaseGigabyte.map((placa) => (
-                                            <div key={placa.id} className="w-full">
+                                            <div key={placa.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={placa.id}

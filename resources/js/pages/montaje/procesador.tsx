@@ -263,9 +263,9 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
                                             </div>
                                         </>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent className="w-full">
                                         {procesadoresIntel.map((procesador) => (
-                                            <div key={procesador.id} className="w-full">
+                                            <div key={procesador.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={procesador.id}
@@ -328,9 +328,9 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
                                         </>
                                     )}
 
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {procesadoresAmd.map((procesador) => (
-                                            <div key={procesador.id} className="w-full">
+                                            <div key={procesador.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={procesador.id}

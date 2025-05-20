@@ -67,7 +67,9 @@ class MontajeController extends Controller
             'datos_montaje' => $datosMontaje,
         ]);
 
-        return redirect()->route('montaje.resumen')->with('link', route('montaje.compartido', $hash));
+        $url = route('montaje.compartido', ['hash' => $hash]);
+
+        return redirect()->route('montaje.resumen')->with('link', $url);
     }
 
     public function verMontajeCompartido($hash)

@@ -4,19 +4,20 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AdminLayout from '@/layouts/admin/layout-admin';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function TablaMemoriasRam({ memoriasRam }: { memoriasRam: any }) {
     const { props }: any = usePage();
-    const exito = props.flash?.success;
+    let exito = props.flash?.success;
     const { delete: eliminar } = useForm();
 
     useEffect(() => {
         exito && toast.success(exito);
+        exito = null;
     }, [exito]);
 
-    const cambiarFilasPorPagina = (e: any) => {
+    const cambiarFilasPorPagina = (e: React.ChangeEvent<HTMLSelectElement>) => {
         router.get(
             route('admin.memoriasRam'),
             {
@@ -28,6 +29,11 @@ export default function TablaMemoriasRam({ memoriasRam }: { memoriasRam: any }) 
             },
         );
     };
+
+    // Estados para el diálogo de confirmación eliminar
+    const [dialogoEliminar, setDialogoEliminar] = useState<boolean>(false);
+    const [nombreEliminar, setNombreEliminar] = useState<string>('');
+    const [idEliminar, setIdEliminar] = useState<number>();
 
     return (
         <AdminLayout titulo="Memorias RAM">
@@ -66,33 +72,35 @@ export default function TablaMemoriasRam({ memoriasRam }: { memoriasRam: any }) 
                                 <TableHead>Almacenamiento</TableHead>
                                 <TableHead>Tipo</TableHead>
                                 <TableHead>Pack</TableHead>
-                                <TableHead>Frecuencia</TableHead>
-                                <TableHead>Consumo</TableHead>
+                                <TableHead>Velocidad</TableHead>
                                 <TableHead>Precio</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {memoriasRam.data.map((memoria: any) => (
-                                <ContextMenu key={memoria.id}>
+                            {memoriasRam.data.map((ram: any) => (
+                                <ContextMenu key={ram.id}>
                                     <ContextMenuTrigger asChild>
                                         <TableRow
                                             className="cursor-pointer odd:bg-gray-500/30 hover:bg-white/60 hover:text-black"
-                                            onClick={() => (window.location.href = route('admin.memoriasRam.editar', memoria.id))}
+                                            onClick={() => (window.location.href = route('admin.memoriasRam.editar', ram.id))}
                                         >
-                                            <TableCell>{memoria.nombre}</TableCell>
-                                            <TableCell>{memoria.marca}</TableCell>
-                                            <TableCell>{memoria.almacenamiento} GB</TableCell>
-                                            <TableCell>{memoria.tipo}</TableCell>
-                                            <TableCell>{memoria.pack} piezas</TableCell>
-                                            <TableCell>{memoria.frecuencia} MHz</TableCell>
-                                            <TableCell>{memoria.consumo} W</TableCell>
-                                            <TableCell>{memoria.precio} €</TableCell>
+                                            <TableCell>{ram.nombre}</TableCell>
+                                            <TableCell>{ram.marca}</TableCell>
+                                            <TableCell>{ram.almacenamiento} GB</TableCell>
+                                            <TableCell>{ram.tipo}</TableCell>
+                                            <TableCell>{ram.pack}</TableCell>
+                                            <TableCell>{ram.velocidad} MHz</TableCell>
+                                            <TableCell>{ram.precio} €</TableCell>
                                         </TableRow>
                                     </ContextMenuTrigger>
                                     <ContextMenuContent>
                                         <ContextMenuItem
                                             className="text-red-600 focus:text-red-600"
-                                            onClick={() => eliminar(route('admin.memoriasRam.eliminar', memoria.id))}
+                                            onClick={() => {
+                                                setDialogoEliminar(true);
+                                                setNombreEliminar(ram.nombre);
+                                                setIdEliminar(ram.id);
+                                            }}
                                         >
                                             Eliminar
                                         </ContextMenuItem>
@@ -105,6 +113,53 @@ export default function TablaMemoriasRam({ memoriasRam }: { memoriasRam: any }) 
 
                 <PaginacionComponentes links={memoriasRam.links} />
             </section>
+
+            {/* Modal personalizado para confirmar eliminación */}
+            {dialogoEliminar && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+                    aria-modal="true"
+                    role="dialog"
+                    aria-labelledby="modal-titulo"
+                    aria-describedby="modal-descripcion"
+                >
+                    <div className="bg-[#0d0d0d] rounded-md border border-[var(--rojo-neon)] p-6 max-w-md w-full text-white shadow-[0_0_15px_var(--rojo-neon)]">
+                        <header className="mb-4">
+                            <h2
+                                id="modal-titulo"
+                                className="text-[var(--rojo-neon)] drop-shadow-[0_0_8px_var(--rojo-neon)] text-xl font-semibold"
+                            >
+                                ¿Eliminar componente?
+                            </h2>
+                        </header>
+                        <section id="modal-descripcion" className="text-gray-400 mb-6">
+                            <p>
+                                ¿Estás seguro de que quieres eliminar{' '}
+                                <span className="text-white font-bold">{nombreEliminar}</span>?
+                            </p>
+                            <p>Esta acción no se puede deshacer.</p>
+                        </section>
+                        <footer className="flex justify-end gap-2">
+                            <Button
+                                variant="ghost"
+                                onClick={() => setDialogoEliminar(false)}
+                                className="border border-gray-600 text-white hover:cursor-pointer hover:bg-gray-800"
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setDialogoEliminar(false);
+                                    eliminar(route('admin.memoriasRam.eliminar', idEliminar));
+                                }}
+                                className="bg-[var(--rojo-neon)] text-black hover:cursor-pointer hover:bg-red-600"
+                            >
+                                Eliminar
+                            </Button>
+                        </footer>
+                    </div>
+                </div>
+            )}
         </AdminLayout>
     );
 }

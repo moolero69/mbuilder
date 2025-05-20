@@ -244,6 +244,11 @@ export interface EstadoMontaje {
 export interface AdminLayoutProps {
     children: ReactNode;
     titulo: string;
+    abrirDialogo?: boolean;
+    nombreComponente?: string;
+    idComponente?: number;
+    rutaEliminar?: string;
+    cerrarDialogo?: ()=>void;
 }
 
 export interface LinksPaginacionProps{

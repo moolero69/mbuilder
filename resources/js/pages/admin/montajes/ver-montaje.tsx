@@ -1,5 +1,6 @@
+import { Button } from '@/components/ui/button';
 import AdminLayout from '@/layouts/admin/layout-admin';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Box, CircuitBoard, Cpu, MemoryStick, PcCase, Power, Wind } from 'lucide-react';
 
 export default function VerMontaje({ montaje }: { montaje: any }) {
@@ -78,6 +79,9 @@ export default function VerMontaje({ montaje }: { montaje: any }) {
                     <p className="mt-2 text-sm text-white/80">{datos.torre?.nombre || 'No seleccionado'}</p>
                 </div>
             </section>
+            <div className='mt-4 flex justify-center intems-center w-full'>
+                <Button onClick={(e) => router.visit(route('admin.montajes'))}>Volver</Button>
+            </div>
         </AdminLayout>
     );
 }

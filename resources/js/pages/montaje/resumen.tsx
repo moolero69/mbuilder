@@ -10,6 +10,7 @@ import { Separator } from '@radix-ui/react-separator';
 import { Check } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { QRCodeCanvas } from 'qrcode.react';
 
 type MontajeForm = {
     nombre: string;
@@ -24,10 +25,14 @@ export default function ResumenMontaje() {
 
     const { props }: any = usePage();
     const link = props.flash?.link;
+    const qr = props.flash?.qr;
+
+    console.log(qr)
+
 
     const [dialogoNombreAbierto, setDialogoNombreAbierto] = useState(false);
     const [dialogoLinkAbierto, setDialogoLinkAbierto] = useState(false);
-    const [copiado, setCopiado] = useState(false);
+    const [linkCopiado, setLinkCopiado] = useState(false);
 
     const [montajeGuardado, setMontajeGuardado] = useState(false);
     const [montajeCompartido, setMontajeCompartido] = useState(false);
@@ -451,24 +456,35 @@ export default function ResumenMontaje() {
                         Guardar montaje en mi perfil
                     </Button>
 
-                    <Button
-                        className="rounded-lg border border-[var(--naranja-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--naranja-neon)] transition-colors duration-1000 hover:cursor-pointer hover:bg-[var(--naranja-neon)] hover:text-black"
-                        asChild
-                        onClick={() => {
-                            setMontajeCompartido(true);
-                            setDialogoLinkAbierto(true);
-                        }}
-                        disabled={montajeCompartido}
-                    >
-                        <Link
-                            href={route('montaje.compartir')}
-                            data={{ datos: JSON.stringify(componentesSeleccionados) }}
-                            method="post"
-                            preserveScroll
+                    {!montajeCompartido ?
+                        <Button
+                            className="rounded-lg border border-[var(--naranja-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--naranja-neon)] transition-colors duration-1000 hover:cursor-pointer hover:bg-[var(--naranja-neon)] hover:text-black"
+                            asChild
+                            onClick={() => {
+                                setMontajeCompartido(true);
+                                setDialogoLinkAbierto(true);
+                            }}
+                        >
+                            <Link
+                                href={route('montaje.compartir')}
+                                data={{ datos: JSON.stringify(componentesSeleccionados) }}
+                                method="post"
+                                preserveScroll
+                            >
+                                Compartir Montaje
+                            </Link>
+                        </Button>
+                        :
+                        <Button
+                            className="rounded-lg border border-[var(--naranja-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--naranja-neon)] transition-colors duration-1000 hover:cursor-pointer hover:bg-[var(--naranja-neon)] hover:text-black"
+                            onClick={() => {
+                                setDialogoLinkAbierto(true);
+                            }}
                         >
                             Compartir Montaje
-                        </Link>
-                    </Button>
+                        </Button>
+
+                    }
 
                     <Button
                         className="rounded-lg border border-[var(--azul-neon)] bg-black px-6 py-3 font-['Orbitron'] font-bold text-[var(--azul-neon)] transition-colors duration-1000 hover:cursor-pointer hover:bg-[var(--azul-neon)] hover:text-black"
@@ -540,35 +556,42 @@ export default function ResumenMontaje() {
                             />
                         </div>
                     </div>
-                    <DialogFooter>
-                        <Button
-                            onClick={() => {
-                                const input = document.getElementById('enlace-compartido') as HTMLInputElement;
 
-                                if (navigator.clipboard && navigator.clipboard.writeText) {
-                                    navigator.clipboard
-                                        .writeText(link)
-                                        .then(() => {
-                                            setCopiado(true);
-                                            setTimeout(() => setCopiado(false), 2000);
-                                        })
-                                        .catch(() => {
-                                            // fallback en caso de error
-                                            input.select();
-                                            document.execCommand('copy');
-                                            setCopiado(true);
-                                            setTimeout(() => setCopiado(false), 2000);
-                                        });
-                                } else {
-                                    input.select();
-                                    document.execCommand('copy');
-                                    setCopiado(true);
-                                    setTimeout(() => setCopiado(false), 2000);
-                                }
-                            }}
-                        >
-                            {copiado ? '¡Copiado!' : 'Copiar link'}
-                        </Button>
+                    <DialogFooter>
+                        <div className='flex w-full justify-between'>
+                            {link && <QRCodeCanvas value={link} size={150} />}
+
+                            <Button
+                            variant='secondary'
+                                onClick={() => {
+                                    const input = document.getElementById('enlace-compartido') as HTMLInputElement;
+
+                                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                                        navigator.clipboard
+                                            .writeText(link)
+                                            .then(() => {
+                                                setLinkCopiado(true);
+                                                setTimeout(() => setLinkCopiado(false), 2000);
+                                            })
+                                            .catch(() => {
+                                                // fallback en caso de error
+                                                input.select();
+                                                document.execCommand('copy');
+                                                setLinkCopiado(true);
+                                                setTimeout(() => setLinkCopiado(false), 2000);
+                                            });
+                                    } else {
+                                        input.select();
+                                        document.execCommand('copy');
+                                        setLinkCopiado(true);
+                                        setTimeout(() => setLinkCopiado(false), 2000);
+                                    }
+                                }}
+                            >
+                                {linkCopiado ? '¡Copiado!' : 'Copiar link'}
+                            </Button>
+
+                        </div>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

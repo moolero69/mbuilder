@@ -22,7 +22,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
     };
 
     return (
-        <AuthLayout title="¿Contraseña olvidada?" description="Introduce tu email para recibir un enlace de restablecimiento de contraseña">
+        <AuthLayout titulo="¿Contraseña olvidada?" descripcion="Introduce tu email para recibir un enlace de restablecimiento de contraseña">
             <Head title="Contraseña olvidada" />
 
             {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}

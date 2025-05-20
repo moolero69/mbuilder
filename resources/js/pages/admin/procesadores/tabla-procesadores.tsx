@@ -3,15 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AdminLayout from '@/layouts/admin/layout-admin';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useForm } from '@inertiajs/react';
-import {
-    ContextMenu,
-    ContextMenuTrigger,
-    ContextMenuContent,
-    ContextMenuItem,
-} from "@/components/ui/context-menu";
+import { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem } from "@/components/ui/context-menu";
 
 export default function TablaProcesadores({ procesadores }: { procesadores: any }) {
     const { props }: any = usePage();
@@ -32,11 +27,14 @@ export default function TablaProcesadores({ procesadores }: { procesadores: any 
         });
     };
 
+    const [dialogoEliminar, setDialogoEliminar] = useState<boolean>(false);
+    const [nombreEliminar, setNombreEliminar] = useState<string>('');
+    const [idEliminar, setIdEliminar] = useState<number>();
+
     return (
         <AdminLayout titulo='Procesadores'>
             <Head title='Admin - procesadores' />
             <section className='flex flex-col justify-center h-[100%]'>
-
                 <div className="flex justify-between items-center mb-4">
                     <Button asChild>
                         <Link href={route('admin.procesadores.crear')}>Añadir procesador</Link>
@@ -104,7 +102,7 @@ export default function TablaProcesadores({ procesadores }: { procesadores: any 
                                     <ContextMenuContent>
                                         <ContextMenuItem
                                             className="text-red-600 focus:text-red-600"
-                                            onClick={() => eliminar(route('admin.procesadores.eliminar', proc.id))}
+                                            onClick={() => { setDialogoEliminar(true); setNombreEliminar(proc.nombre); setIdEliminar(proc.id) }}
                                         >
                                             Eliminar
                                         </ContextMenuItem>
@@ -117,6 +115,50 @@ export default function TablaProcesadores({ procesadores }: { procesadores: any 
 
                 <PaginacionComponentes links={procesadores.links} />
             </section>
+
+            {/* Modal personalizado */}
+            {dialogoEliminar && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+                    aria-modal="true"
+                    role="dialog"
+                    aria-labelledby="modal-titulo"
+                    aria-describedby="modal-descripcion"
+                >
+                    <div className="bg-[#0d0d0d] rounded-md border border-[var(--rojo-neon)] p-6 max-w-md w-full text-white shadow-[0_0_15px_var(--rojo-neon)]">
+                        <header className="mb-4">
+                            <h2
+                                id="modal-titulo"
+                                className="text-[var(--rojo-neon)] drop-shadow-[0_0_8px_var(--rojo-neon)] text-xl font-semibold"
+                            >
+                                ¿Eliminar componente?
+                            </h2>
+                        </header>
+                        <section id="modal-descripcion" className="text-gray-400 mb-6">
+                            <p>¿Estás seguro de que quieres eliminar <span className="text-white font-bold">{nombreEliminar}</span>?</p>
+                            <p>Esta acción no se puede deshacer.</p>
+                        </section>
+                        <footer className="flex justify-end gap-2">
+                            <Button
+                                variant="ghost"
+                                onClick={() => setDialogoEliminar(false)}
+                                className="border border-gray-600 text-white hover:cursor-pointer hover:bg-gray-800"
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setDialogoEliminar(false);
+                                    eliminar(route('admin.procesadores.eliminar', idEliminar));
+                                }}
+                                className="bg-[var(--rojo-neon)] text-black hover:cursor-pointer hover:bg-red-600"
+                            >
+                                Eliminar
+                            </Button>
+                        </footer>
+                    </div>
+                </div>
+            )}
         </AdminLayout>
     );
 }

@@ -301,9 +301,9 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                                             )}
                                         </div>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {graficasNvidia.map((grafica) => (
-                                            <div key={grafica.id} className="w-full">
+                                            <div key={grafica.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={grafica.id}
@@ -375,9 +375,9 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                                             )}
                                         </div>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {graficasAmd.map((grafica) => (
-                                            <div key={grafica.id} className="w-full">
+                                            <div key={grafica.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={grafica.id}
@@ -449,9 +449,9 @@ export default function MontajeTarjetaGrafica({ tarjetasGraficas }: { tarjetasGr
                                             )}
                                         </div>
                                     )}
-                                    <CollapsibleContent className="space-y-3 rounded-xl bg-black/50 p-2">
+                                    <CollapsibleContent>
                                         {graficasIntel.map((grafica) => (
-                                            <div key={grafica.id} className="w-full">
+                                            <div key={grafica.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
                                                     <ItemArrastrable
                                                         id={grafica.id}
