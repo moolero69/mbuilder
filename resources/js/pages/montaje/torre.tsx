@@ -12,7 +12,7 @@ import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
 import { Label } from '@radix-ui/react-label';
-import { ArrowBigDown, Euro, Factory, Microchip, Minus, Move, PcCase, Plus, Search, Sun, Wrench } from 'lucide-react';
+import { ArrowBigDown, Euro, Factory, Microchip, Minus, Move, PcCase, Plus, Search, Sun, Wrench, ZoomIn } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -121,11 +121,14 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
 
     const [torresFiltradas, setTorresFiltradas] = useState<Torre[]>(torres);
 
+    const [zoomImagen, setZoomImagen] = useState(false);
+
+
     useEffect(() => {
         !editarMontaje &&
             toast.custom(
                 (t) => (
-                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
+                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-4 text-white shadow-lg">
                         <span>
                             <Wrench size={30} className="text-[var(--rojo-neon)]" />
                         </span>
@@ -911,7 +914,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                             {torreSeleccionada && (
                                 <>
                                     <div className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3" key={torreSeleccionada.id}>
-                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Factory size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -920,7 +923,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                                 <p className="text-lg text-gray-300">{torreSeleccionada.marca}</p>
                                             </div>
                                         </div>
-                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Microchip size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -929,7 +932,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                                 <p className="text-lg text-gray-300">{torreSeleccionada.factor_forma}</p>
                                             </div>
                                         </div>
-                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Sun size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -938,7 +941,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                                 <p className="text-lg text-gray-300">{torreSeleccionada.soporte_RGB}</p>
                                             </div>
                                         </div>
-                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Euro size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-green-300 via-green-400 to-green-600 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -947,6 +950,24 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                                 <p className="text-lg text-green-300">{torreSeleccionada.precio}€</p>
                                             </div>
                                         </div>
+                                        <div className="bg-transparent"></div>
+                                        <div className="flex transform items-center justify-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)] bg-gradient-to-l from-[#1a1a1a] via-[#121212] to-[#0a0a0a]">
+                                            <div className="relative flex items-center justify-center hover:cursor-pointer">
+                                                <img
+                                                    src={torreSeleccionada.link_imagen}
+                                                    alt="imagen torre"
+                                                    className="h-[90px] w-[90px]"
+                                                    onClick={() => setZoomImagen(true)}
+                                                />
+                                                <div
+                                                    className="absolute bottom-0 -right-4 text-[var(--rojo-neon)]"
+                                                    onClick={() => setZoomImagen(true)}
+                                                >
+                                                    <ZoomIn size={32} />
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                     {esCompatible ? (
                                         <Button
@@ -1024,6 +1045,18 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {torreSeleccionada &&
+                <Dialog open={zoomImagen} onOpenChange={setZoomImagen}>
+                    <DialogContent className="max-w-[90vw] max-h-[90vh] p-4">
+                        <img
+                            src={torreSeleccionada.link_imagen}
+                            alt="Imagen en grande"
+                            className="w-full h-auto max-h-[80vh] object-contain mx-auto"
+                        />
+                    </DialogContent>
+                </Dialog>
+            }
         </>
     );
 }

@@ -147,7 +147,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
         !editarMontaje &&
             toast.custom(
                 (t) => (
-                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
+                    <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-4 text-white shadow-lg">
                         <span>
                             <Wrench size={30} className="text-[var(--rojo-neon)]" />
                         </span>
@@ -696,7 +696,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                             {discoSeleccionado && (
                                 <>
                                     <div className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 md:grid-cols-3" key={discoSeleccionado.id}>
-                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Factory size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -705,7 +705,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                                 <p className="text-lg text-gray-300">{discoSeleccionado.marca}</p>
                                             </div>
                                         </div>
-                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Microchip size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -714,7 +714,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                                 <p className="text-lg text-gray-300">{discoSeleccionado.almacenamiento}</p>
                                             </div>
                                         </div>
-                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <CircuitBoard size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -723,7 +723,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                                 <p className="text-lg text-gray-300">{discoSeleccionado.tecnologia}</p>
                                             </div>
                                         </div>
-                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Box size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -732,7 +732,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                                 <p className="text-lg text-gray-300">{discoSeleccionado.conexion}</p>
                                             </div>
                                         </div>
-                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Gauge size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -741,7 +741,7 @@ export default function MontajeDiscoDuro({ discosDuros }: { discosDuros: DiscoDu
                                                 <p className="text-lg text-gray-300">{discoSeleccionado.velocidad} MB/s</p>
                                             </div>
                                         </div>
-                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <Euro size={48} className="text-[var(--rojo-neon)]" />
                                             <div>
                                                 <h2 className="mb-2 bg-gradient-to-r from-green-300 via-green-400 to-green-600 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">

@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
 
-import HeadingSmall from '@/components/heading-small';
+import HeadingSmall from '@/components/encabezado-pequeño';
 import { type BreadcrumbItem } from '@/types';
 
 

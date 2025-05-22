@@ -1,6 +1,0 @@
-- cambiar tipo componentesMontaje y estadoMontaje
-- cambiar useprogresomontaje
-- barra progreso lateral (poner componente nuevo en todos los componentes y condicional en componente(progresomontaje.tsx))
-- resumen
-- listamontajes
-- editar montaje

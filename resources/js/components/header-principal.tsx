@@ -22,24 +22,27 @@ const Header: React.FC = () => {
             <Toaster position="bottom-center" />
             <header className="colores-borde sticky top-0 z-50 flex h-[120px] w-full items-center justify-between border-b-3 bg-gradient-to-r from-[#0d0d0d] via-[#131313] to-[#0d0d0d] px-6 py-4">
                 {/* Logo + MBUILDER */}
-                <div className="relative z-10 flex flex-col items-center gap-2 px-5 md:flex-row md:items-center md:gap-4">
+                <div className="relative z-10 flex flex-col items-center gap-2 md:flex-row md:items-center md:gap-4">
                     <Link
                         href={route('home')}
                         onClick={() => limpiarComponentes()}
                         className="relative flex items-center"
                     >
                         <img src="/img/logo-64px.png" alt="logo mbuilder" />
+                        {/* Texto grande solo en escritorio */}
                         <span className="hidden md:flex font-['Orbitron'] text-5xl font-extrabold tracking-widest text-white drop-shadow-[5px_5px_6px_var(--azul-neon)] transition duration-500 hover:drop-shadow-[5px_5px_6px_var(--rojo-neon)] ml-4">
                             MBUILDER
                         </span>
                     </Link>
 
-                    {(auth.user && auth.user.es_pro) && (
-                        <span className="rainbow-text font-['Orbitron'] text-lg font-bold rotate-0 md:absolute md:-top-2 md:-right-12 md:rotate-24">
-                            PRO
-                        </span>
-                    )}
+                    {/* Texto pequeño debajo del icono, solo en móvil */}
+                    <span
+                        className="font-['Orbitron'] text-base font-extrabold tracking-widest text-white drop-shadow-[5px_5px_6px_var(--azul-neon)] md:hidden"
+                    >
+                        MBUILDER
+                    </span>
                 </div>
+
 
 
                 {/* Navegación escritorio */}

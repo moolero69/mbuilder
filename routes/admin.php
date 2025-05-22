@@ -11,7 +11,6 @@ use App\Http\Controllers\Admin\AdminPlacasBaseController;
 use App\Http\Controllers\Admin\AdminTarjetasGraficasController;
 use App\Http\Controllers\Admin\AdminTorresController;
 use App\Http\Controllers\Admin\AdminUsuariosController;
-use App\Http\Controllers\PruebasController;
 
 
 Route::middleware(['auth', 'verified', 'es_admin'])->group(function () {
@@ -88,7 +87,5 @@ Route::middleware(['auth', 'verified', 'es_admin'])->group(function () {
     Route::get('admin/montajes', [AdminMontajesController::class, 'index'])->name('admin.montajes');
     Route::get('admin/montajes/ver/{id}', [AdminMontajesController::class, 'show'])->name('admin.montajes.ver');
     Route::delete('/admin/montajes/eliminar/{id}', [AdminMontajesController::class, 'destroy'])->name('admin.montajes.eliminar');
-
-    Route::get('pruebas', PruebasController::class)->name('pruebas');
 
 });

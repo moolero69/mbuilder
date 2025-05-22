@@ -84,8 +84,6 @@ Route::get('/github-auth/redirect', function () {
 Route::get('/github-auth/callback', function () {
     $user_github = Socialite::driver('github')->stateless()->user();
 
-    // dd($user_github);
-
     $user = User::updateOrCreate([
         'email' => $user_github->email
     ], [

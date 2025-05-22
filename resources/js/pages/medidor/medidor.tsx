@@ -15,7 +15,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
     useEffect(() => {
         toast.custom(
             (t) => (
-                <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-black/80 p-4 text-white shadow-lg">
+                <div className="ml-20 flex w-[350px] items-center gap-3 rounded-xl border-2 border-[var(--rosa-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-4 text-white shadow-lg">
                     <span>
                         <Wrench size={30} className="text-[var(--rojo-neon)]" />
                         {}
@@ -656,7 +656,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-1 md:grid-cols-2"
                                                         key={procesadorSeleccionado?.id}
                                                     >
-                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                                             <Factory size={38} className="text-[var(--rojo-neon)]" />
                                                             <div>
                                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -665,7 +665,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                                 <p className="text-lg text-gray-300">{procesadorSeleccionado?.marca}</p>
                                                             </div>
                                                         </div>
-                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                                             <MemoryStick size={38} className="text-[var(--rojo-neon)]" />
                                                             <div>
                                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -674,7 +674,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                                 <p className="text-lg text-gray-300">{procesadorSeleccionado?.socket}</p>
                                                             </div>
                                                         </div>
-                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                                             <Zap size={38} className="text-[var(--rojo-neon)]" />
                                                             <div>
                                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -683,7 +683,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                                 <p className="text-lg text-gray-300">{procesadorSeleccionado?.consumo}W</p>
                                                             </div>
                                                         </div>
-                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                                             <Gauge size={38} className="text-[var(--rojo-neon)]" />
                                                             <div>
                                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-xl font-bold text-transparent">
@@ -732,7 +732,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                         className="fade-left grid grid-cols-1 gap-8 p-8 sm:grid-cols-1 md:grid-cols-2"
                                                         key={graficaSeleccionada?.id}
                                                     >
-                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                                             <Factory size={38} className="text-[var(--rojo-neon)]" />
                                                             <div>
                                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -741,7 +741,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                                 <p className="text-lg text-gray-300">{graficaSeleccionada?.marca}</p>
                                                             </div>
                                                         </div>
-                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                                             <Gamepad2 size={48} className="text-[var(--rojo-neon)]" />
                                                             <div>
                                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -750,7 +750,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                                 <p className="text-lg text-gray-300">{graficaSeleccionada.serie}</p>
                                                             </div>
                                                         </div>
-                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                                             <Microchip size={48} className="text-[var(--rojo-neon)]" />
                                                             <div>
                                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">
@@ -759,7 +759,7 @@ export default function MedidorCuelloBotella({ procesadores, graficas }: { proce
                                                                 <p className="text-lg text-gray-300">{graficaSeleccionada.memoria} GB</p>
                                                             </div>
                                                         </div>
-                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-black/80 p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
+                                                        <div className="flex transform items-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#0d0d0d] via-[#080808] to-[#000000] p-8 transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                                             <Zap size={38} className="text-[var(--rojo-neon)]" />
                                                             <div>
                                                                 <h2 className="mb-2 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text font-['orbitron'] text-2xl font-bold text-transparent">

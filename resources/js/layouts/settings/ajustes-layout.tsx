@@ -1,5 +1,5 @@
 import Header from '@/components/header-principal';
-import Heading from '@/components/heading';
+import Heading from '@/components/encabezado';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
@@ -38,7 +38,7 @@ export default function AjustesLayout({ children }: PropsWithChildren) {
             <div className="flex min-h-screen items-start justify-center bg-gradient-to-b from-black to-[#0d0d0d] px-4 py-10">
                 <div className="w-full max-w-6xl rounded-xl border border-[var(--morado-neon)] bg-[#0d0d0d]/70 p-10 shadow-[0_0_15px_var(--morado-neon)]">
                     <div className='flex justify-between items-center w-full'>
-                        <Heading title="⚙️ Ajustes de Cuenta" description="Configura tu perfil, preferencias y opciones avanzadas" />
+                        <Heading titulo="⚙️ Ajustes de Cuenta" descripcion="Configura tu perfil, preferencias y opciones avanzadas" />
                         {auth.user.es_pro && <span className='flex font-["Orbitron"] text-[var(--amarillo-neon)] text-xl gap-3 font-extrabold'><Crown/> USUARIO PRO <Crown/> </span>}
                     </div>
                     <div className="mt-10 flex flex-col gap-12 lg:flex-row">
