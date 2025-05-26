@@ -82,7 +82,7 @@ export default function TablaProcesadores({ procesadores }: { procesadores: any 
                                     <ContextMenuTrigger asChild>
                                         <TableRow
                                             className="cursor-pointer odd:bg-gray-500/30 hover:bg-white/60 hover:text-black"
-                                            onClick={() => window.location.href = route('admin.procesadores.editar', proc.id)}
+                                            onClick={() => router.visit(route('admin.procesadores.editar', proc.id))}
                                         >
                                             <TableCell>{proc.nombre}</TableCell>
                                             <TableCell>{proc.marca}</TableCell>

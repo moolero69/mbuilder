@@ -81,7 +81,7 @@ export default function TablaTorres({ torres }: { torres: any }) {
                                     <ContextMenuTrigger asChild>
                                         <TableRow
                                             className="cursor-pointer odd:bg-gray-500/30 hover:bg-white/60 hover:text-black"
-                                            onClick={() => (window.location.href = route('admin.torres.editar', torre.id))}
+                                            onClick={() => router.visit(window.location.href = route('admin.torres.editar', torre.id))}
                                         >
                                             <TableCell>{torre.nombre}</TableCell>
                                             <TableCell>{torre.marca}</TableCell>

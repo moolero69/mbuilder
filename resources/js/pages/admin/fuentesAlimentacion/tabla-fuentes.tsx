@@ -81,7 +81,7 @@ export default function TablaFuentesAlimentacion({ fuentesAlimentacion }: { fuen
                                         <TableRow
                                             className="cursor-pointer odd:bg-gray-500/30 hover:bg-white/60 hover:text-black"
                                             onClick={() =>
-                                                (window.location.href = route('admin.fuentes.editar', fuente.id))
+                                                router.visit(window.location.href = route('admin.fuentes.editar', fuente.id))
                                             }
                                         >
                                             <TableCell>{fuente.nombre}</TableCell>

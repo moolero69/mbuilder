@@ -37,7 +37,7 @@ export default function TipoMontaje() {
                                 <div className="flex flex-col items-center space-y-6">
                                     <Leaf size={48} className="text-[var(--verde-neon)]" />
                                     <h2 className="font-['exo_2'] text-2xl font-semibold text-[var(--verde-neon)]">Modo Eco</h2>
-                                    <p className="text-center text-sm text-zinc-300">Máxima eficiencia energética para tareas cotidianas.</p>
+                                    <p className="text-center text-sm text-white">Máxima eficiencia energética para tareas cotidianas.</p>
                                     <Button
                                         className="mt-4 w-full bg-[var(--verde-neon)] font-bold text-black hover:bg-lime-400"
                                         onClick={() => guardarTipoMontaje!('eco')}
@@ -53,7 +53,7 @@ export default function TipoMontaje() {
                                 <div className="flex flex-col items-center space-y-6">
                                     <ActivitySquare size={48} className="text-[var(--azul-neon)]" />
                                     <h2 className="font-['Exo_2'] text-2xl font-semibold text-[var(--azul-neon)]">Modo Equilibrado</h2>
-                                    <p className="text-center text-sm text-zinc-300">Balance perfecto entre rendimiento y eficiencia.</p>
+                                    <p className="text-center text-sm text-white">Balance perfecto entre rendimiento y eficiencia.</p>
                                     <Button
                                         className="mt-8 w-full bg-[var(--azul-neon)] font-bold text-black hover:bg-sky-400"
                                         asChild
@@ -69,7 +69,7 @@ export default function TipoMontaje() {
                                 <div className="flex flex-col items-center space-y-6">
                                     <Flame size={48} className="text-[var(--rojo-neon)]" />
                                     <h2 className="font-['Exo_2'] text-2xl font-semibold text-[var(--rojo-neon)]">Modo Pro</h2>
-                                    <p className="text-center text-sm text-zinc-300">Rendimiento extremo para gaming y edición de alto nivel.</p>
+                                    <p className="text-center text-sm text-white">Rendimiento extremo para gaming y edición de alto nivel.</p>
                                     <Button
                                         className="mt-4 w-full bg-[var(--rojo-neon)] font-bold text-black hover:bg-red-400"
                                         onClick={() => guardarTipoMontaje!('pro')}

@@ -79,7 +79,7 @@ export default function TablaDisipadores({ disipadores }: { disipadores: any }) 
                                     <ContextMenuTrigger asChild>
                                         <TableRow
                                             className="cursor-pointer odd:bg-gray-500/30 hover:bg-white/60 hover:text-black"
-                                            onClick={() => window.location.href = route('admin.disipadores.editar', disipador.id)}
+                                            onClick={() => router.visit(route('admin.disipadores.editar', disipador.id))}
                                         >
                                             <TableCell>{disipador.nombre}</TableCell>
                                             <TableCell>{disipador.marca}</TableCell>

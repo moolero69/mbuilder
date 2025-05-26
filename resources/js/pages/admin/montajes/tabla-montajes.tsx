@@ -74,7 +74,7 @@ export default function TablaMontajes({ montajes }: { montajes: any }) {
                                         <TableRow
                                             className="cursor-pointer odd:bg-gray-500/30 hover:bg-white/60 hover:text-black"
                                             onClick={() =>
-                                                (window.location.href = route('admin.montajes.ver', montaje.id))
+                                                router.visit(window.location.href = route('admin.montajes.ver', montaje.id))
                                             }
                                         >
                                             <TableCell>{montaje.nombre}</TableCell>

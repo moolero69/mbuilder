@@ -19,7 +19,7 @@ export default function EditarTorre({ torre }: { torre: Torre }) {
         link_imagen: torre.link_imagen
     });
 
-    const submit: FormEventHandler = (e) => {
+    const editar: FormEventHandler = (e) => {
         e.preventDefault();
         put(route('admin.torres.actualizar', torre.id));
     };
@@ -28,7 +28,7 @@ export default function EditarTorre({ torre }: { torre: Torre }) {
         <>
             <Head title="Editar torre" />
             <AdminLayout titulo="Editar torre">
-                <form onSubmit={submit} className="mx-auto grid max-w-4xl grid-cols-2 gap-6">
+                <form onSubmit={editar} className="mx-auto grid max-w-4xl grid-cols-2 gap-6">
                     <div>
                         <Label htmlFor="nombre">Nombre</Label>
                         <Input id="nombre" value={data.nombre} onChange={(e) => setData('nombre', e.target.value)} />

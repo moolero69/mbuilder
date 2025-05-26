@@ -82,7 +82,7 @@ export default function TablaMemoriasRam({ memoriasRam }: { memoriasRam: any }) 
                                     <ContextMenuTrigger asChild>
                                         <TableRow
                                             className="cursor-pointer odd:bg-gray-500/30 hover:bg-white/60 hover:text-black"
-                                            onClick={() => (window.location.href = route('admin.memoriasRam.editar', ram.id))}
+                                            onClick={() => router.visit(route('admin.memoriasRam.editar', ram.id))}
                                         >
                                             <TableCell>{ram.nombre}</TableCell>
                                             <TableCell>{ram.marca}</TableCell>

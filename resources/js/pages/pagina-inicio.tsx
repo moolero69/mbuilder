@@ -37,28 +37,6 @@ export default function Principal() {
 
     const [dialogoAsistencia, setDialogoAsistencia] = useState<boolean>(false);
 
-    // Estado para cookies
-    const [mostrarCookies, setMostrarCookies] = useState(true);
-
-    const aceptarTodas = () => {
-        // Aquí guardas la elección y ocultas la tarjeta
-        localStorage.setItem('cookies_aceptadas', 'todas');
-        setMostrarCookies(false);
-    };
-    const aceptarEsenciales = () => {
-        localStorage.setItem('cookies_aceptadas', 'esenciales');
-        setMostrarCookies(false);
-    };
-    const rechazarCookies = () => {
-        localStorage.setItem('cookies_aceptadas', 'rechazadas');
-        setMostrarCookies(false);
-    };
-
-    useEffect(() => {
-        const eleccion = localStorage.getItem('cookies_aceptadas');
-        if (eleccion) setMostrarCookies(false);
-    }, []);
-
     return (
         <>
             <AppLayout>
@@ -80,7 +58,7 @@ export default function Principal() {
                                 <h2 className="mb-4 text-5xl font-extrabold text-[var(--verde-neon)] drop-shadow-xl">
                                     Construye tu PC ideal
                                 </h2>
-                                <p className="max-w-2xl text-lg text-gray-400">
+                                <p className="max-w-2xl text-lg text-white">
                                     Descubre la mejor combinación de componentes para optimizar rendimiento, compatibilidad y eficiencia.
                                 </p>
                                 <Button
@@ -98,7 +76,7 @@ export default function Principal() {
                                 <h2 className="mb-4 text-5xl font-extrabold text-[var(--rojo-neon)] drop-shadow-xl">
                                     Medidor de Cuello de Botella
                                 </h2>
-                                <p className="max-w-2xl text-gray-400">
+                                <p className="max-w-2xl text-white">
                                     Analiza si tu procesador limita a tu tarjeta gráfica o si tu gráfica va sobrada respecto al procesador. Asegúrate de
                                     tener el mejor equilibrio entre potencia y rendimiento.
                                 </p>
@@ -110,16 +88,16 @@ export default function Principal() {
 
                         <section className="grid grid-cols-1 gap-6 px-6 py-12 text-center md:grid-cols-3">
                             <div className="rounded-lg border border-[var(--verde-neon)] p-6 shadow-lg">
-                                <h3 className="text-neon-green text-xl font-semibold">Compatibilidad</h3>
-                                <p className="mt-2 text-gray-400">Verifica que todos los componentes funcionen en armonía.</p>
+                                <h3 className="text-[var(--verde-neon)] text-xl font-semibold">Compatibilidad</h3>
+                                <p className="mt-2 text-white">Verifica que todos los componentes funcionen en armonía.</p>
                             </div>
                             <div className="rounded-lg border border-cyan-400 p-6 shadow-lg">
                                 <h3 className="text-xl font-semibold text-cyan-400">Rendimiento</h3>
-                                <p className="mt-2 text-gray-400">Obtén la mejor potencia según tu presupuesto.</p>
+                                <p className="mt-2 text-white">Obtén la mejor potencia según tu presupuesto.</p>
                             </div>
-                            <div className="rounded-lg border border-red-500 p-6 shadow-lg">
-                                <h3 className="text-xl font-semibold text-red-500">Optimización</h3>
-                                <p className="mt-2 text-gray-400">Mejor equilibrio entre eficiencia y consumo energético.</p>
+                            <div className="rounded-lg border border-[var(--rojo-neon)] p-6 shadow-lg">
+                                <h3 className="text-xl font-semibold text-[var(--rojo-neon)]">Optimización</h3>
+                                <p className="mt-2 text-white">Mejor equilibrio entre eficiencia y consumo energético.</p>
                             </div>
                         </section>
                     </section>

@@ -17,7 +17,7 @@ export default function EditarFuenteAlimentacion({ fuenteAlimentacion }: { fuent
         precio: fuenteAlimentacion.precio,
     });
 
-    const submit: FormEventHandler = (e) => {
+    const editar: FormEventHandler = (e) => {
         e.preventDefault();
         put(route('admin.fuentes.actualizar', fuenteAlimentacion.id));
     };
@@ -26,7 +26,7 @@ export default function EditarFuenteAlimentacion({ fuenteAlimentacion }: { fuent
         <>
             <Head title="Editar fuente de alimentación" />
             <AdminLayout titulo="Editar fuente de alimentación">
-                <form onSubmit={submit} className="mx-auto grid max-w-4xl grid-cols-2 gap-6">
+                <form onSubmit={editar} className="mx-auto grid max-w-4xl grid-cols-2 gap-6">
                     <div>
                         <Label htmlFor="nombre">Nombre</Label>
                         <Input id="nombre" value={data.nombre} onChange={(e) => setData('nombre', e.target.value)} />

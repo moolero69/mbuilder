@@ -83,7 +83,7 @@ export default function TablaTarjetasGraficas({ tarjetasGraficas }: { tarjetasGr
                                         <TableRow
                                             className="cursor-pointer odd:bg-gray-500/30 hover:bg-white/60 hover:text-black"
                                             onClick={() =>
-                                                (window.location.href = route('admin.graficas.editar', grafica.id))
+                                                router.visit(route('admin.graficas.editar', grafica.id))
                                             }
                                         >
                                             <TableCell>{grafica.nombre}</TableCell>

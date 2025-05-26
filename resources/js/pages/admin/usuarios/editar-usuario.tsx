@@ -15,7 +15,7 @@ export default function EditarUsuario({ usuario }: { usuario: any }) {
         es_admin: usuario.es_admin,
     });
 
-    const submit: FormEventHandler = (e) => {
+    const editar: FormEventHandler = (e) => {
         e.preventDefault();
         put(route('admin.usuarios.actualizar', usuario.id));
     };
@@ -24,7 +24,7 @@ export default function EditarUsuario({ usuario }: { usuario: any }) {
         <>
             <Head title="Editar usuario" />
             <AdminLayout titulo="Editar usuario">
-                <form onSubmit={submit} className="mx-auto grid max-w-5xl grid-cols-2 gap-6">
+                <form onSubmit={editar} className="mx-auto grid max-w-5xl grid-cols-2 gap-6">
                     <div>
                         <Label htmlFor="name">Nombre</Label>
                         <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} />

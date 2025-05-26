@@ -17,7 +17,7 @@ export default function EditarDisipador({ disipador }: { disipador: Disipador })
         precio: disipador.precio,
     });
 
-    const submit: FormEventHandler = (e) => {
+    const editar: FormEventHandler = (e) => {
         e.preventDefault();
         put(route('admin.disipadores.actualizar', disipador.id));
     };
@@ -26,7 +26,7 @@ export default function EditarDisipador({ disipador }: { disipador: Disipador })
         <>
             <Head title="Editar disipador" />
             <AdminLayout titulo="Editar disipador">
-                <form onSubmit={submit} className="mx-auto grid max-w-5xl grid-cols-2 gap-6">
+                <form onSubmit={editar} className="mx-auto grid max-w-5xl grid-cols-2 gap-6">
                     <div>
                         <Label htmlFor="nombre">Nombre</Label>
                         <Input id="nombre" value={data.nombre} onChange={(e) => setData('nombre', e.target.value)} />

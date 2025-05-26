@@ -1,0 +1,1 @@
+import{r as i,j as s}from"./app-PKe6NknW.js";import{P as l}from"./index-C5Wy39pv.js";var f="Label",r=i.forwardRef((a,o)=>s.jsx(l.label,{...a,ref:o,onMouseDown:t=>{var e;t.target.closest("button, input, select, textarea")||((e=a.onMouseDown)==null||e.call(a,t),!t.defaultPrevented&&t.detail>1&&t.preventDefault())}}));r.displayName=f;var x=r;export{r as L,x as R};

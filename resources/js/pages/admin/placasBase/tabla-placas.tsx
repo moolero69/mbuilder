@@ -85,7 +85,7 @@ export default function TablaPlacasBase({ placasBase }: { placasBase: any }) {
                                     <ContextMenuTrigger asChild>
                                         <TableRow
                                             className="cursor-pointer odd:bg-gray-500/30 hover:bg-white/60 hover:text-black"
-                                            onClick={() => (window.location.href = route('admin.placasBase.editar', placa.id))}
+                                            onClick={() => router.visit(route('admin.placasBase.editar', placa.id))}
                                         >
                                             <TableCell>{placa.nombre}</TableCell>
                                             <TableCell>{placa.marca}</TableCell>

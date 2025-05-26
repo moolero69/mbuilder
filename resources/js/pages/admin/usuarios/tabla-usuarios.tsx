@@ -32,6 +32,7 @@ export default function TablaUsuarios({ usuarios }: { usuarios: any }) {
 
     const [dialogoEliminar, setDialogoEliminar] = useState<boolean>(false);
     const [nombreEliminar, setNombreEliminar] = useState<string>('');
+    const [emailEliminar, setEmailEliminar] = useState<string>('');
     const [idEliminar, setIdEliminar] = useState<number>();
 
     return (
@@ -78,7 +79,7 @@ export default function TablaUsuarios({ usuarios }: { usuarios: any }) {
                                         <TableRow
                                             className="cursor-pointer odd:bg-gray-500/30 hover:bg-white/60 hover:text-black"
                                             onClick={() =>
-                                                (window.location.href = route('admin.usuarios.editar', usuario.id))
+                                                router.visit(route('admin.usuarios.editar', usuario.id))
                                             }
                                         >
                                             <TableCell>{usuario.name}</TableCell>
@@ -92,6 +93,7 @@ export default function TablaUsuarios({ usuarios }: { usuarios: any }) {
                                             onClick={() => {
                                                 setDialogoEliminar(true);
                                                 setNombreEliminar(usuario.name);
+                                                setEmailEliminar(usuario.email)
                                                 setIdEliminar(usuario.id);
                                             }}
                                         >
@@ -126,8 +128,8 @@ export default function TablaUsuarios({ usuarios }: { usuarios: any }) {
                         </header>
                         <section id="modal-descripcion" className="text-gray-400 mb-6">
                             <p>
-                                ¿Estás seguro de que quieres eliminar{' '}
-                                <span className="text-white font-bold">{nombreEliminar}</span>?
+                                ¿Estás seguro de que quieres eliminar a{' '}
+                                <span className="text-white font-bold">{nombreEliminar} - {emailEliminar}</span>?
                             </p>
                             <p>Esta acción no se puede deshacer.</p>
                         </section>

@@ -1,6 +1,0 @@
-import{r as a,S as s,j as e}from"./app-sL5v9rWa.js";import{c as r}from"./createLucideIcon-Ca1Y-7ap.js";/**
- * @license lucide-react v0.475.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */const o=[["path",{d:"M21.801 10A10 10 0 1 1 17 3.335",key:"yps3ct"}],["path",{d:"m9 11 3 3L22 4",key:"1pflzl"}]],i=r("CircleCheckBig",o);function d(){return a.useEffect(()=>{const t=setTimeout(()=>{s.visit(route("home"))},4e3);return()=>clearTimeout(t)},[]),e.jsx("div",{className:"flex min-h-screen items-center justify-center bg-[#0a0a0a] px-4 py-12 text-white",children:e.jsxs("div",{className:"max-w-md rounded-xl border border-[var(--verde-neon)] bg-gradient-to-br from-[#0d0d0d] via-[#121212] to-[#1a1a1a] p-8 text-center shadow-[0_0_25px_var(--verde-neon)]",children:[e.jsx(i,{size:48,className:"mx-auto mb-4 text-[var(--verde-neon)]"}),e.jsx("h1",{className:"text-2xl font-bold mb-2",children:"¡Pago exitoso!"}),e.jsx("p",{className:"mb-4",children:"Tu cuenta PRO está activa. Ya puedes disfrutar de todas las ventajas."}),e.jsx("p",{className:"text-sm text-gray-400",children:"Redirigiendo a la pantalla de inicio..."})]})})}export{d as default};

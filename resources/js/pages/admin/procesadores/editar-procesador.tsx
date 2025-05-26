@@ -8,7 +8,7 @@ import { Head, router, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 import { Router } from 'lucide-react';
 
-export default function EditarrProcesador({ procesador }: { procesador: Procesador }) {
+export default function EditarProcesador({ procesador }: { procesador: Procesador }) {
     const { data, setData, put, processing, errors } = useForm({
         nombre: procesador.nombre,
         marca: procesador.marca,
@@ -25,7 +25,7 @@ export default function EditarrProcesador({ procesador }: { procesador: Procesad
         precio: procesador.precio,
     });
 
-    const submit: FormEventHandler = (e) => {
+    const editar: FormEventHandler = (e) => {
         e.preventDefault();
         put(route('admin.procesadores.actualizar', procesador.id));
     };
@@ -34,7 +34,7 @@ export default function EditarrProcesador({ procesador }: { procesador: Procesad
         <>
             <Head title="Editar procesador" />
             <AdminLayout titulo="Editar procesador">
-                <form onSubmit={submit} className="mx-auto grid max-w-5xl grid-cols-2 gap-6">
+                <form onSubmit={editar} className="mx-auto grid max-w-5xl grid-cols-2 gap-6">
                     <div>
                         <Label htmlFor="nombre">Nombre</Label>
                         <Input id="nombre" value={data.nombre} onChange={(e) => setData('nombre', e.target.value)} />
