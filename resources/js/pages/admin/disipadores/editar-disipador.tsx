@@ -41,11 +41,7 @@ export default function EditarDisipador({ disipador }: { disipador: Disipador })
 
                     <div>
                         <Label htmlFor="socket">Sockets</Label>
-                        <Input
-                            id="socket"
-                            value={data.socket}
-                            onChange={(e) => setData('socket', e.target.value)}
-                        />
+                        <Input id="socket" value={data.socket} onChange={(e) => setData('socket', e.target.value)} />
                         <InputError message={errors.socket} />
                     </div>
 
@@ -61,12 +57,7 @@ export default function EditarDisipador({ disipador }: { disipador: Disipador })
 
                     <div>
                         <Label htmlFor="consumo">Consumo (W)</Label>
-                        <Input
-                            type="number"
-                            id="consumo"
-                            value={data.consumo}
-                            onChange={(e) => setData('consumo', parseInt(e.target.value))}
-                        />
+                        <Input type="number" id="consumo" value={data.consumo} onChange={(e) => setData('consumo', parseInt(e.target.value))} />
                         <InputError message={errors.consumo} />
                     </div>
 
@@ -82,8 +73,16 @@ export default function EditarDisipador({ disipador }: { disipador: Disipador })
                         <InputError message={errors.precio} />
                     </div>
 
-                    <div className="col-span-2 flex justify-center mt-4 gap-4">
-                        <Button onClick={(e) => { router.visit(route('admin.disipadores')); e.preventDefault() }} variant='link'>Volver</Button>
+                    <div className="col-span-2 mt-4 flex justify-center gap-4">
+                        <Button
+                            onClick={(e) => {
+                                router.visit(route('admin.disipadores'));
+                                e.preventDefault();
+                            }}
+                            variant="link"
+                        >
+                            Volver
+                        </Button>
                         <Button disabled={processing}>Editar disipador</Button>
                     </div>
                 </form>

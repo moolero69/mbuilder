@@ -16,7 +16,7 @@ export default function EditarTorre({ torre }: { torre: Torre }) {
         longitud_maxima_gpu: torre.longitud_maxima_gpu,
         refrigeracion_liquida: torre.refrigeracion_liquida,
         precio: torre.precio,
-        link_imagen: torre.link_imagen
+        link_imagen: torre.link_imagen,
     });
 
     const editar: FormEventHandler = (e) => {
@@ -92,8 +92,16 @@ export default function EditarTorre({ torre }: { torre: Torre }) {
                         <InputError message={errors.precio} />
                     </div>
 
-                    <div className="col-span-2 flex justify-center mt-4 gap-4">
-                        <Button onClick={(e) => { router.visit(route('admin.torres')); e.preventDefault() }} variant='link'>Volver</Button>
+                    <div className="col-span-2 mt-4 flex justify-center gap-4">
+                        <Button
+                            onClick={(e) => {
+                                router.visit(route('admin.torres'));
+                                e.preventDefault();
+                            }}
+                            variant="link"
+                        >
+                            Volver
+                        </Button>
                         <Button disabled={processing}>Editar torre</Button>
                     </div>
                 </form>

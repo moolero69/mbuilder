@@ -51,13 +51,21 @@ export default function CrearUsuario() {
                             id="es_admin"
                             checked={data.es_admin === 'Si'}
                             onCheckedChange={(checked) => setData('es_admin', checked ? 'Si' : null)}
-                            className='border-1 border-white'
+                            className="border-1 border-white"
                         />
                         <InputError message={errors.es_admin} />
                     </div>
 
-                    <div className="col-span-2 flex justify-center mt-4 gap-4">
-                        <Button onClick={(e) => { router.visit(route('admin.usuarios')); e.preventDefault() }} variant='link'>Volver</Button>
+                    <div className="col-span-2 mt-4 flex justify-center gap-4">
+                        <Button
+                            onClick={(e) => {
+                                router.visit(route('admin.usuarios'));
+                                e.preventDefault();
+                            }}
+                            variant="link"
+                        >
+                            Volver
+                        </Button>
                         <Button disabled={processing}>Crear usuario</Button>
                     </div>
                 </form>

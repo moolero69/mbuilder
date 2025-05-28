@@ -1,5 +1,4 @@
 import InputError from '@/components/input-error';
-import { type BreadcrumbItem } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useRef } from 'react';
@@ -10,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AjustesLayout from '@/layouts/settings/ajustes-layout';
 
-export default function Password({ tiene_contraseña, contra }: { tiene_contraseña: boolean, contra: string }) {
+export default function Password({ tiene_contraseña, contra }: { tiene_contraseña: boolean; contra: string }) {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
 
@@ -46,11 +45,16 @@ export default function Password({ tiene_contraseña, contra }: { tiene_contrase
 
             <AjustesLayout>
                 <div className="space-y-6">
-                    {!tiene_contraseña &&
-                        <h1 className='text-[var(--amarillo-neon)]'>Has iniciado sesión con un servicio de terceros, con lo cual no puedes cambiar la contraseña.</h1>
-                    }
-                    
-                    <HeadingSmall title="Actualizar contraseña" description="Recuerda poner una contraseña larga y aleatoria para una mayor seguridad." />
+                    {!tiene_contraseña && (
+                        <h1 className="text-[var(--amarillo-neon)]">
+                            Has iniciado sesión con un servicio de terceros, con lo cual no puedes cambiar la contraseña.
+                        </h1>
+                    )}
+
+                    <HeadingSmall
+                        titulo="Actualizar contraseña"
+                        descripcion="Recuerda poner una contraseña larga y aleatoria para una mayor seguridad."
+                    />
 
                     <form onSubmit={updatePassword} className="space-y-6">
                         <div className="grid gap-2">
@@ -115,7 +119,6 @@ export default function Password({ tiene_contraseña, contra }: { tiene_contrase
                                 enterFrom="opacity-0"
                                 leave="transition ease-in-out"
                                 leaveTo="opacity-0"
-
                             >
                                 <p className="text-sm text-neutral-600">Guardada!</p>
                             </Transition>

@@ -205,9 +205,9 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
         setIsDragging(true);
     };
 
-    const desplegar = () => { };
+    const desplegar = () => {};
 
-    const replegar = () => { };
+    const replegar = () => {};
     return (
         <>
             <Head title="montaje - fuente alimentacion" />
@@ -283,12 +283,7 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                         {fuentesCorsair.map((fuente) => (
                                             <div key={fuente.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={fuente.id}
-                                                        nombre={fuente.nombre}
-                                                        icono={<Power />}
-                                                        precio={fuente.precio}
-                                                    />
+                                                    <ItemArrastrable id={fuente.id} nombre={fuente.nombre} icono={<Power />} precio={fuente.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -341,12 +336,7 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                         {fuentesEvga.map((fuente) => (
                                             <div key={fuente.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={fuente.id}
-                                                        nombre={fuente.nombre}
-                                                        icono={<Power />}
-                                                        precio={fuente.precio}
-                                                    />
+                                                    <ItemArrastrable id={fuente.id} nombre={fuente.nombre} icono={<Power />} precio={fuente.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>
@@ -399,12 +389,7 @@ export default function MontajeFuenteAlimentacion({ fuentesAlimentacion }: { fue
                                         {fuentesBequiet.map((fuente) => (
                                             <div key={fuente.id} className="space-y-3 bg-black/50 p-2">
                                                 <div className="flex flex-row justify-center gap-5 py-3 align-middle">
-                                                    <ItemArrastrable
-                                                        id={fuente.id}
-                                                        nombre={fuente.nombre}
-                                                        icono={<Power />}
-                                                        precio={fuente.precio}
-                                                    />
+                                                    <ItemArrastrable id={fuente.id} nombre={fuente.nombre} icono={<Power />} precio={fuente.precio} />
                                                 </div>
                                                 <Separator className="border-[1px] border-gray-600" />
                                             </div>

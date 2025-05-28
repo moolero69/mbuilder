@@ -101,12 +101,7 @@ export default function EditarPlacaBase({ placaBase }: { placaBase: PlacaBase })
 
                     <div>
                         <Label htmlFor="consumo">Consumo (W)</Label>
-                        <Input
-                            type="number"
-                            id="consumo"
-                            value={data.consumo}
-                            onChange={(e) => setData('consumo', parseInt(e.target.value))}
-                        />
+                        <Input type="number" id="consumo" value={data.consumo} onChange={(e) => setData('consumo', parseInt(e.target.value))} />
                         <InputError message={errors.consumo} />
                     </div>
 
@@ -122,8 +117,16 @@ export default function EditarPlacaBase({ placaBase }: { placaBase: PlacaBase })
                         <InputError message={errors.precio} />
                     </div>
 
-                    <div className="col-span-2 flex justify-center mt-4 gap-4">
-                        <Button onClick={(e) => { router.visit(route('admin.placasBase')); e.preventDefault() }} variant='link'>Volver</Button>
+                    <div className="col-span-2 mt-4 flex justify-center gap-4">
+                        <Button
+                            onClick={(e) => {
+                                router.visit(route('admin.placasBase'));
+                                e.preventDefault();
+                            }}
+                            variant="link"
+                        >
+                            Volver
+                        </Button>
                         <Button disabled={processing}>Editar placa base</Button>
                     </div>
                 </form>

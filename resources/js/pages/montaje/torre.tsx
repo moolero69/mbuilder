@@ -123,7 +123,6 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
 
     const [zoomImagen, setZoomImagen] = useState(false);
 
-
     useEffect(() => {
         !editarMontaje &&
             toast.custom(
@@ -951,7 +950,7 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                             </div>
                                         </div>
                                         <div className="bg-transparent"></div>
-                                        <div className="flex transform items-center justify-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)] bg-gradient-to-l from-[#1a1a1a] via-[#121212] to-[#0a0a0a]">
+                                        <div className="flex transform items-center justify-center gap-6 rounded-xl border-4 border-[var(--azul-neon)] bg-gradient-to-l from-[#1a1a1a] via-[#121212] to-[#0a0a0a] transition-all duration-1500 ease-in-out hover:border-[var(--morado-neon)]">
                                             <div className="relative flex items-center justify-center hover:cursor-pointer">
                                                 <img
                                                     src={torreSeleccionada.link_imagen}
@@ -960,14 +959,13 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                                                     onClick={() => setZoomImagen(true)}
                                                 />
                                                 <div
-                                                    className="absolute bottom-0 -right-4 text-[var(--rojo-neon)]"
+                                                    className="absolute -right-4 bottom-0 text-[var(--rojo-neon)]"
                                                     onClick={() => setZoomImagen(true)}
                                                 >
                                                     <ZoomIn size={32} />
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                     {esCompatible ? (
                                         <Button
@@ -1046,17 +1044,17 @@ export default function MontajeTorre({ torres }: { torres: Torre[] }) {
                 </DialogContent>
             </Dialog>
 
-            {torreSeleccionada &&
+            {torreSeleccionada && (
                 <Dialog open={zoomImagen} onOpenChange={setZoomImagen}>
-                    <DialogContent className="max-w-[90vw] max-h-[90vh] p-4">
+                    <DialogContent className="max-h-[90vh] max-w-[90vw] p-4">
                         <img
                             src={torreSeleccionada.link_imagen}
                             alt="Imagen en grande"
-                            className="w-full h-auto max-h-[80vh] object-contain mx-auto"
+                            className="mx-auto h-auto max-h-[80vh] w-full object-contain"
                         />
                     </DialogContent>
                 </Dialog>
-            }
+            )}
         </>
     );
 }

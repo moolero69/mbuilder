@@ -41,22 +41,13 @@ export default function EditarFuenteAlimentacion({ fuenteAlimentacion }: { fuent
 
                     <div>
                         <Label htmlFor="certificacion">Certificación</Label>
-                        <Input
-                            id="certificacion"
-                            value={data.certificacion}
-                            onChange={(e) => setData('certificacion', e.target.value)}
-                        />
+                        <Input id="certificacion" value={data.certificacion} onChange={(e) => setData('certificacion', e.target.value)} />
                         <InputError message={errors.certificacion} />
                     </div>
 
                     <div>
                         <Label htmlFor="potencia">Potencia (W)</Label>
-                        <Input
-                            type="number"
-                            id="potencia"
-                            value={data.potencia}
-                            onChange={(e) => setData('potencia', parseInt(e.target.value))}
-                        />
+                        <Input type="number" id="potencia" value={data.potencia} onChange={(e) => setData('potencia', parseInt(e.target.value))} />
                         <InputError message={errors.potencia} />
                     </div>
 
@@ -78,8 +69,16 @@ export default function EditarFuenteAlimentacion({ fuenteAlimentacion }: { fuent
                         <InputError message={errors.precio} />
                     </div>
 
-                    <div className="col-span-2 flex justify-center mt-4 gap-4">
-                        <Button onClick={(e) => { router.visit(route('admin.fuentes')); e.preventDefault() }} variant='link'>Volver</Button>
+                    <div className="col-span-2 mt-4 flex justify-center gap-4">
+                        <Button
+                            onClick={(e) => {
+                                router.visit(route('admin.fuentes'));
+                                e.preventDefault();
+                            }}
+                            variant="link"
+                        >
+                            Volver
+                        </Button>
                         <Button disabled={processing}>Editar fuente de alimentación</Button>
                     </div>
                 </form>

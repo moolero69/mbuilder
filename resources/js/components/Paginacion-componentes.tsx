@@ -5,7 +5,7 @@ export default function PaginacionComponentes({ links }: LinksPaginacionProps) {
     if (links.length <= 3) return null;
 
     return (
-        <Pagination className='mt-3'>
+        <Pagination className="mt-3">
             <PaginationContent>
                 {/* Botón Anterior */}
                 <PaginationItem>

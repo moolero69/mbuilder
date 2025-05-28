@@ -63,45 +63,25 @@ export default function EditarTarjetaGrafica({ tarjetaGrafica }: { tarjetaGrafic
 
                     <div>
                         <Label htmlFor="memoria">Memoria (GB)</Label>
-                        <Input
-                            type="number"
-                            id="memoria"
-                            value={data.memoria}
-                            onChange={(e) => setData('memoria', parseInt(e.target.value))}
-                        />
+                        <Input type="number" id="memoria" value={data.memoria} onChange={(e) => setData('memoria', parseInt(e.target.value))} />
                         <InputError message={errors.memoria} />
                     </div>
 
                     <div>
                         <Label htmlFor="longitud">Longitud (mm)</Label>
-                        <Input
-                            type="number"
-                            id="longitud"
-                            value={data.longitud}
-                            onChange={(e) => setData('longitud', parseInt(e.target.value))}
-                        />
+                        <Input type="number" id="longitud" value={data.longitud} onChange={(e) => setData('longitud', parseInt(e.target.value))} />
                         <InputError message={errors.longitud} />
                     </div>
 
                     <div>
                         <Label htmlFor="passmark">Passmark</Label>
-                        <Input
-                            type="number"
-                            id="passmark"
-                            value={data.passmark}
-                            onChange={(e) => setData('passmark', parseInt(e.target.value))}
-                        />
+                        <Input type="number" id="passmark" value={data.passmark} onChange={(e) => setData('passmark', parseInt(e.target.value))} />
                         <InputError message={errors.passmark} />
                     </div>
 
                     <div>
                         <Label htmlFor="consumo">Consumo (W)</Label>
-                        <Input
-                            type="number"
-                            id="consumo"
-                            value={data.consumo}
-                            onChange={(e) => setData('consumo', parseInt(e.target.value))}
-                        />
+                        <Input type="number" id="consumo" value={data.consumo} onChange={(e) => setData('consumo', parseInt(e.target.value))} />
                         <InputError message={errors.consumo} />
                     </div>
 
@@ -117,8 +97,16 @@ export default function EditarTarjetaGrafica({ tarjetaGrafica }: { tarjetaGrafic
                         <InputError message={errors.precio} />
                     </div>
 
-                    <div className="col-span-2 flex justify-center mt-4 gap-4">
-                        <Button onClick={(e) => { router.visit(route('admin.graficas')); e.preventDefault() }} variant='link'>Volver</Button>
+                    <div className="col-span-2 mt-4 flex justify-center gap-4">
+                        <Button
+                            onClick={(e) => {
+                                router.visit(route('admin.graficas'));
+                                e.preventDefault();
+                            }}
+                            variant="link"
+                        >
+                            Volver
+                        </Button>
                         <Button disabled={processing}>Editar tarjeta gráfica</Button>
                     </div>
                 </form>

@@ -1,10 +1,10 @@
-import { FormEventHandler } from 'react';
-import { useForm, Head, router } from '@inertiajs/react';
-import AdminLayout from '@/layouts/admin/admin-layout';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import InputError from '@/components/input-error';
+import AdminLayout from '@/layouts/admin/admin-layout';
+import { Head, router, useForm } from '@inertiajs/react';
+import { FormEventHandler } from 'react';
 
 export default function CrearTarjetaGrafica() {
     const { data, setData, post, processing, errors } = useForm({
@@ -29,7 +29,7 @@ export default function CrearTarjetaGrafica() {
         <>
             <Head title="Añadir tarjeta gráfica" />
             <AdminLayout titulo="Añadir tarjeta gráfica">
-                <form onSubmit={submit} className="grid grid-cols-2 gap-6 max-w-5xl mx-auto">
+                <form onSubmit={submit} className="mx-auto grid max-w-5xl grid-cols-2 gap-6">
                     <div>
                         <Label htmlFor="nombre">Nombre</Label>
                         <Input id="nombre" value={data.nombre} onChange={(e) => setData('nombre', e.target.value)} />
@@ -86,12 +86,26 @@ export default function CrearTarjetaGrafica() {
 
                     <div>
                         <Label htmlFor="precio">Precio (€)</Label>
-                        <Input type="number" step="0.01" id="precio" value={data.precio} onChange={(e) => setData('precio', parseFloat(e.target.value))} />
+                        <Input
+                            type="number"
+                            step="0.01"
+                            id="precio"
+                            value={data.precio}
+                            onChange={(e) => setData('precio', parseFloat(e.target.value))}
+                        />
                         <InputError message={errors.precio} />
                     </div>
 
-                    <div className="col-span-2 flex justify-center mt-4 gap-4">
-                        <Button onClick={(e) => { router.visit(route('admin.graficas')); e.preventDefault() }} variant='link'>Volver</Button>
+                    <div className="col-span-2 mt-4 flex justify-center gap-4">
+                        <Button
+                            onClick={(e) => {
+                                router.visit(route('admin.graficas'));
+                                e.preventDefault();
+                            }}
+                            variant="link"
+                        >
+                            Volver
+                        </Button>
                         <Button disabled={processing}>Guardar tarjeta gráfica</Button>
                     </div>
                 </form>

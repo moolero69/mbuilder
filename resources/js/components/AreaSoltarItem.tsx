@@ -23,7 +23,7 @@ export function AreaSoltarItem({
         >
             {children}
             {mostrarBoton && (
-                <div onClick={botonEliminar} className='hover:cursor-pointer'>
+                <div onClick={botonEliminar} className="hover:cursor-pointer">
                     <Trash2 size={35} className="absolute right-3 bottom-5 text-[var(--rojo-neon)]" />
                 </div>
             )}

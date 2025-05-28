@@ -59,15 +59,12 @@ export default function Login() {
                     </div>
 
                     <div className="grid gap-2">
-                        <div className="flex w-full justify-between items-center gap-15">
+                        <div className="flex w-full items-center justify-between gap-15">
                             <Label htmlFor="password" className="text-[var(--verde-neon)]">
                                 Contraseña
                             </Label>
 
-                            <Link
-                                href={route('password.request')}
-                                className="text-sm text-[var(--cian-neon)] hover:underline"
-                            >
+                            <Link href={route('password.request')} className="text-sm text-[var(--cian-neon)] hover:underline">
                                 ¿Contraseña olvidada?
                             </Link>
                         </div>
@@ -131,7 +128,6 @@ export default function Login() {
                     </TextLink>
                 </div>
             </form>
-
         </AuthLayout>
     );
 }

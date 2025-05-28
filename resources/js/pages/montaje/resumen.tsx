@@ -29,9 +29,6 @@ export default function ResumenMontaje() {
     const link = props.flash?.link;
     const qr = props.flash?.qr;
 
-    console.log(qr)
-
-
     const [dialogoNombreAbierto, setDialogoNombreAbierto] = useState(false);
     const [dialogoLinkAbierto, setDialogoLinkAbierto] = useState(false);
     const [linkCopiado, setLinkCopiado] = useState(false);
@@ -156,7 +153,6 @@ export default function ResumenMontaje() {
             },
             onError: (error: any) => {
                 toast.error('Error al guardar el montaje');
-                console.error(error);
             },
         });
     };

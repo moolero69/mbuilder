@@ -7,7 +7,7 @@ import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/
 import { Head, Link } from '@inertiajs/react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
 import { Separator } from '@radix-ui/react-separator';
-import { ArrowBigDown, Cpu, Factory, Gamepad2, Gauge, MemoryStick, Microchip, Minus, Move, Plus, Search, Trash2, Zap, Wrench } from 'lucide-react';
+import { ArrowBigDown, Cpu, Factory, Gamepad2, Gauge, MemoryStick, Microchip, Minus, Move, Plus, Search, Trash2, Wrench, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 

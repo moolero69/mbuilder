@@ -78,9 +78,7 @@ export default function TablaUsuarios({ usuarios }: { usuarios: any }) {
                                     <ContextMenuTrigger asChild>
                                         <TableRow
                                             className="cursor-pointer odd:bg-gray-500/30 hover:bg-white/60 hover:text-black"
-                                            onClick={() =>
-                                                router.visit(route('admin.usuarios.editar', usuario.id))
-                                            }
+                                            onClick={() => router.visit(route('admin.usuarios.editar', usuario.id))}
                                         >
                                             <TableCell>{usuario.name}</TableCell>
                                             <TableCell>{usuario.email}</TableCell>
@@ -93,7 +91,7 @@ export default function TablaUsuarios({ usuarios }: { usuarios: any }) {
                                             onClick={() => {
                                                 setDialogoEliminar(true);
                                                 setNombreEliminar(usuario.name);
-                                                setEmailEliminar(usuario.email)
+                                                setEmailEliminar(usuario.email);
                                                 setIdEliminar(usuario.id);
                                             }}
                                         >
@@ -105,9 +103,7 @@ export default function TablaUsuarios({ usuarios }: { usuarios: any }) {
                         </TableBody>
                     </Table>
                 </div>
-                <p className="mb-4 mt-2 text-center font-['Exo_2'] text-sm text-gray-300 italic">
-                    Click derecho para eliminar
-                </p>
+                <p className="mt-2 mb-4 text-center font-['Exo_2'] text-sm text-gray-300 italic">Click derecho para eliminar</p>
                 <PaginacionComponentes links={usuarios.links} />
             </section>
 
@@ -119,19 +115,19 @@ export default function TablaUsuarios({ usuarios }: { usuarios: any }) {
                     aria-labelledby="modal-titulo"
                     aria-describedby="modal-descripcion"
                 >
-                    <div className="bg-[#0d0d0d] rounded-md border border-[var(--rojo-neon)] p-6 max-w-md w-full text-white shadow-[0_0_15px_var(--rojo-neon)]">
+                    <div className="w-full max-w-md rounded-md border border-[var(--rojo-neon)] bg-[#0d0d0d] p-6 text-white shadow-[0_0_15px_var(--rojo-neon)]">
                         <header className="mb-4">
-                            <h2
-                                id="modal-titulo"
-                                className="text-[var(--rojo-neon)] drop-shadow-[0_0_8px_var(--rojo-neon)] text-xl font-semibold"
-                            >
+                            <h2 id="modal-titulo" className="text-xl font-semibold text-[var(--rojo-neon)] drop-shadow-[0_0_8px_var(--rojo-neon)]">
                                 ¿Eliminar usuario?
                             </h2>
                         </header>
-                        <section id="modal-descripcion" className="text-gray-400 mb-6">
+                        <section id="modal-descripcion" className="mb-6 text-gray-400">
                             <p>
                                 ¿Estás seguro de que quieres eliminar a{' '}
-                                <span className="text-white font-bold">{nombreEliminar} - {emailEliminar}</span>?
+                                <span className="font-bold text-white">
+                                    {nombreEliminar} - {emailEliminar}
+                                </span>
+                                ?
                             </p>
                             <p>Esta acción no se puede deshacer.</p>
                         </section>

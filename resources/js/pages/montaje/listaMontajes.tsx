@@ -3,15 +3,15 @@ import TooltipIncopatibilidadMonatje from '@/components/TooltipIncopatibilidad';
 import TooltipTipoMontaje from '@/components/TooltipTipoMontaje';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
+import AppLayout from '@/layouts/app-layout';
 import { ComponentesMontaje, Montaje } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Check } from 'lucide-react';
+import { QRCodeCanvas } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { QRCodeCanvas } from 'qrcode.react';
-import { Input } from '@/components/ui/input';
-import AppLayout from '@/layouts/app-layout';
 
 type MontajeForm = {
     id: number;
@@ -24,7 +24,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
 
     useEffect(() => {
         link && setDialogoLinkAbierto(true);
-    }, [link])
+    }, [link]);
 
     const [componenteSeleccionado, setComponenteSeleccionado] = useState<ComponentesMontaje>();
     const [dialogoEliminar, setDialogoEliminar] = useState(false);
@@ -124,15 +124,11 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
 
                         {montajes.length == 0 ? (
                             <>
-                                <div className="flex h-[512px] w-full items-center justify-center flex-col gap-15">
+                                <div className="flex h-[512px] w-full flex-col items-center justify-center gap-15">
                                     <h1 className="text-center font-['Orbitron'] text-5xl font-bold text-[var(--naranja-neon)] drop-shadow-[0_0_10px_var(--naranja-neon)]">
                                         No tienes montajes guardados
                                     </h1>
-                                    <Button
-                                        className='text-3xl underline  hover:text-[var(--fucsia-neon)] duration-300'
-                                        variant='link'
-                                        asChild
-                                    >
+                                    <Button className="text-3xl underline duration-300 hover:text-[var(--fucsia-neon)]" variant="link" asChild>
                                         <Link href={route('montaje.tipo')}>Comienza tu primer montaje</Link>
                                     </Button>
                                 </div>
@@ -172,7 +168,6 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                         <div
                                             key={montaje.id}
                                             className="colores-borde-glow flex h-full flex-col rounded-xl bg-gradient-to-l from-[#1a1a1a] via-[#121212] to-[#0a0a0a] p-5 transition-all duration-300"
-
                                         >
                                             <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-between">
                                                 <div className="flex items-center justify-center gap-3">
@@ -188,11 +183,12 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                                 )}
                                             </div>
 
-                                            <p className="mb-4 text-sm text-gray-400">Creado el {new Date(montaje.created_at).toLocaleDateString()}</p>
+                                            <p className="mb-4 text-sm text-gray-400">
+                                                Creado el {new Date(montaje.created_at).toLocaleDateString()}
+                                            </p>
 
-
-                                            <div className='flex flex-row justify-between items-center'>
-                                                <ul className="mb-4 space-y-1 text-sm min-w-[300px]">
+                                            <div className="flex flex-row items-center justify-between">
+                                                <ul className="mb-4 min-w-[300px] space-y-1 text-sm">
                                                     <li>
                                                         <strong className="text-[var(--azul-neon)]">Procesador:</strong>{' '}
                                                         {datos.procesador?.nombre || <span className="text-red-500">Sin procesador</span>}
@@ -263,8 +259,8 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                                                 <img
                                                     src={datos.torre?.link_imagen}
                                                     alt=""
-                                                    className='h-[250px] w-[500px] overflow-hidden mb-8 ml-4'
-                                                    draggable='false'
+                                                    className="mb-8 ml-4 h-[250px] w-[500px] overflow-hidden"
+                                                    draggable="false"
                                                 />
                                             </div>
 
@@ -285,7 +281,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
 
                                                 <Button
                                                     variant="outline"
-                                                    className="w-full border-[var(--verde-neon)] font-['Orbitron'] text-[var(--verde-neon)] shadow-[0_0_8px_var(--verde-neon)] transition-all duration-500 hover:bg-[var(--verde-neon)] hover:text-black hover:shadow-[0_0_16px_var(--verde-neon)] sm:w-auto hover:cursor-pointer"
+                                                    className="w-full border-[var(--verde-neon)] font-['Orbitron'] text-[var(--verde-neon)] shadow-[0_0_8px_var(--verde-neon)] transition-all duration-500 hover:cursor-pointer hover:bg-[var(--verde-neon)] hover:text-black hover:shadow-[0_0_16px_var(--verde-neon)] sm:w-auto"
                                                     asChild
                                                 >
                                                     <Link href={route('montaje.generarPdf')} data={idComponentes} method="post">
@@ -295,10 +291,11 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
 
                                                 <Button
                                                     variant="outline"
-                                                    className="w-full border-[var(--amarillo-neon)] font-['Orbitron'] text-[var(--amarillo-neon)] shadow-[0_0_8px_var(--amarillo-neon)] transition-all duration-500 hover:bg-[var(--amarillo-neon)] hover:text-black hover:shadow-[0_0_16px_var(--amarillo-neon)] sm:w-auto hover:cursor-pointer"
+                                                    className="w-full border-[var(--amarillo-neon)] font-['Orbitron'] text-[var(--amarillo-neon)] shadow-[0_0_8px_var(--amarillo-neon)] transition-all duration-500 hover:cursor-pointer hover:bg-[var(--amarillo-neon)] hover:text-black hover:shadow-[0_0_16px_var(--amarillo-neon)] sm:w-auto"
+                                                    onClick={() => link && setDialogoLinkAbierto(true)}
                                                     asChild
                                                 >
-                                                    <Link href={route('montaje.ver.link', montaje.id)} method='post'>
+                                                    <Link href={route('montaje.ver.link', montaje.id)} method="post">
                                                         Compartir
                                                     </Link>
                                                 </Button>
@@ -325,7 +322,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                     </section>
                 </div>
                 <Dialog open={dialogoEliminar} onOpenChange={setDialogoEliminar}>
-                    <DialogContent className="border-[var(--rojo-neon)] bg-[#0d0d0d] text-white shadow-[0_0_15px_var(--rojo-neon)] max-w-xl">
+                    <DialogContent className="max-w-xl border-[var(--rojo-neon)] bg-[#0d0d0d] text-white shadow-[0_0_15px_var(--rojo-neon)]">
                         <DialogHeader>
                             <DialogTitle className="text-[var(--rojo-neon)] drop-shadow-[0_0_8px_var(--rojo-neon)]">¿Eliminar montaje?</DialogTitle>
                             <DialogDescription className="text-gray-400">
@@ -373,10 +370,10 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                         </div>
 
                         <DialogFooter>
-                            <div className='flex w-full justify-between'>
+                            <div className="flex w-full justify-between">
                                 {link && <QRCodeCanvas value={link} size={150} />}
                                 <Button
-                                    variant='secondary'
+                                    variant="secondary"
                                     onClick={() => {
                                         const input = document.getElementById('enlace-compartido') as HTMLInputElement;
 

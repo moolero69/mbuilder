@@ -6,7 +6,6 @@ import AdminLayout from '@/layouts/admin/admin-layout';
 import { Procesador } from '@/types';
 import { Head, router, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
-import { Router } from 'lucide-react';
 
 export default function EditarProcesador({ procesador }: { procesador: Procesador }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -140,7 +139,15 @@ export default function EditarProcesador({ procesador }: { procesador: Procesado
                     </div>
 
                     <div className="col-span-2 mt-4 flex justify-center gap-4">
-                        <Button onClick={(e) => { router.visit(route('admin.procesadores')); e.preventDefault() }} variant='link'>Volver</Button>
+                        <Button
+                            onClick={(e) => {
+                                router.visit(route('admin.procesadores'));
+                                e.preventDefault();
+                            }}
+                            variant="link"
+                        >
+                            Volver
+                        </Button>
                         <Button disabled={processing}>Editar procesador</Button>
                     </div>
                 </form>

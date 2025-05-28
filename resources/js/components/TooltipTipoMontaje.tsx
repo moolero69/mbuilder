@@ -21,14 +21,12 @@ export default function TooltipTipoMontaje({ tipo }: { tipo: string }) {
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <div className={`text-[var(--${color}-neon)] mb-2 before:hidden after:hidden`}>
-                        {icono}
-                    </div>
+                    <div className={`text-[var(--${color}-neon)] mb-2 before:hidden after:hidden`}>{icono}</div>
                 </TooltipTrigger>
                 <TooltipContent
                     className={`border-2 border-[var(--${color}-neon)] bg-gradient-to-r from-[#0d0d0d] via-[#131313] to-[#0d0d0d] text-white`}
                     side="right"
-                    align='center'
+                    align="center"
                 >
                     <p className='font-["exo_2"]'>Montaje {tipo}</p>
                 </TooltipContent>

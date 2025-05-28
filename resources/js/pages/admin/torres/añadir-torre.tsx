@@ -15,7 +15,7 @@ export default function CrearTorre() {
         longitud_maxima_gpu: 0,
         refrigeracion_liquida: '',
         precio: 0,
-        link_imagen: ''
+        link_imagen: '',
     });
 
     const submit: FormEventHandler = (e) => {
@@ -27,7 +27,7 @@ export default function CrearTorre() {
         <>
             <Head title="Añadir torre" />
             <AdminLayout titulo="Añadir torre">
-                <form onSubmit={submit} className="mx-auto grid max-w-5xl grid-cols-2 gap-6 mt-10">
+                <form onSubmit={submit} className="mx-auto mt-10 grid max-w-5xl grid-cols-2 gap-6">
                     <div>
                         <Label htmlFor="nombre">Nombre</Label>
                         <Input id="nombre" value={data.nombre} onChange={(e) => setData('nombre', e.target.value)} />
@@ -75,11 +75,7 @@ export default function CrearTorre() {
 
                     <div>
                         <Label htmlFor="refrigeracion_liquida">Link imagen</Label>
-                        <Input
-                            id="link_imagen"
-                            value={data.link_imagen}
-                            onChange={(e) => setData('link_imagen', e.target.value)}
-                        />
+                        <Input id="link_imagen" value={data.link_imagen} onChange={(e) => setData('link_imagen', e.target.value)} />
                         <InputError message={errors.link_imagen} />
                     </div>
 
@@ -95,8 +91,16 @@ export default function CrearTorre() {
                         <InputError message={errors.precio} />
                     </div>
 
-                    <div className="col-span-2 flex justify-center mt-4 gap-4">
-                        <Button onClick={(e) => { router.visit(route('admin.torresi')); e.preventDefault() }} variant='link'>Volver</Button>
+                    <div className="col-span-2 mt-4 flex justify-center gap-4">
+                        <Button
+                            onClick={(e) => {
+                                router.visit(route('admin.torresi'));
+                                e.preventDefault();
+                            }}
+                            variant="link"
+                        >
+                            Volver
+                        </Button>
                         <Button disabled={processing}>Guardar torre</Button>
                     </div>
                 </form>

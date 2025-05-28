@@ -14,7 +14,6 @@ const AppLayout: React.FC<Props> = ({ children }) => {
         setCookiesAceptadas(consentimiento === 'esenciales' || consentimiento === 'todas');
     }, []);
 
-
     return (
         <div>
             {children}

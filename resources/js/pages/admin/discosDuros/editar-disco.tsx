@@ -62,34 +62,19 @@ export default function EditarDiscoDuro({ discoDuro }: { discoDuro: DiscoDuro })
 
                     <div>
                         <Label htmlFor="pulgadas">Pulgadas</Label>
-                        <Input
-                            type="number"
-                            id="pulgadas"
-                            value={data.pulgadas}
-                            onChange={(e) => setData('pulgadas', parseFloat(e.target.value))}
-                        />
+                        <Input type="number" id="pulgadas" value={data.pulgadas} onChange={(e) => setData('pulgadas', parseFloat(e.target.value))} />
                         <InputError message={errors.pulgadas} />
                     </div>
 
                     <div>
                         <Label htmlFor="velocidad">Velocidad (RPM)</Label>
-                        <Input
-                            type="number"
-                            id="velocidad"
-                            value={data.velocidad}
-                            onChange={(e) => setData('velocidad', parseInt(e.target.value))}
-                        />
+                        <Input type="number" id="velocidad" value={data.velocidad} onChange={(e) => setData('velocidad', parseInt(e.target.value))} />
                         <InputError message={errors.velocidad} />
                     </div>
 
                     <div>
                         <Label htmlFor="consumo">Consumo (W)</Label>
-                        <Input
-                            type="number"
-                            id="consumo"
-                            value={data.consumo}
-                            onChange={(e) => setData('consumo', parseInt(e.target.value))}
-                        />
+                        <Input type="number" id="consumo" value={data.consumo} onChange={(e) => setData('consumo', parseInt(e.target.value))} />
                         <InputError message={errors.consumo} />
                     </div>
 
@@ -105,8 +90,16 @@ export default function EditarDiscoDuro({ discoDuro }: { discoDuro: DiscoDuro })
                         <InputError message={errors.precio} />
                     </div>
 
-                    <div className="col-span-2 flex justify-center mt-4 gap-4">
-                        <Button onClick={(e) => { router.visit(route('admin.discosDuros')); e.preventDefault() }} variant='link'>Volver</Button>
+                    <div className="col-span-2 mt-4 flex justify-center gap-4">
+                        <Button
+                            onClick={(e) => {
+                                router.visit(route('admin.discosDuros'));
+                                e.preventDefault();
+                            }}
+                            variant="link"
+                        >
+                            Volver
+                        </Button>
                         <Button disabled={processing}>Editar disco duro</Button>
                     </div>
                 </form>

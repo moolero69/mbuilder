@@ -1,8 +1,8 @@
 import Header from '@/components/header-principal';
-import AppLayout from '../app-layout';
-import { useState } from 'react';
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { MedidorLayoutProps } from '@/types';
+import { useState } from 'react';
+import AppLayout from '../app-layout';
 
 export default function Medidorlayout({ sidebarIzquierdo, sidebarDerecho, main }: MedidorLayoutProps) {
     const [dialogoAyuda, setDialogoAyuda] = useState(false);
@@ -12,7 +12,7 @@ export default function Medidorlayout({ sidebarIzquierdo, sidebarDerecho, main }
             <AppLayout>
                 <Header />
                 <main className="flex h-[calc(100dvh-120px)]">
-                    <section className="w-[18%] flex-col overflow-x-hidden overflow-y-auto bg-gray-700 text-center font-['Exo_2'] border-r border-black">
+                    <section className="w-[18%] flex-col overflow-x-hidden overflow-y-auto border-r border-black bg-gray-700 text-center font-['Exo_2']">
                         {sidebarIzquierdo}
                     </section>
 
@@ -21,7 +21,7 @@ export default function Medidorlayout({ sidebarIzquierdo, sidebarDerecho, main }
 
                         {/* Icono interrogación abajo izquierda */}
                         <section
-                            className={`absolute bottom-2 ml-4 w-fit rounded-4xl border border-[var(--azul-neon)] bg-black/70 py-2 px-4 backdrop-blur-md hover:cursor-pointer`}
+                            className={`absolute bottom-2 ml-4 w-fit rounded-4xl border border-[var(--azul-neon)] bg-black/70 px-4 py-2 backdrop-blur-md hover:cursor-pointer`}
                             onClick={() => setDialogoAyuda(true)}
                             title="Ver vídeo de ayuda"
                         >
@@ -29,19 +29,14 @@ export default function Medidorlayout({ sidebarIzquierdo, sidebarDerecho, main }
                         </section>
                     </section>
 
-                    <section className="w-[18%] flex-col overflow-x-hidden overflow-y-auto bg-gray-700 text-center font-['Exo_2'] border-l border-black">
+                    <section className="w-[18%] flex-col overflow-x-hidden overflow-y-auto border-l border-black bg-gray-700 text-center font-['Exo_2']">
                         {sidebarDerecho}
                     </section>
                 </main>
 
                 <Dialog open={dialogoAyuda} onOpenChange={setDialogoAyuda}>
-                    <DialogContent className="bg-black p-0 h-[500px] w-[950px]">
-                        <video
-                            autoPlay
-                            muted
-                            loop
-                            className="w-full h-full object-cover rounded-lg"
-                        >
+                    <DialogContent className="h-[500px] w-[950px] bg-black p-0">
+                        <video autoPlay muted loop className="h-full w-full rounded-lg object-cover">
                             <source src="/vid/ayuda-medidor.mp4" type="video/mp4" />
                             Tu navegador no admite vídeos HTML5.
                         </video>

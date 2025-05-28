@@ -60,12 +60,7 @@ export default function EditarMemoriaRam({ memoriaRam }: { memoriaRam: MemoriaRa
 
                     <div>
                         <Label htmlFor="pack">Pack</Label>
-                        <Input
-                            type="number"
-                            id="pack"
-                            value={data.pack}
-                            onChange={(e) => setData('pack', parseInt(e.target.value))}
-                        />
+                        <Input type="number" id="pack" value={data.pack} onChange={(e) => setData('pack', parseInt(e.target.value))} />
                         <InputError message={errors.pack} />
                     </div>
 
@@ -82,12 +77,7 @@ export default function EditarMemoriaRam({ memoriaRam }: { memoriaRam: MemoriaRa
 
                     <div>
                         <Label htmlFor="consumo">Consumo (W)</Label>
-                        <Input
-                            type="number"
-                            id="consumo"
-                            value={data.consumo}
-                            onChange={(e) => setData('consumo', parseInt(e.target.value))}
-                        />
+                        <Input type="number" id="consumo" value={data.consumo} onChange={(e) => setData('consumo', parseInt(e.target.value))} />
                         <InputError message={errors.consumo} />
                     </div>
 
@@ -103,8 +93,16 @@ export default function EditarMemoriaRam({ memoriaRam }: { memoriaRam: MemoriaRa
                         <InputError message={errors.precio} />
                     </div>
 
-                    <div className="col-span-2 flex justify-center mt-4 gap-4">
-                        <Button onClick={(e) => { router.visit(route('admin.memoriasram')); e.preventDefault() }} variant='link'>Volver</Button>
+                    <div className="col-span-2 mt-4 flex justify-center gap-4">
+                        <Button
+                            onClick={(e) => {
+                                router.visit(route('admin.memoriasram'));
+                                e.preventDefault();
+                            }}
+                            variant="link"
+                        >
+                            Volver
+                        </Button>
                         <Button disabled={processing}>Editar memoria RAM</Button>
                     </div>
                 </form>

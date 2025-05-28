@@ -70,7 +70,6 @@ export default function editarMontajes() {
         (montajeAnterior?.disco_duro_secundario?.consumo ?? 0) +
         (montajeAnterior?.tarjeta_grafica?.consumo ?? 0);
 
-
     const { data, setData, post } = useForm<MontajeForm>({
         id: undefined,
         nombre: '',
@@ -132,8 +131,8 @@ export default function editarMontajes() {
                                     {nombreMontajeAnterior}
                                 </h2>
 
-                                <section className='flex flex-row justify-between items-center'>
-                                    <ul className="space-y-1 text-sm min-w-[300px]">
+                                <section className="flex flex-row items-center justify-between">
+                                    <ul className="min-w-[300px] space-y-1 text-sm">
                                         <li>
                                             <strong className="text-[var(--azul-neon)]">Procesador:</strong>{' '}
                                             {montajeAnterior?.procesador ? (
@@ -235,7 +234,7 @@ export default function editarMontajes() {
                                     <img
                                         src={montajeAnterior?.torre?.link_imagen}
                                         alt="imagen torre anterior"
-                                        className="h-[250px] w-[500px] overflow-hidden mb-4 mt-2"
+                                        className="mt-2 mb-4 h-[250px] w-[500px] overflow-hidden"
                                         draggable="false"
                                     />
                                 </section>
@@ -251,8 +250,8 @@ export default function editarMontajes() {
                                     {nombreMontajeNuevo}
                                 </h2>
 
-                                <section className='flex flex-row justify-between items-center'>
-                                    <ul className="space-y-1 text-sm min-w-[300px]">
+                                <section className="flex flex-row items-center justify-between">
+                                    <ul className="min-w-[300px] space-y-1 text-sm">
                                         <li>
                                             <strong className="text-[var(--azul-neon)]">Procesador:</strong>{' '}
                                             {procesadorGuardado ? procesadorGuardado.nombre : <span className="text-red-500">Sin procesador</span>}
@@ -294,7 +293,11 @@ export default function editarMontajes() {
                                         </li>
                                         <li>
                                             <strong className="text-[var(--azul-neon)]">Gráfica:</strong>{' '}
-                                            {tarjetaGraficaGuardada ? tarjetaGraficaGuardada.nombre : <span className="text-red-500">Sin gráfica</span>}
+                                            {tarjetaGraficaGuardada ? (
+                                                tarjetaGraficaGuardada.nombre
+                                            ) : (
+                                                <span className="text-red-500">Sin gráfica</span>
+                                            )}
                                         </li>
                                         <li>
                                             <strong className="text-[var(--azul-neon)]">Fuente:</strong>{' '}
@@ -322,7 +325,7 @@ export default function editarMontajes() {
                                     <img
                                         src={torreGuardada?.link_imagen}
                                         alt="imagen nueva torre"
-                                        className="h-[250px] w-[500px] overflow-hidden mb-4 mt-2"
+                                        className="mt-2 mb-4 h-[250px] w-[500px] overflow-hidden"
                                         draggable="false"
                                     />
                                 </section>

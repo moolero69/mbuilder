@@ -1,16 +1,11 @@
 import PaginacionComponentes from '@/components/Paginacion-componentes';
 import { Button } from '@/components/ui/button';
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from '@/components/ui/context-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import {
-    ContextMenu,
-    ContextMenuTrigger,
-    ContextMenuContent,
-    ContextMenuItem,
-} from "@/components/ui/context-menu";
 
 export default function TablaDisipadores({ disipadores }: { disipadores: any }) {
     const { props }: any = usePage();
@@ -23,12 +18,16 @@ export default function TablaDisipadores({ disipadores }: { disipadores: any }) 
     }, [exito]);
 
     const cambiarFilasPorPagina = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        router.get(route('admin.disipadores'), {
-            mostrar_filas: e.target.value
-        }, {
-            preserveState: true,
-            preserveScroll: true
-        });
+        router.get(
+            route('admin.disipadores'),
+            {
+                mostrar_filas: e.target.value,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
     };
 
     const [dialogoEliminar, setDialogoEliminar] = useState<boolean>(false);
@@ -36,21 +35,23 @@ export default function TablaDisipadores({ disipadores }: { disipadores: any }) 
     const [idEliminar, setIdEliminar] = useState<number>();
 
     return (
-        <AdminLayout titulo='Disipadores'>
-            <Head title='Admin - disipadores' />
-            <section className='flex flex-col justify-center h-[100%]'>
-                <div className="flex justify-between items-center mb-4">
+        <AdminLayout titulo="Disipadores">
+            <Head title="Admin - disipadores" />
+            <section className="flex h-[100%] flex-col justify-center">
+                <div className="mb-4 flex items-center justify-between">
                     <Button asChild>
                         <Link href={route('admin.disipadores.crear')}>Añadir disipador</Link>
                     </Button>
 
-                    <div className="flex items-center gap-2 mr-2">
-                        <label htmlFor="mostrar_filas" className="text-sm">Filas por página:</label>
+                    <div className="mr-2 flex items-center gap-2">
+                        <label htmlFor="mostrar_filas" className="text-sm">
+                            Filas por página:
+                        </label>
                         <select
                             id="mostrar_filas"
                             defaultValue={new URLSearchParams(window.location.search).get('mostrar_filas') || '15'}
                             onChange={cambiarFilasPorPagina}
-                            className="rounded border px-2 py-1 bg-background text-foreground"
+                            className="bg-background text-foreground rounded border px-2 py-1"
                         >
                             <option value="5">5</option>
                             <option value="10">10</option>
@@ -64,7 +65,7 @@ export default function TablaDisipadores({ disipadores }: { disipadores: any }) 
                 <div className="overflow-x-auto rounded-lg border border-gray-600">
                     <Table>
                         <TableHeader>
-                            <TableRow className='bg-[var(--rosa-neon)]/30 hover:bg-[var(--morado-neon)]/30'>
+                            <TableRow className="bg-[var(--rosa-neon)]/30 hover:bg-[var(--morado-neon)]/30">
                                 <TableHead>Nombre</TableHead>
                                 <TableHead>Marca</TableHead>
                                 <TableHead>Socket</TableHead>
@@ -106,9 +107,7 @@ export default function TablaDisipadores({ disipadores }: { disipadores: any }) 
                         </TableBody>
                     </Table>
                 </div>
-                <p className="mb-4 mt-2 text-center font-['Exo_2'] text-sm text-gray-300 italic">
-                    Click derecho para eliminar
-                </p>
+                <p className="mt-2 mb-4 text-center font-['Exo_2'] text-sm text-gray-300 italic">Click derecho para eliminar</p>
                 <PaginacionComponentes links={disipadores.links} />
             </section>
 
@@ -121,17 +120,16 @@ export default function TablaDisipadores({ disipadores }: { disipadores: any }) 
                     aria-labelledby="modal-titulo"
                     aria-describedby="modal-descripcion"
                 >
-                    <div className="bg-[#0d0d0d] rounded-md border border-[var(--rojo-neon)] p-6 max-w-md w-full text-white shadow-[0_0_15px_var(--rojo-neon)]">
+                    <div className="w-full max-w-md rounded-md border border-[var(--rojo-neon)] bg-[#0d0d0d] p-6 text-white shadow-[0_0_15px_var(--rojo-neon)]">
                         <header className="mb-4">
-                            <h2
-                                id="modal-titulo"
-                                className="text-[var(--rojo-neon)] drop-shadow-[0_0_8px_var(--rojo-neon)] text-xl font-semibold"
-                            >
+                            <h2 id="modal-titulo" className="text-xl font-semibold text-[var(--rojo-neon)] drop-shadow-[0_0_8px_var(--rojo-neon)]">
                                 ¿Eliminar componente?
                             </h2>
                         </header>
-                        <section id="modal-descripcion" className="text-gray-400 mb-6">
-                            <p>¿Estás seguro de que quieres eliminar <span className="text-white font-bold">{nombreEliminar}</span>?</p>
+                        <section id="modal-descripcion" className="mb-6 text-gray-400">
+                            <p>
+                                ¿Estás seguro de que quieres eliminar <span className="font-bold text-white">{nombreEliminar}</span>?
+                            </p>
                             <p>Esta acción no se puede deshacer.</p>
                         </section>
                         <footer className="flex justify-end gap-2">

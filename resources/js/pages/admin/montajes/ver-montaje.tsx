@@ -79,7 +79,7 @@ export default function VerMontaje({ montaje }: { montaje: any }) {
                     <p className="mt-2 text-sm text-white/80">{datos.torre?.nombre || 'No seleccionado'}</p>
                 </div>
             </section>
-            <div className='mt-4 flex justify-center intems-center w-full'>
+            <div className="intems-center mt-4 flex w-full justify-center">
                 <Button onClick={(e) => router.visit(route('admin.montajes'))}>Volver</Button>
             </div>
         </AdminLayout>

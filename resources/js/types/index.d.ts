@@ -208,7 +208,7 @@ export interface ComponentesMontaje {
     fuente_alimentacion: FuenteAlimentacion;
     disipador: Disipador;
     torre: Torre;
-    otros?: { precio: number; potencia: number; nombre: string, tipo_montaje: string };
+    otros?: { precio: number; potencia: number; nombre: string; tipo_montaje: string };
 }
 
 export interface EstadoMontaje {
@@ -249,13 +249,13 @@ export interface AdminLayoutProps {
     nombreComponente?: string;
     idComponente?: number;
     rutaEliminar?: string;
-    cerrarDialogo?: ()=>void;
+    cerrarDialogo?: () => void;
 }
 
-export interface LinksPaginacionProps{
-    links:{
+export interface LinksPaginacionProps {
+    links: {
         url: string | null;
         label: string;
         active: boolean;
-    }[]
+    }[];
 }

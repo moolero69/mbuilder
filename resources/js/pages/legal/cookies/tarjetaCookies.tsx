@@ -1,23 +1,23 @@
-import { Link } from "@inertiajs/react";
-import { Cookie } from "lucide-react";
+import { Link } from '@inertiajs/react';
+import { Cookie } from 'lucide-react';
 
 interface TarjetaCookiesProps {
     onAceptar: (tipo: string) => void;
 }
 
 export default function TarjetaCookies({ onAceptar }: TarjetaCookiesProps) {
-
     return (
         <>
-            <section className="fixed bottom-6 left-6 right-6 z-50 max-w-md rounded-xl border border-[var(--azul-neon)] bg-black/70 p-5 shadow-[0_0_20px_var(--azul-neon)] backdrop-blur-md">
+            <section className="fixed right-6 bottom-6 left-6 z-50 max-w-md rounded-xl border border-[var(--azul-neon)] bg-black/70 p-5 shadow-[0_0_20px_var(--azul-neon)] backdrop-blur-md">
                 <div className="flex items-center gap-4 text-white">
-                    <Cookie size={50} className="text-[var(--azul-neon)] animate-pulse" />
-                    <span className="inline text-sm leading-relaxed text-gray-300 md:text-base font-['exo_2']">
+                    <Cookie size={50} className="animate-pulse text-[var(--azul-neon)]" />
+                    <span className="inline font-['exo_2'] text-sm leading-relaxed text-gray-300 md:text-base">
                         Usamos cookies para mejorar tu experiencia, analizar tráfico y personalizar contenido. ¿Qué prefieres?
-                        <Link href={route('cookies')} className="ml-2 underline text-[var(--azul-neon)] hover:opacity-80">Política de cookies</Link>
+                        <Link href={route('cookies')} className="ml-2 text-[var(--azul-neon)] underline hover:opacity-80">
+                            Política de cookies
+                        </Link>
                     </span>
                 </div>
-
 
                 <div className="mt-4 flex flex-wrap justify-center gap-3">
                     <button

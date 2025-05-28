@@ -100,6 +100,8 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
 
     const [procesadoresFiltrados, setProcesadoresFiltrados] = useState<Procesador[]>(procesadores);
 
+    const [mostrarDialogoSaltarComponente, setMostrarDialogoSaltarComponente] = useState(false);
+
     useEffect(() => {
         !editarMontaje &&
             toast.custom(
@@ -144,17 +146,19 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
         procesadorSeleccionado && comprobarCompatibilidad();
     }, [procesadorSeleccionado]);
 
-    const [mostrarDialogoSaltarComponente, setMostrarDialogoSaltarComponente] = useState(false);
+    useEffect(() => {
+        const preventScroll = (e: TouchEvent) => {
+            if (isDragging) {
+                e.preventDefault();
+            }
+        };
 
-    const procesadoresAmd = (() => {
-        const p = procesadoresFiltrados.filter((p) => p.marca === 'AMD' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-        return p.length ? p : null;
-    })();
+        document.addEventListener('touchmove', preventScroll, { passive: false });
 
-    const procesadoresIntel = (() => {
-        const p = procesadoresFiltrados.filter((p) => p.marca === 'Intel' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
-        return p.length ? p : null;
-    })();
+        return () => {
+            document.removeEventListener('touchmove', preventScroll);
+        };
+    }, [isDragging]);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -176,6 +180,11 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
         setIsDragging(true);
     };
 
+    const handleDragCancel = () => {
+        setIsDragging(false);
+        setProcesadorActivo(null);
+    };
+
     const desplegar = () => {
         setIntelDesplegado(true);
         setAmdDesplegado(true);
@@ -186,10 +195,20 @@ export default function MontajeProcesador({ procesadores }: { procesadores: Proc
         setAmdDesplegado(false);
     };
 
+    const procesadoresAmd = (() => {
+        const p = procesadoresFiltrados.filter((p) => p.marca === 'AMD' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return p.length ? p : null;
+    })();
+
+    const procesadoresIntel = (() => {
+        const p = procesadoresFiltrados.filter((p) => p.marca === 'Intel' && p.nombre.toLowerCase().includes(busquedaGeneral.toLowerCase()));
+        return p.length ? p : null;
+    })();
+
     return (
         <>
             <Head title="montaje - procesador" />
-            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragCancel={handleDragCancel}>
                 {/* Blur de fondo al arrastrar */}
                 {(isDragging || mostrarDialogoSaltarComponente) && (
                     <div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isDragging ? 'z-10' : 'z-50'}`}></div>

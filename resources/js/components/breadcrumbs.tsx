@@ -21,13 +21,9 @@ export function Breadcrumbs({ breadcrumbs }: { breadcrumbs: BreadcrumbItemType[]
                                 <Fragment key={index}>
                                     <BreadcrumbItem className="text-xl">
                                         {isResaltado ? (
-                                            <BreadcrumbPage className="current-page underline">
-                                                {item.titulo}
-                                            </BreadcrumbPage>
+                                            <BreadcrumbPage className="current-page underline">{item.titulo}</BreadcrumbPage>
                                         ) : estaDeshabilitado ? (
-                                            <span className="text-gray-500 opacity-60 cursor-default">
-                                                {item.titulo}
-                                            </span>
+                                            <span className="cursor-default text-gray-500 opacity-60">{item.titulo}</span>
                                         ) : (
                                             <BreadcrumbLink asChild>
                                                 <Link href={item.href} className="hover:underline">

@@ -24,9 +24,7 @@ export function ItemArrastrable({ id, nombre, icono, iconoSecundario, textoSecun
                     )}
                 </li>
             ) : (
-                <li
-                    className="flex w-fit items-center justify-center gap-3 rounded-2xl border-2 border-[var(--azul-neon)] bg-gray-700 p-3 text-center font-['exo_2'] hover:bg-gray-600 hover:cursor-default"
-                >
+                <li className="flex w-fit items-center justify-center gap-3 rounded-2xl border-2 border-[var(--azul-neon)] bg-gray-700 p-3 text-center font-['exo_2'] hover:cursor-default hover:bg-gray-600">
                     {icono}
                     <span>{nombre}</span>
                     {iconoSecundario}

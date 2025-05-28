@@ -18,7 +18,7 @@ export default function DescargarPDF({
     nombre,
     precioTotal,
     consumoTotal,
-    numeroMemorias
+    numeroMemorias,
 }: {
     procesador: Procesador;
     disipador: Disipador;

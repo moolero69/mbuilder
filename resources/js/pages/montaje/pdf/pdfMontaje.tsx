@@ -31,7 +31,6 @@ export default function PdfMontaje({
     Font.register({ family: 'Orbitron', src: '/fonts/Orbitron.ttf' });
     Font.register({ family: 'DynaPuff', src: '/fonts/DynaPuff.ttf' });
 
-
     const styles = StyleSheet.create({
         page: {
             padding: 20,
