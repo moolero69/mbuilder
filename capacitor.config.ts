@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'mbuilder',
   webDir: 'dist',
     server: {
-    url: 'http://mbuilder.es/',
+    url: 'http://www.mbuilder.es/',
     cleartext: true
   }
 };
