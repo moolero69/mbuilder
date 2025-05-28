@@ -1,7 +1,7 @@
 import PaginacionComponentes from '@/components/Paginacion-componentes';
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from '@/components/ui/context-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import AdminLayout from '@/layouts/admin/layout-admin';
+import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -99,7 +99,9 @@ export default function TablaMontajes({ montajes }: { montajes: any }) {
                         </TableBody>
                     </Table>
                 </div>
-
+                <p className="mb-4 mt-2 text-center font-['Exo_2'] text-sm text-gray-300 italic">
+                    Click derecho para eliminar
+                </p>
                 <PaginacionComponentes links={montajes.links} />
             </section>
 

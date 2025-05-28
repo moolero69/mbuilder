@@ -114,7 +114,7 @@ export default function Principal() {
                                     <Headset className="h-6 w-6" />
                                 </button>
                             </DialogTrigger>
-                            <DialogContent className="colores-borde-glow z-60 border-1 bg-neutral-900 text-white">
+                            <DialogContent className="colores-borde-glow z-60 border-1 bg-neutral-900 text-white max-w-xl">
                                 <DialogHeader>
                                     <div className="flex items-center justify-center gap-3">
                                         <Headset />

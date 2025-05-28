@@ -69,7 +69,8 @@ Route::get('/google-auth/callback', function () {
         'email' => $user_google->email
     ], [
         'name' => $user_google->name,
-        'email' => $user_google->email
+        'email' => $user_google->email,
+        'url_avatar'=> $user_google->avatar
     ]);
 
     Auth::login($user);
@@ -88,7 +89,8 @@ Route::get('/github-auth/callback', function () {
         'email' => $user_github->email
     ], [
         'name' => $user_github->nickname,
-        'email' => $user_github->email
+        'email' => $user_github->email,
+        'url_avatar'=> $user_github->avatar
     ]);
 
     Auth::login($user);

@@ -25,3 +25,5 @@
 /vendor/bin/
 vite.config.ts
 /android/.idea
+.env-entregar
+vite.config.ts-entregar

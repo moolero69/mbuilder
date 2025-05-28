@@ -7,11 +7,13 @@ import { Pencil } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import AppLayout from '../app-layout';
 import { useProgresoMontaje } from '@/hooks/useProgresoMontaje';
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 export default function MontajeLayout({ sidebar, main, breadcrums, progresoMontaje }: MontajeLayoutProps) {
     const { tipoMontaje } = useProgresoMontaje((state) => state);
     const [montajeEditado, setMontajeEditado] = useState((sessionStorage.getItem("nombreMontajeEditar") || null))
     const [color, setColor] = useState('--verde-neon');
+    const [dialogoAyuda, setDialogoAyuda] = useState(false);
 
     useEffect(() => {
         const sinComponentes = hayComponentes();
@@ -60,7 +62,16 @@ export default function MontajeLayout({ sidebar, main, breadcrums, progresoMonta
                         }
 
                         <div className="flex h-full w-full justify-center">
-                            <div className="flex-1">{main}</div>
+                            <div className="flex-1">
+                                {/* Icono de interrogación */}
+                                <section className={`absolute mt-2 ml-4 w-fit rounded-4xl border border-[var(${color})] bg-black/70 py-2 px-4 backdrop-blur-md hover:cursor-pointer`}
+                                    onClick={() => setDialogoAyuda(true)}
+                                >
+                                    <span className="text-xl">?</span>
+                                </section>
+
+                                {main}
+                            </div>
                             {progresoMontaje && (
                                 <div className={`relative right-0 z-20 h-auto w-[300px] overflow-y-auto border-l-4 border-[var(${color})] bg-black/80 p-4 text-white shadow-lg ${montajeEditado && 'mt-4'}`}>
                                     <ProgresoMontaje componentes={progresoMontaje} />
@@ -69,6 +80,20 @@ export default function MontajeLayout({ sidebar, main, breadcrums, progresoMonta
                         </div>
                     </section>
                 </main>
+
+                <Dialog open={dialogoAyuda} onOpenChange={setDialogoAyuda}>
+                    <DialogContent className="bg-black p-0 h-[500px] w-[950px]">
+                        <video
+                            autoPlay
+                            muted
+                            loop
+                            className="w-full h-full object-cover rounded-lg z-100"
+                        >
+                            <source src="/vid/ayuda-montaje.mp4" type="video/mp4" />
+                            Tu navegador no admite vídeos HTML5.
+                        </video>
+                    </DialogContent>
+                </Dialog>
             </AppLayout>
         </>
     );

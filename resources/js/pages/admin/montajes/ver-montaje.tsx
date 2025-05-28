@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import AdminLayout from '@/layouts/admin/layout-admin';
+import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, router } from '@inertiajs/react';
 import { Box, CircuitBoard, Cpu, MemoryStick, PcCase, Power, Wind } from 'lucide-react';
 

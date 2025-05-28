@@ -1,7 +1,7 @@
 import PaginacionComponentes from '@/components/Paginacion-componentes';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import AdminLayout from '@/layouts/admin/layout-admin';
+import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -106,7 +106,9 @@ export default function TablaDisipadores({ disipadores }: { disipadores: any }) 
                         </TableBody>
                     </Table>
                 </div>
-
+                <p className="mb-4 mt-2 text-center font-['Exo_2'] text-sm text-gray-300 italic">
+                    Click derecho para eliminar
+                </p>
                 <PaginacionComponentes links={disipadores.links} />
             </section>
 

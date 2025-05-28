@@ -22,7 +22,7 @@ export default function UsuarioHeader() {
             <DropdownMenuTrigger asChild>
                 <div className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl px-4 py-2 transition duration-300 hover:bg-[var(--azul-neon)]/10 hover:shadow-[0_0_10px_var(--azul-neon)]">
                     <Avatar>
-                        <AvatarImage src="/img/avatar.png" className="h-[40px] w-[40px]" />
+                        <AvatarImage src={auth.user.url_avatar ? `${auth.user.url_avatar}` : "/img/avatar.png"} />
                         <AvatarFallback className="text-[var(--verde-neon)]">MB</AvatarFallback>
                     </Avatar>
                     <div className="relative flex items-center justify-center">
@@ -42,7 +42,7 @@ export default function UsuarioHeader() {
                 {!auth.user.es_pro && (
                     <>
                         <DropdownMenuItem className='hover:cursor-pointer text-[var(--amarillo-neon)]' asChild>
-                            <Link href={route('usuario.suscribirse')}>Hazte premium</Link>
+                            <Link href={route('usuario.suscribirse')}>Hazte PRO</Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                     </>

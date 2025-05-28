@@ -17,6 +17,7 @@ class CrearUsuarios extends Command
         User::create([
             'name' => 'admin',
             'email' => 'admin@mbuilder.es',
+            'email_verified_at' => '2023-07-18 14:37:25',
             'password' => Hash::make('adminlaravel'),
             'es_admin' => 'Si',
             'es_pro' => 'Si'
@@ -25,6 +26,7 @@ class CrearUsuarios extends Command
         User::create([
             'name' => 'usuario',
             'email' => 'usuario@mbuilder.es',
+            'email_verified_at' => '2023-07-18 14:37:25',
             'password' => Hash::make('usuariolaravel'),
         ]);
 

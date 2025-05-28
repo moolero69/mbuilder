@@ -7,12 +7,6 @@ Route::get('/', function () {
     return Inertia::render('pagina-inicio');
 })->name('home');
 
-Route::get('/qr', function () {
-    return Inertia::render('generarQR');
-})->name('qr');
-
-
-
 
 require __DIR__ . '/ajustes.php';
 require __DIR__ . '/auth.php';

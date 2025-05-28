@@ -21,7 +21,7 @@ const sidebarNavItems: NavItem[] = [
     },
     {
         title: 'Apariencia',
-        href: '/ajustes/apariencia',
+        href: '#',
         icon: <SunMoon />,
     },
 ];

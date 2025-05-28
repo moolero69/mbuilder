@@ -20,6 +20,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->string('es_admin')->nullable();
             $table->string('es_pro')->nullable();
+            $table->string('url_avatar')->nullable();
             $table->timestamps();
         });
 

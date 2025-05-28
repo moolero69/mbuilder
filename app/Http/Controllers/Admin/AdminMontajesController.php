@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Montaje;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Inertia\Inertia;
 
 class AdminMontajesController extends Controller
@@ -70,7 +69,7 @@ class AdminMontajesController extends Controller
      */
     public function destroy($id)
     {
-        $disco = User::findOrFail($id);
+        $disco = Montaje::findOrFail($id);
         $disco->delete();
 
         return redirect()->route('admin.montajes')->with('success', 'Montaje eliminado correctamente');

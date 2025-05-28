@@ -325,7 +325,7 @@ export default function listaMontajes({ montajes }: { montajes: Montaje[] }) {
                     </section>
                 </div>
                 <Dialog open={dialogoEliminar} onOpenChange={setDialogoEliminar}>
-                    <DialogContent className="border-[var(--rojo-neon)] bg-[#0d0d0d] text-white shadow-[0_0_15px_var(--rojo-neon)]">
+                    <DialogContent className="border-[var(--rojo-neon)] bg-[#0d0d0d] text-white shadow-[0_0_15px_var(--rojo-neon)] max-w-xl">
                         <DialogHeader>
                             <DialogTitle className="text-[var(--rojo-neon)] drop-shadow-[0_0_8px_var(--rojo-neon)]">¿Eliminar montaje?</DialogTitle>
                             <DialogDescription className="text-gray-400">

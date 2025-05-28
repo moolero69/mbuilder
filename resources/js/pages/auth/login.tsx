@@ -32,7 +32,7 @@ export default function Login() {
 
     return (
         <AuthLayout titulo="Accede a tu cuenta de mbuilder" descripcion="Introduce tu email y contraseña para acceder">
-            <Head title="Log in" />
+            <Head title="Iniciar Sesion" />
 
             <form
                 className="flex flex-col gap-6 rounded-xl border border-[var(--verde-neon)] bg-black/70 p-6 shadow-[0_0_20px_var(--verde-neon)]"

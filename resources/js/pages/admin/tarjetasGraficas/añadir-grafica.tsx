@@ -1,6 +1,6 @@
 import { FormEventHandler } from 'react';
 import { useForm, Head, router } from '@inertiajs/react';
-import AdminLayout from '@/layouts/admin/layout-admin';
+import AdminLayout from '@/layouts/admin/admin-layout';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
