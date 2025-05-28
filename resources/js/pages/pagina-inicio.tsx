@@ -119,7 +119,9 @@ export default function Principal() {
                                 <p className="mt-2 text-base text-gray-300">Nuestro equipo de asistencia PRO está listo para ayudarte.</p>
                                 <p className="mt-2 text-base text-gray-300">¿Quieres iniciar una solicitud?</p>
                                 <DialogFooter className="mt-4 flex justify-end gap-4">
-                                    <Button variant="ghost">Cancelar</Button>
+                                    <Button variant="ghost" onClick={() => setDialogoAsistencia(false)}>
+                                        Cancelar
+                                    </Button>
                                     <Button
                                         className="bg-[var(--verde-neon)] text-black hover:cursor-pointer hover:bg-[var(--verde-neon)]/80"
                                         asChild
